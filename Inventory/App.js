@@ -5,6 +5,7 @@ const App = () => {
   return(
     <View style={styles.container}>
       <Text>Welcome to Inventory</Text>
+      <Text>Testing Reha Branch</Text>
     </View>
   )
 }
