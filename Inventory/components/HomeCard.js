@@ -10,17 +10,17 @@ import {
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-// props.nav.navigate(props.tabName)
+
 
 const HomeCard = (props) => {
    return(
       <Animatable.View animation="fadeInLeftBig" duration={1000} style={styles.card}>
-         <TouchableOpacity onPress={() => {}}>
+         <TouchableOpacity onPress={() => {props.nav.navigate(props.tabName)}}>
             <View style={styles.cardContent}>
                <Animatable.View animation="bounceInRight" duration={2000}>
                <Icon
                   name={props.iconName}
-                  color="#fff"
+                  color="#078bab"
                   size={30}
                />
                </Animatable.View>
@@ -37,30 +37,32 @@ export default HomeCard;
 
 const styles = StyleSheet.create({
    cardTitle:{
-      color: '#fff',
+      color: '#078bab',
       fontSize: 15
    },
    card: {
+      flex: 1,
       borderRadius: 5,
-      backgroundColor: '#065ba1',
-      width: 135,
-      height: 100,
+      backgroundColor: '#fff',
+      width: 101,
+      height: 120,
       marginVertical: 10,
       marginLeft: 10,
       marginRight: 10,
       shadowColor: "#000",
       shadowOffset: {
          width:  10,
-         height: 16,
+         height: 10,
       },
-      shadowOpacity: 1,
-      shadowRadius: 20,
+      shadowOpacity: 0.8,
+      shadowRadius: 10,
 
-      elevation: 14,
+      elevation: 7,
    },
    cardContent: {
-      padding: 25,
+      padding: 10,
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      marginVertical: 20
    }
 })

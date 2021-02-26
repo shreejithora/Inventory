@@ -6,7 +6,6 @@ import {
    Avatar,
    Title,
    Caption,
-   Paragraph,
    Drawer 
 } from 'react-native-paper';
 
@@ -41,6 +40,12 @@ const DrawerContent = (props) => {
                </TouchableOpacity>            
             </View>
             <Drawer.Section style={styles.menuDrawer} title="Basics">               
+               <DrawerItem 
+               icon = { ({color, size}) => <Icon name="cash-multiple" color='black' size={size}/>}
+               label="Home"
+               labelStyle= {{color: 'black'}}
+               onPress = { () => {props.navigation.navigate('Home')}}
+               />
                <DrawerItem 
                icon = { ({color, size}) => <Icon name="cash-multiple" color='black' size={size}/>}
                label="Products"
@@ -145,47 +150,41 @@ export default DrawerContent;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginTop: 20,
-    // backgroundColor: '#0a5591',
-    opacity: 0.8
+      flex: 1,
+      backgroundColor: '#e6f1fa',
+      opacity: 0.8
   },
   userTop: {
-    marginLeft: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
+      marginTop: 20,
+      marginLeft: 15,
+      flexDirection: 'row',
+      alignItems: 'center',
   },
   menuDrawer: {
-    marginTop: 5,
+      marginTop: 5,
   },
   title: {
-    marginHorizontal: 10,
+      marginHorizontal: 10,
   },
   bottomDrawer: {
-    borderTopColor: '#dddddd',
-    borderTopWidth: 1,
+      borderTopColor: '#dddddd',
+      borderTopWidth: 1,
 
   },
-  paragraph: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: '#000'
-  },
   modal: {
-    flex: 1,
-    // display: 'flex',
-    justifyContent: 'flex-start',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    flex: 1,
-    marginTop: 100,
-    backgroundColor: '#fff',
-    marginBottom: 0,
-    marginLeft: 0,
-    marginRight: 0
+      flex: 1,
+      justifyContent: 'flex-start',
+      borderTopLeftRadius: 30,
+      borderTopRightRadius: 30,
+      flex: 1,
+      marginTop: 100,
+      backgroundColor: '#fff',
+      marginBottom: 0,
+      marginLeft: 0,
+      marginRight: 0
   },
   modalView: {
-    marginTop: 0
+      marginTop: 0
   },
   modalText: {   
     marginTop: 20,

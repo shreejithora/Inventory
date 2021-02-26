@@ -2,14 +2,14 @@ import React from 'react';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import UsersScreen from '../screens/UsersScreen';
+import VendorsScreen from '../screens/VendorsScreen';
 
 import { createStackNavigator } from '@react-navigation/stack';
-const UsersStack = createStackNavigator();
+const VendorsStack = createStackNavigator();
 
-const UsersNav = ({navigation}) =>{
+const VendorsNav = ({navigation}) =>{
    return(
-      <UsersStack.Navigator screenOptions= { {
+      <VendorsStack.Navigator screenOptions= { {
          headerStyle: {
             backgroundColor: '#078bab',
          },
@@ -18,11 +18,11 @@ const UsersNav = ({navigation}) =>{
             fontWeight: 'bold'
          }
       }}>
-         <UsersStack.Screen name="UsersScreen" component = {UsersScreen}
+         <VendorsStack.Screen name="VendorsScreen" component = {VendorsScreen}
             options= {{ 
-            title: 'Users ',
+            title: 'Vendors',
             headerLeft: () => (
-               <Icon.Button 
+               <Icon.Button
                name="menu"
                size={25}   
                backgroundColor= "#078bab"
@@ -30,9 +30,9 @@ const UsersNav = ({navigation}) =>{
                )
             }}
          />
-      </UsersStack.Navigator>
-   
+      </VendorsStack.Navigator>
+
    )
  }
 
-export default UsersNav;
+export default VendorsNav;

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Text } from 'react-native';
 
-const EntriesScreen = () => {
+const SalesScreen = () => {
    return(
-      <Text>Hello</Text>
+      <Text>Sales</Text>
    )
 }
 
-export default EntriesScreen;
+export default SalesScreen;

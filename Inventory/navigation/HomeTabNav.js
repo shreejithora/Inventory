@@ -5,9 +5,9 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import HomeScreen from '../screens/HomeScreen';
-import EntriesScreen from '../screens/EntriesScreen';
-import ProductsScreen from '../screens/ProductsScreen';
+import HomeScreen from '../screens/TabScreens/HomeScreen';
+import EntriesScreen from '../screens/TabScreens/EntriesScreen';
+import ProductsScreen from '../screens/TabScreens/ProductsScreen';
 
 const HomeStack = createStackNavigator();
 const EntriesStack = createStackNavigator();
@@ -24,14 +24,14 @@ const HomeTabNav = () =>{
       >
          <Tab.Screen
             name="Home"
-               component={HomeStackScreen}
+               component={HomeStackScreen}               
                options={{
                tabBarLabel: 'Home',
                tabBarColor:'#078bab',
                tabBarIcon: ({ color }) => (
-                  <Icon name="home" color={color} size={26} />
+                  <Icon name="home" color={color} size={26} />               
                ),
-         }}
+            }}
          />      
          <Tab.Screen
             name="Entries"
@@ -40,11 +40,10 @@ const HomeTabNav = () =>{
                tabBarLabel: 'Entries',
                tabBarColor:'#078bab',
                tabBarIcon: ({ color }) => (
-                  <Icon name="person" color={color} size={26} />
+                  <Icon name="clipboard-text-multiple-outline" color={color} size={26} />
                ),
             }}
          />
-
          <Tab.Screen
             name="Products"
             component={ProductsStackScreen}
@@ -52,7 +51,7 @@ const HomeTabNav = () =>{
                tabBarLabel: 'Products',
                tabBarColor:'#078bab',
                tabBarIcon: ({ color }) => (
-                  <Icon name="settings" color={color} size={26} />
+                  <Icon name="cart-outline" color={color} size={26} />
                ),
             }}
          />
@@ -98,9 +97,9 @@ const EntriesStackScreen=({navigation})=>{
          fontWeight: 'bold'
       }
    }}>
-      <EntriesStack.Screen name="Home" component = {EntriesScreen}
+      <EntriesStack.Screen name="EntriesScreen" component = {EntriesScreen}
          options= {{ 
-         title: 'Inventory ',
+         title: 'Entries ',
          headerLeft: () => (
                <Icon.Button 
                name="menu"
@@ -122,9 +121,9 @@ const ProductsStackScreen=({navigation})=>{
          fontWeight: 'bold'
       }
    }}>
-      <ProductsStack.Screen name="Home" component = {ProductsScreen}
+      <ProductsStack.Screen name="ProductsScreen" component = {ProductsScreen}
          options= {{ 
-         title: 'Inventory ',
+         title: 'Products ',
          headerLeft: () => (
                <Icon.Button 
                name="menu"
