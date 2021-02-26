@@ -18,9 +18,7 @@ const App = () => {
         <Drawer.Screen name="Home" component = { HomeTabNav } />
         {/* <Drawer.Screen name="Users" component = { UsersNav } />
         <Drawer.Screen name="Traders" component = { TradersNav } />
-        <Drawer.Screen name="Products" component = { ProductsNav } />
         <Drawer.Screen name="Sales" component = { SalesNav } />
-        <Drawer.Screen name="Entries" component = { EntriesNav } />
         <Drawer.Screen name="Quotation" component = { QuotationNav } /> */}
       </Drawer.Navigator>
     </NavigationContainer>

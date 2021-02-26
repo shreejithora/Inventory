@@ -12,7 +12,7 @@ const HomeStack = createStackNavigator();
 
 const HomeTabNav = ({navigation}) => {
    return(
-      <HomeStack.Navigator screenOptions= { {
+      <HomeStack.Navigator screenOptions= {{
          headerStyle: {
             backgroundColor: '#065ba1',
          },
@@ -25,11 +25,14 @@ const HomeTabNav = ({navigation}) => {
             options= {{ 
             title: 'Inventory ',
             headerLeft: () => (
-                  <Icon.Button 
+               <Icon.Button 
                   name="menu" 
                   size={25}   
                   backgroundColor= "#065ba1"
-                  onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>)}}/>
+                  onPress = {  () => {navigation.openDrawer()}} 
+               />
+            )}}
+         />
       </HomeStack.Navigator>
    )
 }
