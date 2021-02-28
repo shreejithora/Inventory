@@ -2,7 +2,7 @@ import React from 'react';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import QuotationScreen from '../screens/TabScreens/HomeScreen';
+import QuotationScreen from '../screens/QuotationScreen';
 
 import { createStackNavigator } from '@react-navigation/stack';
 const QuotationStack = createStackNavigator();

@@ -44,19 +44,19 @@ const DrawerContent = (props) => {
                icon = { ({color, size}) => <Icon name="cash-multiple" color='black' size={size}/>}
                label="Home"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {props.navigation.navigate('Home')}}
+               onPress = { () => {props.navigation.navigate('HomeTab')}}
                />
                <DrawerItem 
                icon = { ({color, size}) => <Icon name="cash-multiple" color='black' size={size}/>}
                label="Products"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {}}
+               onPress = { () => {props.navigation.navigate('Products')}}
                />
                <DrawerItem 
                icon = { ({color, size}) => <Icon name="chart-line" color='black' size={size}/>}
                label="Sales"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {}}
+               onPress = { () => {props.navigation.navigate('Sales')}}
                />
             </Drawer.Section>
             <Drawer.Section style={styles.menuDrawer} title="Vendors">
@@ -64,13 +64,13 @@ const DrawerContent = (props) => {
                icon = { ({color, size}) => <Icon name="account-cash" color='black' size={size}/>}
                label="Suppliers"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {props.navigation.navigate('Loan')}}
+               onPress = { () => {props.navigation.navigate('Vendors', { screen: 'SuppliersScreen' })}}
                />
                <DrawerItem 
                icon = { ({color, size}) => <Icon name="checkbook" color='black' size={size}/>}
                label="Customers"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {props.navigation.navigate('Cheques')}}
+               onPress = { () => {props.navigation.navigate('Vendors', { screen: 'CustomersScreen' })}}
                />
             </Drawer.Section>
             <Drawer.Section style={styles.menuDrawer} title="Entries">
@@ -78,13 +78,13 @@ const DrawerContent = (props) => {
                icon = { ({color, size}) => <Icon name="account-cash" color='black' size={size}/>}
                label="Income"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {props.navigation.navigate('Loan')}}
+               onPress = { () => {props.navigation.navigate('Entries', { screen: 'IncomeScreen' })}}
                />
                <DrawerItem 
                icon = { ({color, size}) => <Icon name="checkbook" color='black' size={size}/>}
                label="Expense"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {props.navigation.navigate('Cheques')}}
+               onPress = { () => {props.navigation.navigate('Entries', { screen: 'ExpenseScreen' })}}
                />
             </Drawer.Section>
             <Drawer.Section style={styles.menuDrawer} title="Users">
@@ -92,19 +92,13 @@ const DrawerContent = (props) => {
                icon = { ({color, size}) => <Icon name="home-outline" color='#000' size={size}/>}
                label="Admin"
                labelStyle= {{color: '#000'}}
-               onPress = { () => {}}
+               onPress = { () => {props.navigation.navigate('Users', { screen: 'AdminScreen' })}}
                />
                <DrawerItem 
                icon = { ({color, size}) => <Icon name="cash-multiple" color='black' size={size}/>}
                label="Staff"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {}}
-               />
-               <DrawerItem 
-               icon = { ({color, size}) => <Icon name="chart-line" color='black' size={size}/>}
-               label="Accounts"
-               labelStyle= {{color: 'black'}}
-               onPress = { () => {}}
+               onPress = { () => {props.navigation.navigate('Users', { screen: 'StaffScreen' })}}
                />
             </Drawer.Section>
          </View>
@@ -114,7 +108,7 @@ const DrawerContent = (props) => {
             icon = { ({color, size}) => <Icon name="cog-outline" color='#000' size={size}/>}
             label="Quotation"
             labelStyle= {{color: '#000'}}
-            onPress = { () => {}}
+            onPress = { () => {props.navigation.navigate('Quotation')}}
          />
          <DrawerItem 
             icon = { ({color, size}) => <Icon name="exit-to-app" color={color} size={size}/>}

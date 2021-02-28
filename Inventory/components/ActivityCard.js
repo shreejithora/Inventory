@@ -10,20 +10,20 @@ import {
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const ActivityCard = () => {
+const ActivityCard = ({items}) => {
    return(
       <Animatable.View animation="fadeInUp" duration={1000} style={styles.card}>
          <TouchableOpacity onPress={() => {}}>
             <View style={styles.cardContent}>  
-               <View style={{flexDirection: 'row'}}>
+               <View style={{flexDirection: 'row', flex: 1}}>
                <Icon
                   name='cart-arrow-up'
                   color="#078bab"
                   size={30}
-               />
-               <Text style={styles.cardTitle}>Shoes</Text>  
-               </View>              
-               <Text style={styles.cardTitle}>+ Rs.120</Text>
+               />               
+               <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left'}]}>{items.name}</Text>                            
+               <Text style={[styles.cardTitle, {flex: 2, textAlign: 'right'}]}>+ Rs. {items.price}</Text>
+               </View>  
             </View>         
          </TouchableOpacity>
       </Animatable.View>
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
       padding: 15,
       backgroundColor: '#fff',
       flex: 1,
-      marginVertical: 5,
+      marginTop: 5,
       marginLeft: 5,
       marginRight: 5,   
       borderBottomColor: '#f4f4f4',

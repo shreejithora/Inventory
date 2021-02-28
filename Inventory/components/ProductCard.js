@@ -4,55 +4,50 @@ import {
   View, 
   Text, 
   TouchableOpacity, 
-  StyleSheet,  
+  StyleSheet,
+  FlatList,  
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const ActivityCard = () => {
+const ProductCard = ({items}) => {
    return(
       <Animatable.View animation="fadeInUp" duration={1000} style={styles.card}>
          <TouchableOpacity onPress={() => {}}>
             <View style={styles.cardContent}>  
-               <View style={{flexDirection: 'row'}}>
-               <Icon
-                  name='cart-arrow-up'
-                  color="#078bab"
-                  size={30}
-               />
-               <Text style={styles.cardTitle}>Shoes</Text>  
-               </View>              
-               <Text style={styles.cardTitle}>+ Rs.120</Text>
+               <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.product_id}</Text> 
+               <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left'}]}>{items.name}</Text>  
+               <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{items.quantity}</Text>            
+               <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{items.price}</Text>
             </View>         
          </TouchableOpacity>
-      </Animatable.View>
-      
+      </Animatable.View>               
    )
 }
 
-export default ActivityCard;
+export default ProductCard;
 
 const styles = StyleSheet.create({
    cardTitle:{
-      marginHorizontal: 10,
+      // marginHorizontal: 5,
       color: '#078bab',
       fontSize: 18,
-      fontWeight: '700'
    },
    card: {
       padding: 15,
       backgroundColor: '#fff',
       flex: 1,
-      marginVertical: 5,
+      // marginVertical: 5,
       marginLeft: 5,
       marginRight: 5,   
       borderBottomColor: '#f4f4f4',
       borderBottomWidth: 1,   
+      
    },
    cardContent: {
       flexDirection: 'row',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      borderRadius: 15,
    },
    cardInfo: {      
       marginLeft: 5,

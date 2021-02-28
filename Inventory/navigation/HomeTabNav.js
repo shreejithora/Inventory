@@ -6,7 +6,8 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import HomeScreen from '../screens/TabScreens/HomeScreen';
-import EntriesScreen from '../screens/TabScreens/EntriesScreen';
+import IncomeScreen from '../screens/EntriesScreen/IncomeScreen';
+import ExpenseScreen from '../screens/EntriesScreen/ExpenseScreen';
 import ProductsScreen from '../screens/TabScreens/ProductsScreen';
 
 const HomeStack = createStackNavigator();
@@ -72,7 +73,7 @@ const HomeStackScreen=({navigation})=>{
          fontWeight: 'bold'
       }
    }}>
-      <HomeStack.Screen name="Home" component = {HomeScreen}
+      <HomeStack.Screen name="HomeTab" component = {HomeScreen}
          options= {{ 
          title: 'Inventory ',
          headerLeft: () => (
@@ -86,18 +87,21 @@ const HomeStackScreen=({navigation})=>{
 
 }
 
-const EntriesStackScreen=({navigation})=>{
+const EntriesStackScreen=({navigation, route})=>{
    return(
-   <EntriesStack.Navigator screenOptions= { {
-      headerStyle: {
-         backgroundColor: '#078bab',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-         fontWeight: 'bold'
-      }
-   }}>
-      <EntriesStack.Screen name="EntriesScreen" component = {EntriesScreen}
+   <EntriesStack.Navigator 
+      initialRouteName={ route.params == null ? 'IncomeScreen' : route.params.screen}
+      screenOptions= { {
+         headerStyle: {
+            backgroundColor: '#078bab',
+         },
+         headerTintColor: '#fff',
+         headerTitleStyle: {
+            fontWeight: 'bold'
+         }
+      }}
+   >
+      <EntriesStack.Screen name="IncomeScreen" component = {IncomeScreen}
          options= {{ 
          title: 'Entries ',
          headerLeft: () => (
@@ -105,7 +109,22 @@ const EntriesStackScreen=({navigation})=>{
                name="menu"
                size={25}   
                backgroundColor= "#078bab"
-               onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>)}}/>
+               onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
+            )
+         }}
+      />
+      <EntriesStack.Screen name="ExpenseScreen" component = {ExpenseScreen}
+         options= {{ 
+         title: 'Entries ',
+         headerLeft: () => (
+               <Icon.Button 
+               name="menu"
+               size={25}   
+               backgroundColor= "#078bab"
+               onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
+            )
+         }}
+      />
    </EntriesStack.Navigator>
    )
 }
