@@ -6,51 +6,45 @@ import {
    TouchableOpacity, 
    ScrollView, 
    StyleSheet,
-   FlatList
+   FlatList,
+   Button
 } from 'react-native';
+
+import Modal from 'react-native-modal';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import ProductCard from '../../components/ProductCard';
+import AddProduct from "../../components/AddProduct";
 const ProductsList = require('../../models/Products.json');
 
 const ProductsScreen = () => {
+
+   const [AddProductModal, setAddProductModal] = useState(false);   
 
    const [productData, setProductData] = useState({
       allProducts: ProductsList,
       filteredProducts: ProductsList
    })
 
-   const [foundProduct, setFoundProduct] = useState(true)
+
 
    const handleSearchText = textToSearch => {
       const foundProduct = ProductsList.filter( item => {
-          return ( item.product_id.toLowerCase().includes(textToSearch.toLowerCase()) || 
-                  item.name.toLowerCase().includes(textToSearch.toLowerCase()) ||
-                  item.quantity.toLowerCase().includes(textToSearch.toLowerCase())  ||
-                  item.price.toLowerCase().includes(textToSearch.toLowerCase()) )
+         return ( 
+            item.product_id.toLowerCase().includes(textToSearch.toLowerCase()) || 
+            item.name.toLowerCase().includes(textToSearch.toLowerCase()) ||
+            item.quantity.toLowerCase().includes(textToSearch.toLowerCase())  ||
+            item.price.toLowerCase().includes(textToSearch.toLowerCase()) ||
+            item.last_updated.toLowerCase().includes(textToSearch.toLowerCase()) 
+         )
       })
 
-      console.log(foundProduct);
+      console.log(foundProduct.length);
       
       setProductData({
          ...productData,
-         filteredProducts: foundProduct.length == 0 ? null : foundProduct
-         // ProductsList.filter( item => {
-         //    if(!item.product_id.toLowerCase().(textToSearch.toLowerCase()) && 
-         //       !item.name.toLowerCase().includes(textToSearch.toLowerCase()) &&
-         //       !item.quantity.toLowerCase().includes(textToSearch.toLowerCase())  &&
-         //       !item.price.toLowerCase().includes(textToSearch.toLowerCase()) ) {
-         //       return null 
-         //    } else {
-         //       return (                
-         //          item.product_id.toLowerCase().includes(textToSearch.toLowerCase()) || 
-         //          item.name.toLowerCase().includes(textToSearch.toLowerCase()) ||
-         //          item.quantity.toLowerCase().includes(textToSearch.toLowerCase())  ||
-         //          item.price.toLowerCase().includes(textToSearch.toLowerCase()) 
-         //       )
-         //    }                        
-         // })
+         filteredProducts: foundProduct.length == 0 ? null : foundProduct         
       })      
    }
 
@@ -71,21 +65,51 @@ const ProductsScreen = () => {
                <Text style={[styles.cardTitle, {flex: 1, textAlign: 'left', fontWeight: '700'}]}>Qty</Text>            
                <Text style={[styles.cardTitle, {flex: 2, textAlign: 'center', fontWeight: '700'}]}>Price (In Rs.)</Text>
             </View> 
-            <FlatList 
-               data = {productData.filteredProducts}
-               keyExtractor = {item => item.product_id}
-               renderItem = { ({item}) => 
-                  productData.filteredProducts == null ?
-                  <Text style={{color: 'black', fontSize: 20}}>No Match found</Text> :
-                  <ProductCard items={item}/> 
-                                   
-               }
-            />
+            { 
+               productData.filteredProducts == null ?
+               <View opacity={0.5} style={styles.errorDisplay}>
+                  <Icon name="clipboard-alert-outline" size={30} color='#078bab'/>
+                  <Text style={styles.errorMsg}>No Match Found</Text>  
+                                 
+               </View> :
+               <FlatList 
+                  data = {productData.filteredProducts}
+                  keyExtractor = {item => item.product_id}
+                  renderItem = { ({item}) =>                  
+                     <ProductCard items={item}/>                                    
+                  }
+               />
+            }           
          </View>      
-            <TouchableOpacity style={{position: 'absolute', bottom: 25, right: 25,}}>
-               <Icon name="plus" size={30} color='#e6f1fa' style={styles.icon}/>              
-            </TouchableOpacity>   
-      </View>
+         <TouchableOpacity          
+            style={{position: 'absolute', bottom: 25, right: 25,}}
+            onPress={() => setAddProductModal(true)}
+         >            
+            <Icon name="plus" size={30} color='#e6f1fa' style={styles.icon}/>              
+         </TouchableOpacity>    
+
+         <Modal 
+            style={styles.modal}
+            isVisible={AddProductModal} 
+            transparent={true} 
+            animationIn='slideInUp' 
+            animationOut='slideOutDown'
+            backdropTransitionInTiming={500}
+            backdropTransitionOutTiming={500}
+            animationInTiming={500}
+            animationOutTiming={500}> 
+            <View style={styles.modalView}>       
+               <Icon 
+                  style={styles.buttonIcon}
+                  name="close"
+                  size={30}
+                  color="#078bab"                                   
+                  onPress={ () => setAddProductModal(false)}
+               />   
+               <AddProduct onAddProduct={setAddProductModal}/>                                   
+            </View>                                           
+         </Modal>         
+      </View>    
    )
 }
 
@@ -97,8 +121,8 @@ const styles = StyleSheet.create({
       backgroundColor: '#e6f1fa',
    },
    mainActitivity: {
+      flex: 1,
       position: 'relative',
-      marginBottom: 50,
       backgroundColor: '#e6f1fa',
       justifyContent: 'center',
    },
@@ -144,9 +168,6 @@ const styles = StyleSheet.create({
       fontWeight: '700'
    },
    icon: {
-      // position: 'absolute',
-      // bottom: 70,
-      // right: 25,
       padding: 20,      
       backgroundColor: '#078bab', 
       borderRadius: 50 ,
@@ -159,5 +180,35 @@ const styles = StyleSheet.create({
       shadowRadius: 10,
 
       elevation: 12,
+   },
+   modal: {
+      flex: 1,
+      justifyContent: 'flex-start',
+      borderTopLeftRadius: 30,
+      borderTopRightRadius: 30,
+      marginTop: 100,
+      backgroundColor: '#fff',
+      marginBottom: 0,
+      marginLeft: 0,
+      marginRight: 0
+  },
+   buttonIcon: {
+    marginTop: 15, 
+    padding: 3, 
+    alignSelf: 'center', 
+    backgroundColor: "#c7e6ff", 
+    borderRadius: 50
+  },
+//   modalView: {
+//       marginTop: 0
+//   },
+   errorDisplay: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',            
+   },
+   errorMsg: {
+      color: '#078bab',
+      fontSize: 20
    }
 })
