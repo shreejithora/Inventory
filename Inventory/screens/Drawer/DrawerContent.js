@@ -6,7 +6,6 @@ import {
    Avatar,
    Title,
    Caption,
-   Paragraph,
    Drawer 
 } from 'react-native-paper';
 
@@ -43,15 +42,21 @@ const DrawerContent = (props) => {
             <Drawer.Section style={styles.menuDrawer} title="Basics">               
                <DrawerItem 
                icon = { ({color, size}) => <Icon name="cash-multiple" color='black' size={size}/>}
+               label="Home"
+               labelStyle= {{color: 'black'}}
+               onPress = { () => {props.navigation.navigate('HomeTab')}}
+               />
+               <DrawerItem 
+               icon = { ({color, size}) => <Icon name="cash-multiple" color='black' size={size}/>}
                label="Products"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {}}
+               onPress = { () => {props.navigation.navigate('Products')}}
                />
                <DrawerItem 
                icon = { ({color, size}) => <Icon name="chart-line" color='black' size={size}/>}
                label="Sales"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {}}
+               onPress = { () => {props.navigation.navigate('Sales')}}
                />
             </Drawer.Section>
             <Drawer.Section style={styles.menuDrawer} title="Vendors">
@@ -59,13 +64,13 @@ const DrawerContent = (props) => {
                icon = { ({color, size}) => <Icon name="account-cash" color='black' size={size}/>}
                label="Suppliers"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {props.navigation.navigate('Loan')}}
+               onPress = { () => {props.navigation.navigate('Vendors', { screen: 'SuppliersScreen' })}}
                />
                <DrawerItem 
                icon = { ({color, size}) => <Icon name="checkbook" color='black' size={size}/>}
                label="Customers"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {props.navigation.navigate('Cheques')}}
+               onPress = { () => {props.navigation.navigate('Vendors', { screen: 'CustomersScreen' })}}
                />
             </Drawer.Section>
             <Drawer.Section style={styles.menuDrawer} title="Entries">
@@ -73,13 +78,13 @@ const DrawerContent = (props) => {
                icon = { ({color, size}) => <Icon name="account-cash" color='black' size={size}/>}
                label="Income"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {props.navigation.navigate('Loan')}}
+               onPress = { () => {props.navigation.navigate('Entries', { screen: 'IncomeScreen' })}}
                />
                <DrawerItem 
                icon = { ({color, size}) => <Icon name="checkbook" color='black' size={size}/>}
                label="Expense"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {props.navigation.navigate('Cheques')}}
+               onPress = { () => {props.navigation.navigate('Entries', { screen: 'ExpenseScreen' })}}
                />
             </Drawer.Section>
             <Drawer.Section style={styles.menuDrawer} title="Users">
@@ -87,19 +92,13 @@ const DrawerContent = (props) => {
                icon = { ({color, size}) => <Icon name="home-outline" color='#000' size={size}/>}
                label="Admin"
                labelStyle= {{color: '#000'}}
-               onPress = { () => {}}
+               onPress = { () => {props.navigation.navigate('Users', { screen: 'AdminScreen' })}}
                />
                <DrawerItem 
                icon = { ({color, size}) => <Icon name="cash-multiple" color='black' size={size}/>}
                label="Staff"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {}}
-               />
-               <DrawerItem 
-               icon = { ({color, size}) => <Icon name="chart-line" color='black' size={size}/>}
-               label="Accounts"
-               labelStyle= {{color: 'black'}}
-               onPress = { () => {}}
+               onPress = { () => {props.navigation.navigate('Users', { screen: 'StaffScreen' })}}
                />
             </Drawer.Section>
          </View>
@@ -109,7 +108,7 @@ const DrawerContent = (props) => {
             icon = { ({color, size}) => <Icon name="cog-outline" color='#000' size={size}/>}
             label="Quotation"
             labelStyle= {{color: '#000'}}
-            onPress = { () => {}}
+            onPress = { () => {props.navigation.navigate('Quotation')}}
          />
          <DrawerItem 
             icon = { ({color, size}) => <Icon name="exit-to-app" color={color} size={size}/>}
@@ -145,47 +144,41 @@ export default DrawerContent;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginTop: 20,
-    // backgroundColor: '#0a5591',
-    opacity: 0.8
+      flex: 1,
+      backgroundColor: '#e6f1fa',
+      opacity: 0.8
   },
   userTop: {
-    marginLeft: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
+      marginTop: 20,
+      marginLeft: 15,
+      flexDirection: 'row',
+      alignItems: 'center',
   },
   menuDrawer: {
-    marginTop: 5,
+      marginTop: 5,
   },
   title: {
-    marginHorizontal: 10,
+      marginHorizontal: 10,
   },
   bottomDrawer: {
-    borderTopColor: '#dddddd',
-    borderTopWidth: 1,
+      borderTopColor: '#dddddd',
+      borderTopWidth: 1,
 
   },
-  paragraph: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: '#000'
-  },
   modal: {
-    flex: 1,
-    // display: 'flex',
-    justifyContent: 'flex-start',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    flex: 1,
-    marginTop: 100,
-    backgroundColor: '#fff',
-    marginBottom: 0,
-    marginLeft: 0,
-    marginRight: 0
+      flex: 1,
+      justifyContent: 'flex-start',
+      borderTopLeftRadius: 30,
+      borderTopRightRadius: 30,
+      flex: 1,
+      marginTop: 100,
+      backgroundColor: '#fff',
+      marginBottom: 0,
+      marginLeft: 0,
+      marginRight: 0
   },
   modalView: {
-    marginTop: 0
+      marginTop: 0
   },
   modalText: {   
     marginTop: 20,

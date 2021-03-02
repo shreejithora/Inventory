@@ -5,9 +5,10 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import HomeScreen from '../screens/HomeScreen';
-import EntriesScreen from '../screens/EntriesScreen';
-import ProductsScreen from '../screens/ProductsScreen';
+import HomeScreen from '../screens/TabScreens/HomeScreen';
+import IncomeScreen from '../screens/EntriesScreen/IncomeScreen';
+import ExpenseScreen from '../screens/EntriesScreen/ExpenseScreen';
+import ProductsScreen from '../screens/TabScreens/ProductsScreen';
 
 const HomeStack = createStackNavigator();
 const EntriesStack = createStackNavigator();
@@ -24,14 +25,14 @@ const HomeTabNav = () =>{
       >
          <Tab.Screen
             name="Home"
-               component={HomeStackScreen}
+               component={HomeStackScreen}               
                options={{
                tabBarLabel: 'Home',
                tabBarColor:'#078bab',
                tabBarIcon: ({ color }) => (
-                  <Icon name="home" color={color} size={26} />
+                  <Icon name="home" color={color} size={26} />               
                ),
-         }}
+            }}
          />      
          <Tab.Screen
             name="Entries"
@@ -40,11 +41,10 @@ const HomeTabNav = () =>{
                tabBarLabel: 'Entries',
                tabBarColor:'#078bab',
                tabBarIcon: ({ color }) => (
-                  <Icon name="person" color={color} size={26} />
+                  <Icon name="clipboard-text-multiple-outline" color={color} size={26} />
                ),
             }}
          />
-
          <Tab.Screen
             name="Products"
             component={ProductsStackScreen}
@@ -52,7 +52,7 @@ const HomeTabNav = () =>{
                tabBarLabel: 'Products',
                tabBarColor:'#078bab',
                tabBarIcon: ({ color }) => (
-                  <Icon name="settings" color={color} size={26} />
+                  <Icon name="cart-outline" color={color} size={26} />
                ),
             }}
          />
@@ -73,7 +73,7 @@ const HomeStackScreen=({navigation})=>{
          fontWeight: 'bold'
       }
    }}>
-      <HomeStack.Screen name="Home" component = {HomeScreen}
+      <HomeStack.Screen name="HomeTab" component = {HomeScreen}
          options= {{ 
          title: 'Inventory ',
          headerLeft: () => (
@@ -87,26 +87,44 @@ const HomeStackScreen=({navigation})=>{
 
 }
 
-const EntriesStackScreen=({navigation})=>{
+const EntriesStackScreen=({navigation, route})=>{
    return(
-   <EntriesStack.Navigator screenOptions= { {
-      headerStyle: {
-         backgroundColor: '#078bab',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-         fontWeight: 'bold'
-      }
-   }}>
-      <EntriesStack.Screen name="Home" component = {EntriesScreen}
+   <EntriesStack.Navigator 
+      initialRouteName={ route.params == null ? 'IncomeScreen' : route.params.screen}
+      screenOptions= { {
+         headerStyle: {
+            backgroundColor: '#078bab',
+         },
+         headerTintColor: '#fff',
+         headerTitleStyle: {
+            fontWeight: 'bold'
+         }
+      }}
+   >
+      <EntriesStack.Screen name="IncomeScreen" component = {IncomeScreen}
          options= {{ 
-         title: 'Inventory ',
+         title: 'Entries ',
          headerLeft: () => (
                <Icon.Button 
                name="menu"
                size={25}   
                backgroundColor= "#078bab"
-               onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>)}}/>
+               onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
+            )
+         }}
+      />
+      <EntriesStack.Screen name="ExpenseScreen" component = {ExpenseScreen}
+         options= {{ 
+         title: 'Entries ',
+         headerLeft: () => (
+               <Icon.Button 
+               name="menu"
+               size={25}   
+               backgroundColor= "#078bab"
+               onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
+            )
+         }}
+      />
    </EntriesStack.Navigator>
    )
 }
@@ -122,9 +140,9 @@ const ProductsStackScreen=({navigation})=>{
          fontWeight: 'bold'
       }
    }}>
-      <ProductsStack.Screen name="Home" component = {ProductsScreen}
+      <ProductsStack.Screen name="ProductsScreen" component = {ProductsScreen}
          options= {{ 
-         title: 'Inventory ',
+         title: 'Products ',
          headerLeft: () => (
                <Icon.Button 
                name="menu"

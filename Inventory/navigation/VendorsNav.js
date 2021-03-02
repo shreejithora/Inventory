@@ -2,16 +2,16 @@ import React from 'react';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import AdminScreen from '../screens/UsersScreen/AdminScreen';
-import StaffScreen from '../screens/UsersScreen/StaffScreen';
+import SuppliersScreen from '../screens/VendorsScreen/SuppliersScreen';
+import CustomersScreen from '../screens/VendorsScreen/CustomersScreen';
 
 import { createStackNavigator } from '@react-navigation/stack';
-const UsersStack = createStackNavigator();
+const VendorsStack = createStackNavigator();
 
-const UsersNav = ({navigation, route}) =>{
+const VendorsNav = ({navigation, route}) =>{
    return(
-      <UsersStack.Navigator 
-         initialRouteName={route.params.screen}
+      <VendorsStack.Navigator 
+         initialRouteName={route.params == null ? 'SuppliersScreen' : route.params.screen}
          screenOptions= { {
             headerStyle: {
                backgroundColor: '#078bab',
@@ -22,11 +22,11 @@ const UsersNav = ({navigation, route}) =>{
             }
          }}
       >
-         <UsersStack.Screen name="AdminScreen" component = {AdminScreen}
+         <VendorsStack.Screen name="SuppliersScreen" component = {SuppliersScreen}
             options= {{ 
-            title: 'Users ',
+            title: 'Vendors',
             headerLeft: () => (
-               <Icon.Button 
+               <Icon.Button
                name="menu"
                size={25}   
                backgroundColor= "#078bab"
@@ -34,11 +34,11 @@ const UsersNav = ({navigation, route}) =>{
                )
             }}
          />
-         <UsersStack.Screen name="StaffScreen" component = {StaffScreen}
+         <VendorsStack.Screen name="CustomersScreen" component = {CustomersScreen}
             options= {{ 
-            title: 'Users ',
+            title: 'Vendors',
             headerLeft: () => (
-               <Icon.Button 
+               <Icon.Button
                name="menu"
                size={25}   
                backgroundColor= "#078bab"
@@ -46,9 +46,9 @@ const UsersNav = ({navigation, route}) =>{
                )
             }}
          />
-      </UsersStack.Navigator>
-   
+      </VendorsStack.Navigator>
+
    )
  }
 
-export default UsersNav;
+export default VendorsNav;
