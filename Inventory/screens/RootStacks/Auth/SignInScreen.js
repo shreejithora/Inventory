@@ -61,7 +61,7 @@ const SignInScreen = ({ navigation }) => {
      //  const userPhone = Users.filter( item => {
      //     return number == item.phone
      //  })
-      if ( val.length!=0){
+      if ( val.length>=4){
          setData({
             ...data,
             username: val,
@@ -71,7 +71,7 @@ const SignInScreen = ({ navigation }) => {
          setData({
             ...data,
             username: val,
-            isValidUser: false
+            isValidUser:false
          })
       }
    }
@@ -118,12 +118,11 @@ const SignInScreen = ({ navigation }) => {
                />
             </View>
             {  
-               data.isValidUser?
+               data.isValidUser ?
                null :
-               <Animatable.Text 
-                  animation="fadeIn"
-                  style={styles.errMsg}>Invalid Username</Animatable.Text> 
-            }  
+               <Animatable.Text animation="fadeIn" style={styles.errMsg}>Username must be 4 chars long.</Animatable.Text>
+            } 
+
             <View style={styles.inputs}>
                <Text style={styles.texts}>Password</Text>
                <View style={{flexDirection: 'row'}}>
