@@ -14,8 +14,8 @@ import Modal from 'react-native-modal';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import ProductCard from '../../components/ProductCard';
-import AddProduct from "../../components/AddProduct";
+import ProductCard from '../../components/Products/ProductCard';
+import AddProduct from "../../components/Products/AddProduct";
 const ProductsList = require('../../models/Products.json');
 
 const ProductsScreen = () => {

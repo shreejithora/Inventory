@@ -14,10 +14,10 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const HomeCard = (props) => {
    return(
-      <Animatable.View animation="fadeInLeftBig" duration={1000} style={styles.card}>
+      <Animatable.View animation="fadeInLeftBig" duration={800} style={styles.card}>
          <TouchableOpacity onPress={() => {props.nav.navigate(props.tabName)}}>
             <View style={styles.cardContent}>
-               <Animatable.View animation="bounceInRight" duration={2000}>
+               <Animatable.View animation="fadeInDown" duration={2000}>
                <Icon
                   name={props.iconName}
                   color="#078bab"

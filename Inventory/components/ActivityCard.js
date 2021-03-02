@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ActivityCard = ({items}) => {
    return(
-      <Animatable.View animation="fadeInUp" duration={1000} style={styles.card}>
+      <Animatable.View animation="fadeInUp" duration={2000} style={styles.card}>
          <TouchableOpacity onPress={() => {}}>
             <View style={styles.cardContent}>  
                <View style={{flexDirection: 'row', flex: 1}}>

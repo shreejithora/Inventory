@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 
 import 'react-native-gesture-handler';
@@ -6,6 +6,7 @@ import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
+import RootStackScreen from './screens/RootStacks/RootStackScreen';
 import DrawerContent from './screens/Drawer/DrawerContent';
 import HomeTabNav from './navigation/HomeTabNav';
 import UsersNav from './navigation/UsersNav';
@@ -16,7 +17,7 @@ import QuotationNav from './navigation/QuotationNav';
 const Drawer = createDrawerNavigator();
 
 const App = () => {
-  const[loginstate,setLoginState]=useState(false);
+  const[loginstate,setLoginState]=useState(true);
   return(
     <NavigationContainer>
       {loginstate ? 
