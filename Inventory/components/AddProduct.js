@@ -42,26 +42,43 @@ const AddProduct = (props) => {
 
       const foundProduct = ProductsList.filter( item => {
          return item.product_id == val
-      })
-
-      if (foundProduct.length == 0) {
-         setProductID({
-            ...productID,
-            exists: false
-         })
-      } else {
-         setProductID({
-            ...productID,
-            exists: true
-         })
-      }
+      })    
 
       if( /\D/.test(val) ){   
          setProductID({
             ...productID,
             product_id: val,
             isValidID: false,
+         })         
+      } else {
+         setProductID({
+            ...productID,
+            product_id: val,
+            isValidID: true
          })
+      }   
+
+      if (foundProduct.length == 0 || /\D/.test(val) ) {
+         if ( foundProduct.length == 0 ) {
+            setProductID({
+               ...productID,
+               product_id: val,
+               exists: false
+            })
+         } else {
+            setProductID({
+               ...productID,
+               product_id: val,
+               exists: true
+            })
+         }
+         if ( /\D/.test(val) ) {
+             setProductID({
+               ...productID,
+               product_id: val,
+               isValidID: false,
+            })  
+         } 
       } else {
          setProductID({
             ...productID,
@@ -69,7 +86,7 @@ const AddProduct = (props) => {
             isValidID: true,
             exists: true
          })
-      }      
+      }
    }
 
    const handleProductNameChange = (val) => { 
@@ -125,17 +142,21 @@ console.log(foundProduct);
       }
    }
    const handleAddProduct = () => {
-      if (productName != '' && productID.product_id != '' && productQuantity.product_quantity != '' && productPrice.product_price != ''){
-         if( productID.isValidID ){
-            if ( productQuantity.isValidProductQuantity ) {
-               if(  productPrice.isValidProductPrice ) {
-                  props.onAddProduct(false);
-                  Alert.alert('Product Added!','Product ID:'+productID.product_id+'  with Product Name: '+productName, [{text: 'Ok'}]);
+      if (productName != '' && productID.product_id != '' && productQuantity.product_quantity != '' && productPrice.product_price != '' && productName.product_name != ''){
+         if( productID.isValidID || productID.exists){
+            if ( !productName.exists ) {
+               if ( productQuantity.isValidProductQuantity ) {
+                  if(  productPrice.isValidProductPrice ) {
+                     props.onAddProduct(false);
+                     Alert.alert('Product Added!','Product ID:'+productID.product_id+'  with Product Name: '+productName, [{text: 'Ok'}]);
+                  } else {
+                     Alert.alert('Invalid Input!','Please enter a Valid Price for the product', [{text: 'Ok'}]);                  
+                  }
                } else {
-                  Alert.alert('Invalid Input!','Please enter a Valid Price for the product', [{text: 'Ok'}]);                  
+                  Alert.alert('Invalid input', 'Please enter a Valid Quantity', [{text: 'Ok'}]);
                }
             } else {
-               Alert.alert('Invalid input', 'Please enter a Valid Quantity', [{text: 'Ok'}]);
+               Alert.alert('Invalid input', 'Please enter a Valid Product Name. Such name already exists', [{text: 'Ok'}]);
             }
          } else {
             Alert.alert('Invalid input', 'Please enter a Valid Product ID', [{text: 'Ok'}]);
@@ -160,13 +181,6 @@ console.log(foundProduct);
                      onEndEditing = { (e) => handleProductIDChange(e.nativeEvent.text)}
                   />
                   {  
-                     productID.isValidID ?
-                     null :
-                     <Animatable.Text 
-                        animation="fadeIn"
-                        style={styles.errMsg}>Invalid ID</Animatable.Text> 
-                  } 
-                  {  
                      productID.exists ?
                      <Animatable.Text 
                         animation="fadeIn"
@@ -174,6 +188,14 @@ console.log(foundProduct);
                      </Animatable.Text> :
                      null 
                   } 
+                  {  
+                     productID.isValidID ?
+                     null :
+                     <Animatable.Text 
+                        animation="fadeIn"
+                        style={styles.errMsg}>Invalid ID</Animatable.Text> 
+                  } 
+                  
                </View>  
                <View style={styles.inputs}>
                   <Text style={styles.texts}>Product Name</Text>
