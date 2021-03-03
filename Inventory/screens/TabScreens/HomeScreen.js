@@ -21,7 +21,8 @@ const HomeScreen = ({navigation}) => {
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>           
           <HomeCard iconName={'chart-line'} tabName={'Products'} cardName={'Products'} nav={navigation}/>
           <HomeCard iconName={'bank-transfer'} tabName={'Sales'} cardName={'Sales'} nav={navigation}/>
-          <HomeCard iconName={'checkbook'} tabName={'Vendors'} cardName={'Vendors'} nav={navigation}/> 
+          <HomeCard iconName={'checkbook'} screenName={'SuppliersScreen'} tabName={'Vendors'} cardName={'Suppliers'} nav={navigation}/> 
+          <HomeCard iconName={'checkbook'} screenName={'CustomersScreen'} tabName={'Vendors'} cardName={'Customers'} nav={navigation}/> 
           <HomeCard iconName={'account-cash'} tabName={'Entries'} cardName={'Entries'} nav={navigation}/>                               
         </ScrollView>          
       </View>   
@@ -47,8 +48,8 @@ const HomeScreen = ({navigation}) => {
                   )}                   
                 />
               </View>
-              <TouchableOpacity>
-                <Icon name="arrow-down-circle-outline" size={35} color='#078bab' style={styles.icon} />
+              <TouchableOpacity onPress={() => console.log('hi')}>
+                <Icon name="arrow-down-outline" size={35} color='#078bab' style={styles.icon} />
               </TouchableOpacity>
             </View> 
           </View>
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#e6f1fa',
   },
-  cardView: {
+  cardView: {    
     paddingHorizontal: 10,
     paddingVertical: 20,
     justifyContent: 'center',
@@ -76,7 +77,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   activityView: {
-    borderRadius: 15,
+    padding: 6,
+    borderRadius: 13,
     alignSelf: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
@@ -107,11 +109,11 @@ const styles = StyleSheet.create({
 
   },
   activityCard: {
-    width: 350
+    width: '100%'
   },
   icon: {
     zIndex: 1, 
-    marginTop: -50, 
+    bottom: 50,
     backgroundColor: '#e6f1fa', 
     borderRadius: 50 ,
     shadowColor: "#000",

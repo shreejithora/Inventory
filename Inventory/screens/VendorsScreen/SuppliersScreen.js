@@ -5,15 +5,17 @@ import {
    TextInput,
    TouchableOpacity, 
    StyleSheet,
-   FlatList,   
+   FlatList,  
+   Button, 
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import SuppliersCard from "../../components/Vendors/SuppliersCard";
+import SuppliersCard from "../../components/Vendors/Suppliers/SuppliersCard";
 import Modal from "react-native-modal";
+import AddSupplier from '../../components/Vendors/Suppliers/AddSupplier';
 const SuppliersList = require('../../models/Suppliers.json');
 
-const SuppliersScreen = () => {
+const SuppliersScreen = ({navigation}) => {
 
    const [AddSupplierModal, setAddSupplierModal] = useState(false);   
 
@@ -43,6 +45,21 @@ const SuppliersScreen = () => {
    return(
       <View style={styles.container}>
          <View style={styles.mainActitivity}> 
+            <View style={styles.navigate} >
+               <Text style={[styles.cardTitle, {marginLeft: 10,fontSize: 25, fontWeight: '700'}]}>Suppliers</Text>
+               <TouchableOpacity 
+                  style={{flexDirection: 'row'}}               
+                  onPress={() => navigation.navigate('CustomersScreen')}
+               >
+                  <Text style={[styles.cardTitle, {fontSize: 20, fontWeight: '700'}]}>Customers</Text>
+                  <Icon 
+                     style={{marginHorizontal: 5}}
+                     name="arrow-right-bold-circle-outline"
+                     size={30}
+                     color="#078bab"
+                  />
+               </TouchableOpacity>
+            </View>            
             <View style={styles.searchBar}>
                <Icon style={{marginLeft: 10}} name="text-box-search-outline" size={20} color="#078bab" />
                
@@ -53,8 +70,8 @@ const SuppliersScreen = () => {
             </View>             
             <View style={styles.cardContent}>  
                <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left', fontWeight: '700', marginLeft: 10}]}>ID</Text> 
-               <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left', fontWeight: '700'}]}>Name</Text>  
-               <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left', fontWeight: '700'}]}>Status</Text> 
+               <Text style={[styles.cardTitle, {flex: 3, textAlign: 'left', fontWeight: '700'}]}>Name</Text>  
+               <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left', fontWeight: '700'}]}>Status</Text> 
             </View> 
             { 
                suppliersData.filteredSuppliers == null ?
@@ -98,7 +115,7 @@ const SuppliersScreen = () => {
                   color="#078bab"                                   
                   onPress={ () => setAddSupplierModal(false)}
                />   
-               {/* <AddProduct onAddProduct={setAddProductModal}/>                                    */}
+               <AddSupplier onAddSupplier={setAddSupplierModal}/>                                   
             </View>                                           
          </Modal>                      
       </View>    
@@ -112,6 +129,14 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#e6f1fa',
    },
+   navigate: {
+      marginRight: 5,
+      marginTop: 5,
+      padding: 5,
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+   }, 
    mainActitivity: {
       flex: 1,
       position: 'relative',
@@ -138,7 +163,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between',
       padding: 5,
-      marginTop: 20
+      marginTop: 10
    },
    cardTitle:{
       // marginHorizontal: 5,

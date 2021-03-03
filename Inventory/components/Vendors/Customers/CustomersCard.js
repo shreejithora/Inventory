@@ -11,34 +11,28 @@ import * as Animatable from 'react-native-animatable';
 
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import ProductInfo from "./ProductInfo";
+import CustomersInfo from './CustomerInfo';
 
-const ProductsList = require('../../models/Products.json');
+const CustomersCard = ({items}) => {
 
-const ProductCard = ({items}) => {
-
-   const [productDetailModal, setProductDetailModal] = useState(false);
+   const [customerDetailModal, setCustomerDetailModal] = useState(false);
 
    return(
       <View>
          <Animatable.View animation="fadeInUp" duration={1000} style={styles.card}>
-            <TouchableOpacity onPress={() => setProductDetailModal(!productDetailModal)}>
+            <TouchableOpacity onPress={() => setCustomerDetailModal(!customerDetailModal)}>
                <View style={styles.cardContent}>  
-                  <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.product_id}</Text> 
-                  <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left'}]}>
-                     {items.name.length > 12 ? items.name.slice(0,11)+'...' : items.name}
-                  </Text>  
-                  <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{items.quantity}</Text>            
-                  <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{items.price}</Text>
+                  <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.customer_id}</Text> 
+                  <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left'}]}>{items.name}</Text> 
                </View>         
             </TouchableOpacity>
             
          </Animatable.View>  
          <Modal 
             style={styles.detailModal}
-            isVisible={productDetailModal} 
-            onBackButtonPress = {() => setProductDetailModal(!productDetailModal)}
-            onBackdropPress={() => setProductDetailModal(!productDetailModal)}
+            isVisible={customerDetailModal} 
+            onBackButtonPress = {() => setCustomerDetailModal(!customerDetailModal)}
+            onBackdropPress={() => setCustomerDetailModal(!customerDetailModal)}
             transparent={true} 
             animationIn='slideInUp' 
             animationOut='slideOutUp'
@@ -47,7 +41,7 @@ const ProductCard = ({items}) => {
             animationInTiming={500}
             animationOutTiming={300}> 
             <View style={styles.modalView}>                         
-               <ProductInfo item={items}/> 
+               <CustomersInfo item={items}/> 
                <View style={{flexDirection: 'row',justifyContent: 'space-between', bottom: 0, right: 0}}>
                      <Animatable.View 
                         animation="fadeInLeft"
@@ -92,18 +86,18 @@ const ProductCard = ({items}) => {
                            name="close"
                            size={30}
                            color="#078bab"                                   
-                           onPress={ () => setProductDetailModal(false)}
+                           onPress={ () => setCustomerDetailModal(false)}
                         />
                      </Animatable.View>                  
-                  </View>  
-               </View>                                
+                  </View>                                  
+               </View>
             </View>                                           
          </Modal>
       </View>             
    )
 }
 
-export default ProductCard;
+export default CustomersCard;
 
 const styles = StyleSheet.create({
    cardTitle:{

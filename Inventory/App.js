@@ -9,6 +9,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import RootStackScreen from './screens/RootStacks/RootStackScreen';
 import DrawerContent from './screens/Drawer/DrawerContent';
 import HomeTabNav from './navigation/HomeTabNav';
+import SettingsNav from './navigation/SettingsNav';
 import UsersNav from './navigation/UsersNav';
 import VendorsNav from './navigation/VendorsNav';
 import SalesNav from './navigation/SalesNav';
@@ -26,6 +27,7 @@ const App = () => {
         <Drawer.Screen name="Users" component = { UsersNav } />
         <Drawer.Screen name="Vendors" component = { VendorsNav } />
         <Drawer.Screen name="Sales" component = { SalesNav } />
+        <Drawer.Screen name="Settings" component = { SettingsNav } />
         <Drawer.Screen name="Quotation" component = { QuotationNav } />
       </Drawer.Navigator>
     :

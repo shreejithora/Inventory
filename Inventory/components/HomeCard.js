@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const HomeCard = (props) => {
    return(
       <Animatable.View animation="fadeInLeftBig" duration={800} style={styles.card}>
-         <TouchableOpacity onPress={() => {props.nav.navigate(props.tabName)}}>
+         <TouchableOpacity onPress={() => {props.nav.navigate(props.tabName, {screen: props.screenName})}}>
             <View style={styles.cardContent}>
                <Animatable.View animation="fadeInDown" duration={2000}>
                <Icon

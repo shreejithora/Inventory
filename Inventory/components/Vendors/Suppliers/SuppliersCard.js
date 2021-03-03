@@ -11,34 +11,40 @@ import * as Animatable from 'react-native-animatable';
 
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import ProductInfo from "./ProductInfo";
+import SupplierInfo from "./SupplierInfo";
 
-const ProductsList = require('../../models/Products.json');
+const SuppliersCard = ({items}) => {
 
-const ProductCard = ({items}) => {
-
-   const [productDetailModal, setProductDetailModal] = useState(false);
+   const [supplierDetailModal, setSupplierDetailModal] = useState(false);
 
    return(
       <View>
          <Animatable.View animation="fadeInUp" duration={1000} style={styles.card}>
-            <TouchableOpacity onPress={() => setProductDetailModal(!productDetailModal)}>
+            <TouchableOpacity onPress={() => setSupplierDetailModal(!supplierDetailModal)}>
                <View style={styles.cardContent}>  
-                  <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.product_id}</Text> 
-                  <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left'}]}>
-                     {items.name.length > 12 ? items.name.slice(0,11)+'...' : items.name}
+                  <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.supplier_id}</Text> 
+                  <Text style={[styles.cardTitle, {flex: 3, textAlign: 'left'}]}>
+                     {items.name.length > 13 ? items.name.slice(0,13)+'...' : items.name}
                   </Text>  
-                  <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{items.quantity}</Text>            
-                  <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{items.price}</Text>
+                  <View style={{flexDirection: 'row', flex: 2, alignItems: 'center'}}>                     
+                     <Icon 
+                        name={ items.status  == 'pending' ? "clock-time-nine" : "checkbox-marked-circle" } 
+                        size={18} 
+                        color={ items.status  == 'pending' ? "red" : "green" }  
+                     />
+                     <Text style={[styles.cardTitle, { textAlign: 'left', marginLeft: 10, color: items.status  == 'pending' ? "red" : "green"}]}>
+                        {items.status}
+                     </Text> 
+                  </View>                                  
                </View>         
             </TouchableOpacity>
             
          </Animatable.View>  
          <Modal 
             style={styles.detailModal}
-            isVisible={productDetailModal} 
-            onBackButtonPress = {() => setProductDetailModal(!productDetailModal)}
-            onBackdropPress={() => setProductDetailModal(!productDetailModal)}
+            isVisible={supplierDetailModal} 
+            onBackButtonPress = {() => setSupplierDetailModal(!supplierDetailModal)}
+            onBackdropPress={() => setSupplierDetailModal(!supplierDetailModal)}
             transparent={true} 
             animationIn='slideInUp' 
             animationOut='slideOutUp'
@@ -47,7 +53,7 @@ const ProductCard = ({items}) => {
             animationInTiming={500}
             animationOutTiming={300}> 
             <View style={styles.modalView}>                         
-               <ProductInfo item={items}/> 
+               <SupplierInfo item={items}/> 
                <View style={{flexDirection: 'row',justifyContent: 'space-between', bottom: 0, right: 0}}>
                      <Animatable.View 
                         animation="fadeInLeft"
@@ -81,6 +87,7 @@ const ProductCard = ({items}) => {
                            name="pencil-outline" 
                            color="#078bab" 
                            size={30}  
+                           onPress={()  => {}}
                         />
                      </Animatable.View>
                      <Animatable.View
@@ -92,18 +99,18 @@ const ProductCard = ({items}) => {
                            name="close"
                            size={30}
                            color="#078bab"                                   
-                           onPress={ () => setProductDetailModal(false)}
+                           onPress={ () => setSupplierDetailModal(false)}
                         />
                      </Animatable.View>                  
-                  </View>  
-               </View>                                
+                  </View>
+               </View>                                  
             </View>                                           
          </Modal>
       </View>             
    )
 }
 
-export default ProductCard;
+export default SuppliersCard;
 
 const styles = StyleSheet.create({
    cardTitle:{
@@ -114,15 +121,13 @@ const styles = StyleSheet.create({
    card: {
       padding: 15,
       backgroundColor: '#fff',
-      flex: 1,
-      // marginVertical: 5,
-      marginLeft: 5,
-      marginRight: 5,   
+      flex: 1, 
       borderBottomColor: '#f4f4f4',
       borderBottomWidth: 1,   
       
    },
    cardContent: {
+      flex: 1,
       flexDirection: 'row',
       justifyContent: 'space-between',
       borderRadius: 15,

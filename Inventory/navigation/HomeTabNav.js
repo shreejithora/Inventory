@@ -81,7 +81,10 @@ const HomeStackScreen=({navigation})=>{
                name="menu"
                size={25}   
                backgroundColor= "#078bab"
-               onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>)}}/>
+               onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
+            )
+         }}
+      />
    </HomeStack.Navigator>
    )
 
@@ -148,7 +151,10 @@ const ProductsStackScreen=({navigation})=>{
                name="menu"
                size={25}   
                backgroundColor= "#078bab"
-               onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>)}}/>
+               onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
+            )
+         }}
+      />
    </ProductsStack.Navigator>
    )
 }

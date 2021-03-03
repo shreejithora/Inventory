@@ -1,0 +1,68 @@
+[
+   {
+      "customer_id": "1001",
+      "name": "Srinagar Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "Baneshwor"
+   },
+   {
+      "customer_id": "1002",
+      "name": "Parbati Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "Koteshwor"
+   },
+   {
+      "customer_id": "1003",
+      "name": "Pratik Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "Lokanthali"
+   },
+   {
+      "customer_id": "1004",
+      "name": "Yoman Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "HariDwar"
+   },
+   {
+      "customer_id": "1005",
+      "name": "Hari Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "Bhaktapur"
+   },
+   {
+      "customer_id": "1006",
+      "name": "Party palace Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "Patan"
+   },
+   {
+      "customer_id": "100",
+      "name": "Partun Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "Samakhusi"
+   },
+   {
+      "customer_id": "1008",
+      "name": "Handa Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "Basantapur"
+   },
+   {
+      "customer_id": "1009",
+      "name": "Showroom Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "Choche"
+   },
+   {
+      "customer_id": "1010",
+      "name": "Heavy Lifts Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "Bholache"
+   },
+   {
+      "customer_id": "1011",
+      "name": "Karuna Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "Chabahil"
+   }
+]

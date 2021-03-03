@@ -2,14 +2,14 @@ import React from 'react';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import SalesScreen from '../screens/SalesScreen';
+import SettingsScreen from '../screens/SettingsScreen';
 
 import { createStackNavigator } from '@react-navigation/stack';
-const SalesStack = createStackNavigator();
+const SettingsStack = createStackNavigator();
 
-const SalesNav = ({navigation}) =>{
+const SettingsNav = ({navigation}) =>{
    return(
-      <SalesStack.Navigator screenOptions= { {
+      <SettingsStack.Navigator screenOptions= { {
          headerStyle: {
             backgroundColor: '#078bab',
          },
@@ -18,9 +18,9 @@ const SalesNav = ({navigation}) =>{
             fontWeight: 'bold'
          }
       }}>
-         <SalesStack.Screen name="SalesScreen" component = {SalesScreen}
-            options= {{
-            title: 'Sales ',
+         <SettingsStack.Screen name="SettingsScreen" component = {SettingsScreen}
+            options= {{ 
+            title: 'Settings ',
             headerLeft: () => (
                <Icon.Button 
                name="menu"
@@ -37,9 +37,9 @@ const SalesNav = ({navigation}) =>{
             )
             }}
          />
-      </SalesStack.Navigator>
+      </SettingsStack.Navigator>
    
    )
  }
 
-export default SalesNav;
+export default SettingsNav;

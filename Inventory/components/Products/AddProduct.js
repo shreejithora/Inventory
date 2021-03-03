@@ -46,26 +46,39 @@ const AddProduct = (props) => {
   
 
       if (foundProduct.length == 0 || /\D/.test(val) ) {
-         if ( foundProduct.length == 0 ) {
-            setProductID({
-               ...productID,
-               product_id: val,
-               exists: false
-            })
-         } else {
-            setProductID({
-               ...productID,
-               product_id: val,
-               exists: true
-            })
-         }
+         // if ( foundProduct.length == 0 ) {
+         //    setProductID({
+         //       ...productID,
+         //       product_id: val,
+         //       exists: false
+         //    })
+         // } else {
+         //    setProductID({
+         //       ...productID,
+         //       product_id: val,
+         //       exists: true
+         //    })
+         // }
          if ( /\D/.test(val) ) {
              setProductID({
                ...productID,
                product_id: val,
                isValidID: false,
             })  
-         } 
+         } else {
+            setProductID({
+               ...productID,
+               product_id: val,
+               isValidID: true,
+            }) 
+         }
+         if ( foundProduct.length == 0 ) {
+            setProductID({
+               ...productID,
+               product_id: val,
+               exists: false
+            })
+         }
       } else {
          setProductID({
             ...productID,
@@ -134,7 +147,7 @@ const AddProduct = (props) => {
                if ( productQuantity.isValidProductQuantity ) {
                   if(  productPrice.isValidProductPrice ) {
                      props.onAddProduct(false);
-                     Alert.alert('Product Added!','Product ID:'+productID.product_id+'  with Product Name: '+productName, [{text: 'Ok'}]);
+                     Alert.alert('Product Added!','Product ID:'+productID.product_id+'  with Product Name: '+productName.product_name, [{text: 'Ok'}]);
                   } else {
                      Alert.alert('Invalid Input!','Please enter a Valid Price for the product', [{text: 'Ok'}]);                  
                   }

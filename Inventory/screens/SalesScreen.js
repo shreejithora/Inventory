@@ -69,7 +69,7 @@ const SalesScreen = () => {
                   data = {salesData.filteredSales}
                   keyExtractor = {item => item.product_id}
                   renderItem = { ({item}) =>                  
-                     <SuppliersCard items={item}/>                                 
+                     <SalesCard items={item}/>                                 
                   }
                />
             }           
@@ -117,10 +117,9 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between',
       padding: 5,
-      marginTop: 20
+      marginTop: 10
    },
    cardTitle:{
-      // marginHorizontal: 5,
       color: '#078bab',
       fontSize: 18,
    },

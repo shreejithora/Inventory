@@ -31,7 +31,14 @@ const UsersNav = ({navigation, route}) =>{
                size={25}   
                backgroundColor= "#078bab"
                onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
-               )
+               ),
+            headerRight: () => (
+               <Icon.Button 
+               name="home"
+               size={25}   
+               backgroundColor= "#078bab"
+               onPress = {  () => {navigation.navigate('HomeTab')}} ></Icon.Button>
+            )
             }}
          />
          <UsersStack.Screen name="StaffScreen" component = {StaffScreen}
@@ -43,7 +50,14 @@ const UsersNav = ({navigation, route}) =>{
                size={25}   
                backgroundColor= "#078bab"
                onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
-               )
+               ),
+            headerRight: () => (
+               <Icon.Button 
+               name="home"
+               size={25}   
+               backgroundColor= "#078bab"
+               onPress = {  () => {navigation.navigate('HomeTab')}} ></Icon.Button>
+            )
             }}
          />
       </UsersStack.Navigator>

@@ -31,7 +31,14 @@ const VendorsNav = ({navigation, route}) =>{
                size={25}   
                backgroundColor= "#078bab"
                onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
-               )
+               ),
+            headerRight: () => (
+               <Icon.Button 
+               name="home"
+               size={25}   
+               backgroundColor= "#078bab"
+               onPress = {  () => {navigation.navigate('HomeTab')}} ></Icon.Button>
+            )
             }}
          />
          <VendorsStack.Screen name="CustomersScreen" component = {CustomersScreen}
@@ -43,7 +50,14 @@ const VendorsNav = ({navigation, route}) =>{
                size={25}   
                backgroundColor= "#078bab"
                onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
-               )
+               ),
+            headerRight: () => (
+               <Icon.Button 
+               name="home"
+               size={25}   
+               backgroundColor= "#078bab"
+               onPress = {  () => {navigation.navigate('HomeTab')}} ></Icon.Button>
+            )
             }}
          />
       </VendorsStack.Navigator>
