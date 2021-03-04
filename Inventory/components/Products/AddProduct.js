@@ -43,22 +43,10 @@ const AddProduct = (props) => {
       const foundProduct = ProductsList.filter( item => {
          return item.product_id == val
       })    
-  
+   
+      const regexWithValidID = /^\d{0,4}(\.\d{1,3})?$/ 
 
-      if (foundProduct.length == 0 || /\D/.test(val) ) {
-         // if ( foundProduct.length == 0 ) {
-         //    setProductID({
-         //       ...productID,
-         //       product_id: val,
-         //       exists: false
-         //    })
-         // } else {
-         //    setProductID({
-         //       ...productID,
-         //       product_id: val,
-         //       exists: true
-         //    })
-         // }
+      if (foundProduct.length == 0 || val.match(regexWithValidID) ) {
          if ( /\D/.test(val) ) {
              setProductID({
                ...productID,
@@ -125,18 +113,19 @@ const AddProduct = (props) => {
       }
    }
 
-   const handlePriceChange = (val) => {   
-      if( /\D/.test(val) ){
+   const handlePriceChange = (val) => {  
+      const regexWithValidPrice = /^\d{0,8}(\.\d{1,4})?$/ 
+      if( val.match(regexWithValidPrice) ) {
          setProductPrice({
             ...productPrice,
             product_price: val,
-            isValidProductPrice: false
+            isValidProductPrice: true
          })
       } else {
           setProductPrice({
             ...productPrice,
             product_price: val,
-            isValidProductPrice: true
+            isValidProductPrice: false
          })
       }
    }
@@ -170,11 +159,11 @@ const AddProduct = (props) => {
          <View style={styles.modalForm}>           
             <View style={styles.fields}>                         
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Product ID</Text>
+                  <Text style={styles.texts}>Product ID*</Text>
                   <TextInput
                      keyboardType='numeric'
                      style={styles.textInputs}
-                     placeholder="Product ID..." 
+                     placeholder="Product ID...(eg. 1111)" 
                      maxLength={10}
                      onChangeText={ (val) => handleProductIDChange(val)}
                      onEndEditing = { (e) => handleProductIDChange(e.nativeEvent.text)}
@@ -197,7 +186,7 @@ const AddProduct = (props) => {
                   
                </View>  
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Product Name</Text>
+                  <Text style={styles.texts}>Product Name*</Text>
                   <TextInput
                      style={styles.textInputs}
                      keyboardType="ascii-capable"
@@ -217,9 +206,10 @@ const AddProduct = (props) => {
                <View style={styles.inputs}>
                   <Text style={styles.texts}>Quantity</Text>
                   <TextInput
+                     defaultValue='0'
                      style={styles.textInputs}
                      keyboardType="numeric"
-                     placeholder="Quantity..." 
+                     placeholder="Quantity...(eg. 1 or eg. 200)" 
                      onChangeText={ (val) => handleQuantityChange(val)}
                      onEndEditing = { (e) => handleQuantityChange(e.nativeEvent.text)}
                   />   
@@ -232,11 +222,11 @@ const AddProduct = (props) => {
                   }               
                </View> 
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Price</Text>
+                  <Text style={styles.texts}>Price* (In Rs.)</Text>
                   <TextInput
                      style={styles.textInputs}
                      keyboardType="numeric"
-                     placeholder="Price..." 
+                     placeholder="Price...(eg. 200 or eg. 200.12)" 
                      onChangeText={ (val) => handlePriceChange(val)}
                      onEndEditing = { (e) => handlePriceChange(e.nativeEvent.text)}
                   />      

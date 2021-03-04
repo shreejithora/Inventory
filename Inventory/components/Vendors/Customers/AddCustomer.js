@@ -17,26 +17,93 @@ const CustomersList = require('../../../models/Customers.json');
 
 const AddCustomer = (props) => {
 
-   const handleCustomerIDChange = (val) => {
+   const [ customerID, setCustomerID ] = useState({
+      customer_id: '',
+      isValidId: true,
+   })
+   const [ customerName, setCustomerName ] = useState({
+      customer_name: '',
+      isValidName: true
+   })
+   const [ customerPhone, setCustomerPhone ] = useState({
+      customer_phone: '',
+      isValidPhone: true
+   })
+   const [ customerAddress, setCustomerAddress ] = useState('')
 
+
+   const handleCustomerIDChange = (val) => {
+      const foundCustomer = CustomersList.filter( item => {
+         return item.customer_id == val;
+      })
+
+      if( foundCustomer.length != 0 || /\D/.test(val) ){        
+         setCustomerID({
+            ...customerID,
+            customer_id: val,
+            isValidId: false,
+         })    
+      } else {
+         setCustomerID({
+            ...customerID,
+            customer_id: val,
+            isValidId: true      
+         })
+      }
    }
 
    const handleCustomerNameChange = (val) => {
+      const foundCustomer = CustomersList.filter( item => {
+         return item.name.toLowerCase() == val.toLowerCase();
+      })
 
+      setCustomerName({
+         ...customerName,
+         customer_name: val,
+         isValidName: foundCustomer.length != 0 ? false : true
+      })
    }
 
    const handlePhoneChange = (val) => {
-      
+      const regexWithValidPhone = /(\+\d{3})[-]\d{10}/
+      if ( val.match(regexWithValidPhone)) {
+         setCustomerPhone({
+            ...customerPhone,
+            customer_phone: val,
+            isValidPhone: true
+         })
+      } else {
+          setCustomerPhone({
+            ...customerPhone,
+            customer_phone: val,
+            isValidPhone: false
+         })
+      }
    }
 
    const handleAddressChange = (val) => {
-      
+      setCustomerAddress(val)
    }
 
    const handleAddCustomer = () => {
-      props.onAddCustomerModal(false)
-      // props.onAddCustomer()
-
+      if ( customerID.customer_id != '' && customerName.customer_name != '' &&  customerAddress != '' && customerPhone.customer_phone != '' ) {
+         if( customerID.isValidId ) {
+            if ( customerName.isValidName ) {
+               if ( customerPhone.isValidPhone ) {
+                  Alert.alert('Added Successfully!', 'Customer '+customerName.customer_name+' with ID: '+customerID.customer_id, [{text: 'Ok'}])
+                  props.onAddCustomerModal(false)                  
+               } else {
+                  Alert.alert('Invalid Input!', 'The Customers Phone Number is not Valid', [{text: 'Ok'}])
+               }
+            } else {
+               Alert.alert('Invalid Input!', 'The Customers Name is not Valid', [{text: 'Ok'}])
+            }
+         } else {
+            Alert.alert('Invalid Input!', 'The Customers ID is not Valid', [{text: 'Ok'}])
+         }
+      } else {
+         Alert.alert('Invalid Input!', 'All Fields Should be filled Compulsorily.', [{text: 'Ok'}])
+      }
    }
 
    return (
@@ -44,18 +111,26 @@ const AddCustomer = (props) => {
          <View style={styles.modalForm}>           
             <View style={styles.fields}>                         
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Customer ID</Text>
+                  <Text style={styles.texts}>Customer ID*</Text>
                   <TextInput
                      keyboardType='numeric'
                      style={styles.textInputs}
-                     placeholder="Customer ID..." 
+                     placeholder="Customer ID...(eg: 1012)" 
                      maxLength={10}
                      onChangeText={ (val) => handleCustomerIDChange(val)}
                      onEndEditing = { (e) => handleCustomerIDChange(e.nativeEvent.text)}
-                  />                                     
+                  />        
+                  {
+                     customerID.isValidId ?
+                     null :
+                     <Animatable.Text 
+                        animation="fadeIn"
+                        style={styles.errMsg}>Invalid ID or Customer ID already exists
+                     </Animatable.Text>
+                  }                              
                </View>  
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Customer Name</Text>
+                  <Text style={styles.texts}>Customer Name*</Text>
                   <TextInput
                      style={styles.textInputs}
                      keyboardType="ascii-capable"
@@ -63,30 +138,38 @@ const AddCustomer = (props) => {
                      onChangeText={ (val) => handleCustomerNameChange(val)}
                      onEndEditing = { (e) => handleCustomerNameChange(e.nativeEvent.text)}
                   /> 
-                  {/* {  
-                     CustomerName.exists ?
+                  {  
+                     customerName.isValidName ?
+                     null :
                      <Animatable.Text 
                         animation="fadeIn"
-                        style={styles.errMsg}>Product name already exists
-                     </Animatable.Text> :
-                     null
-                  }                  */}
+                        style={styles.errMsg}>Customer name already exists
+                     </Animatable.Text>
+                  }
                </View>
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Phone</Text>
+                  <Text style={styles.texts}>Phone*</Text>
                   <TextInput
                      style={styles.textInputs}
-                     keyboardType="numeric"
-                     placeholder="Phone..." 
+                     keyboardType='phone-pad'
+                     placeholder="Phone...(eg: +977-0123456789)" 
                      onChangeText={ (val) => handlePhoneChange(val)}
                      onEndEditing = { (e) => handlePhoneChange(e.nativeEvent.text)}
-                  />               
+                  />      
+                  {  
+                     customerPhone.isValidPhone ?
+                     null :
+                     <Animatable.Text 
+                        animation="fadeIn"
+                        style={styles.errMsg}>Invalid Phone Number
+                     </Animatable.Text>
+                  }                 
                </View> 
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Address</Text>
+                  <Text style={styles.texts}>Address*</Text>
                   <TextInput
                      style={styles.textInputs}
-                     keyboardType="numeric"
+                     keyboardType='ascii-capable'
                      placeholder="Address..." 
                      onChangeText={ (val) => handleAddressChange(val)}
                      onEndEditing = { (e) => handleAddressChange(e.nativeEvent.text)}

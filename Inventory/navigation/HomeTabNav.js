@@ -6,8 +6,7 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import HomeScreen from '../screens/TabScreens/HomeScreen';
-import IncomeScreen from '../screens/EntriesScreen/IncomeScreen';
-import ExpenseScreen from '../screens/EntriesScreen/ExpenseScreen';
+import EntriesScreen from '../screens/TabScreens/EntriesScreen/EntriesScreen';
 import ProductsScreen from '../screens/TabScreens/ProductsScreen';
 
 const HomeStack = createStackNavigator();
@@ -104,9 +103,9 @@ const EntriesStackScreen=({navigation, route})=>{
          }
       }}
    >
-      <EntriesStack.Screen name="IncomeScreen" component = {IncomeScreen}
+      {/* <EntriesStack.Screen name="IncomeScreen" component = {IncomeScreen}
          options= {{ 
-         title: 'Entries ',
+         title: 'Income ',
          headerLeft: () => (
                <Icon.Button 
                name="menu"
@@ -115,8 +114,8 @@ const EntriesStackScreen=({navigation, route})=>{
                onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
             )
          }}
-      />
-      <EntriesStack.Screen name="ExpenseScreen" component = {ExpenseScreen}
+      /> */}
+      <EntriesStack.Screen name="EntriesScreen" component = {EntriesScreen}
          options= {{ 
          title: 'Entries ',
          headerLeft: () => (

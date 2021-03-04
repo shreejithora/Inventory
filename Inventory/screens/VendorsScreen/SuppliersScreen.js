@@ -44,22 +44,7 @@ const SuppliersScreen = ({navigation}) => {
 
    return(
       <View style={styles.container}>
-         <View style={styles.mainActitivity}> 
-            <View style={styles.navigate} >
-               <Text style={[styles.cardTitle, {marginLeft: 10,fontSize: 25, fontWeight: '700'}]}>Suppliers</Text>
-               <TouchableOpacity 
-                  style={{flexDirection: 'row'}}               
-                  onPress={() => navigation.navigate('CustomersScreen')}
-               >
-                  <Text style={[styles.cardTitle, {fontSize: 20, fontWeight: '700'}]}>Customers</Text>
-                  <Icon 
-                     style={{marginHorizontal: 5}}
-                     name="arrow-right-bold-circle-outline"
-                     size={30}
-                     color="#078bab"
-                  />
-               </TouchableOpacity>
-            </View>            
+         <View style={styles.mainActitivity}>             
             <View style={styles.searchBar}>
                <Icon style={{marginLeft: 10}} name="text-box-search-outline" size={20} color="#078bab" />
                

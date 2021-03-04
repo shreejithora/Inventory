@@ -17,24 +17,92 @@ const SuppliersList = require('../../../models/Suppliers.json');
 
 const AddSupplier = (props) => {
 
-   const handleSupplierIDChange = (val) => {
+   const [ supplierID, setSupplierID ] = useState({
+      supplier_id: '',
+      isValidId: true,
+   })
+   const [ supplierName, setSupplierName ] = useState({
+      supplier_name: '',
+      isValidName: true
+   })
+   const [ supplierPhone, setSupplierPhone ] = useState({
+      supplier_phone: '',
+      isValidPhone: true
+   })
+   const [ supplierAddress, setSupplierAddress ] = useState('')
 
+   const handleSupplierIDChange = (val) => {
+      const foundSupplier = SuppliersList.filter( item => {
+         return item.supplier_id == val;
+      })
+
+      if( foundSupplier.length != 0 || /\D/.test(val) ){        
+         setSupplierID({
+            ...supplierID,
+            supplier_id: val,
+            isValidId: false,
+         })    
+      } else {
+         setSupplierID({
+            ...supplierID,
+            supplier_id: val,
+            isValidId: true      
+         })
+      }
    }
 
    const handleSupplierNameChange = (val) => {
+      const foundSupplier = SuppliersList.filter( item => {
+         return item.name.toLowerCase() == val.toLowerCase();
+      })
 
+      setSupplierName({
+         ...supplierName,
+         supplier_name: val,
+         isValidName: foundSupplier.length != 0 ? false : true
+      })
    }
 
    const handlePhoneChange = (val) => {
-      
+      const regexWithValidPhone = /(\+\d{3})[-]\d{10}/
+      if ( val.match(regexWithValidPhone)) {
+         setSupplierPhone({
+            ...supplierPhone,
+            supplier_phone: val,
+            isValidPhone: true
+         })
+      } else {
+          setSupplierPhone({
+            ...supplierPhone,
+            supplier_phone: val,
+            isValidPhone: false
+         })
+      }   
    }
 
    const handleAddressChange = (val) => {
-      
+      setSupplierAddress(val)
    }
 
    const handleAddSupplier = () => {
-      props.onAddSupplier(false)
+      if ( supplierID.supplier_id != '' && supplierName.supplier_name != '' &&  supplierAddress != '' && supplierPhone.supplier_phone != '' ) {
+         if( supplierID.isValidId ) {
+            if ( supplierName.isValidName ) {
+               if ( supplierPhone.isValidPhone ) {
+                  Alert.alert('Added Successfully!', 'Supplier '+supplierName.supplier_name+' with ID: '+supplierID.supplier_id, [{text: 'Ok'}])
+                  props.onAddSupplier(false)                  
+               } else {
+                  Alert.alert('Invalid Input!', 'The Suppliers Phone Number is not Valid', [{text: 'Ok'}])
+               }
+            } else {
+               Alert.alert('Invalid Input!', 'The Suppliers Name is not Valid', [{text: 'Ok'}])
+            }
+         } else {
+            Alert.alert('Invalid Input!', 'The Suppliers ID is not Valid', [{text: 'Ok'}])
+         }
+      } else {
+         Alert.alert('Invalid Input!', 'All Fields Should be filled Compulsorily.', [{text: 'Ok'}])
+      }
    }
 
    return (
@@ -42,18 +110,26 @@ const AddSupplier = (props) => {
          <View style={styles.modalForm}>           
             <View style={styles.fields}>                         
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Supplier ID</Text>
+                  <Text style={styles.texts}>Supplier ID*</Text>
                   <TextInput
                      keyboardType='numeric'
                      style={styles.textInputs}
-                     placeholder="Supplier ID..." 
+                     placeholder="Supplier ID...(eg: 1012)" 
                      maxLength={10}
                      onChangeText={ (val) => handleSupplierIDChange(val)}
                      onEndEditing = { (e) => handleSupplierIDChange(e.nativeEvent.text)}
-                  />                                     
+                  />   
+                  {
+                     supplierID.isValidId ?
+                     null :
+                     <Animatable.Text 
+                        animation="fadeIn"
+                        style={styles.errMsg}>Invalid ID or Supplier ID already exists
+                     </Animatable.Text>
+                  }                                  
                </View>  
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Supplier Name</Text>
+                  <Text style={styles.texts}>Supplier Name*</Text>
                   <TextInput
                      style={styles.textInputs}
                      keyboardType="ascii-capable"
@@ -61,30 +137,38 @@ const AddSupplier = (props) => {
                      onChangeText={ (val) => handleSupplierNameChange(val)}
                      onEndEditing = { (e) => handleSupplierNameChange(e.nativeEvent.text)}
                   /> 
-                  {/* {  
-                     SupplierName.exists ?
+                  {  
+                     supplierName.isValidName ?
+                     null :
                      <Animatable.Text 
                         animation="fadeIn"
-                        style={styles.errMsg}>Product name already exists
-                     </Animatable.Text> :
-                     null
-                  }                  */}
+                        style={styles.errMsg}>Supplier name already exists
+                     </Animatable.Text>
+                  }                 
                </View>
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Phone</Text>
+                  <Text style={styles.texts}>Phone*</Text>
                   <TextInput
                      style={styles.textInputs}
-                     keyboardType="numeric"
-                     placeholder="Phone..." 
+                     keyboardType="phone-pad"
+                     placeholder="Phone...(eg: +977-0123456789)" 
                      onChangeText={ (val) => handlePhoneChange(val)}
                      onEndEditing = { (e) => handlePhoneChange(e.nativeEvent.text)}
-                  />               
+                  /> 
+                  {  
+                     supplierPhone.isValidPhone ?
+                     null :
+                     <Animatable.Text 
+                        animation="fadeIn"
+                        style={styles.errMsg}>Invalid Phone Number
+                     </Animatable.Text>
+                  }               
                </View> 
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Address</Text>
+                  <Text style={styles.texts}>Address*</Text>
                   <TextInput
                      style={styles.textInputs}
-                     keyboardType="numeric"
+                     keyboardType="ascii-capable"
                      placeholder="Address..." 
                      onChangeText={ (val) => handleAddressChange(val)}
                      onEndEditing = { (e) => handleAddressChange(e.nativeEvent.text)}
@@ -92,7 +176,7 @@ const AddSupplier = (props) => {
                </View>   
                <TouchableOpacity 
                   style={styles.button}
-                  onPress={ () => handleAddSupplier()}
+                  onPress={handleAddSupplier}
                >
                   <Icon name="account-plus" size={30} color='#fff' />
                   <Text style={[styles.texts,{color: '#fff', fontWeight: 'bold', marginLeft: 10}]}>Add Supplier </Text>

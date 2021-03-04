@@ -21,8 +21,8 @@ const HomeScreen = ({navigation}) => {
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>           
           <HomeCard iconName={'chart-line'} tabName={'Products'} cardName={'Products'} nav={navigation}/>
           <HomeCard iconName={'bank-transfer'} tabName={'Sales'} cardName={'Sales'} nav={navigation}/>
-          <HomeCard iconName={'checkbook'} screenName={'SuppliersScreen'} tabName={'Vendors'} cardName={'Suppliers'} nav={navigation}/> 
-          <HomeCard iconName={'checkbook'} screenName={'CustomersScreen'} tabName={'Vendors'} cardName={'Customers'} nav={navigation}/> 
+          <HomeCard iconName={'checkbook'} cus={0} sup={1} tabName={'Vendors'} cardName={'Suppliers'} nav={navigation}/> 
+          <HomeCard iconName={'checkbook'} cus={1} sup={0} tabName={'Vendors'} cardName={'Customers'} nav={navigation}/> 
           <HomeCard iconName={'account-cash'} tabName={'Entries'} cardName={'Entries'} nav={navigation}/>                               
         </ScrollView>          
       </View>   
@@ -49,7 +49,7 @@ const HomeScreen = ({navigation}) => {
                 />
               </View>
               <TouchableOpacity onPress={() => console.log('hi')}>
-                <Icon name="arrow-down-outline" size={35} color='#078bab' style={styles.icon} />
+                <Icon name="arrow-down" size={25} color='#078bab' style={styles.icon} />
               </TouchableOpacity>
             </View> 
           </View>
@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   icon: {
+    padding: 5,
     zIndex: 1, 
     bottom: 50,
     backgroundColor: '#e6f1fa', 

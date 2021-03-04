@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { 
-   Text, 
+   Text,
    View, 
    TextInput,
    TouchableOpacity, 
    ScrollView, 
    StyleSheet,
    FlatList,
-   Button
 } from 'react-native';
 
 import Modal from 'react-native-modal';
@@ -26,8 +25,6 @@ const ProductsScreen = () => {
       allProducts: ProductsList,
       filteredProducts: ProductsList
    })
-
-
 
    const handleSearchText = textToSearch => {
       const foundProduct = ProductsList.filter( item => {

@@ -2,10 +2,11 @@ import React from 'react';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import SuppliersScreen from '../screens/VendorsScreen/SuppliersScreen';
-import CustomersScreen from '../screens/VendorsScreen/CustomersScreen';
+// import SuppliersScreen from '../screens/VendorsScreen/SuppliersScreen';
+// import CustomersScreen from '../screens/VendorsScreen/CustomersScreen';
 
 import { createStackNavigator } from '@react-navigation/stack';
+import VendorsScreen from '../screens/VendorsScreen/VendorsScreen';
 const VendorsStack = createStackNavigator();
 
 const VendorsNav = ({navigation, route}) =>{
@@ -22,7 +23,7 @@ const VendorsNav = ({navigation, route}) =>{
             }
          }}
       >
-         <VendorsStack.Screen name="SuppliersScreen" component = {SuppliersScreen}
+         {/* <VendorsStack.Screen name="SuppliersScreen" component = {SuppliersScreen}
             options= {{ 
             title: 'Vendors',
             headerLeft: () => (
@@ -40,8 +41,8 @@ const VendorsNav = ({navigation, route}) =>{
                onPress = {  () => {navigation.navigate('HomeTab')}} ></Icon.Button>
             )
             }}
-         />
-         <VendorsStack.Screen name="CustomersScreen" component = {CustomersScreen}
+         /> */}
+         <VendorsStack.Screen name="VendorsScreen" children = { () => <VendorsScreen cus={route.params.cus} sup={route.params.sup} /> }
             options= {{ 
             title: 'Vendors',
             headerLeft: () => (

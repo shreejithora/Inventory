@@ -12,8 +12,8 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomersCard from "../../components/Vendors/Customers/CustomersCard";
 import Modal from "react-native-modal";
+
 import AddCustomer from '../../components/Vendors/Customers/AddCustomer';
-import { CurrentRenderContext } from '@react-navigation/native';
 const CustomersList = require('../../models/Customers.json');
 
 const CustomersScreen = ({navigation}) => {
@@ -24,14 +24,6 @@ const CustomersScreen = ({navigation}) => {
       allCustomers: CustomersList,
       filteredCustomers: CustomersList
    })
-
-   // const handleAddCustomerToArray = (item) => {
-   //    setCustomersData( (currentItem) => {
-   //       return [item, ...currentItem]
-   //    })
-   // }
-
-
 
    const handleSearchText = textToSearch => {
       const foundCustomer = CustomersList.filter( item => {
@@ -51,22 +43,7 @@ const CustomersScreen = ({navigation}) => {
 
    return(
       <View style={styles.container}>
-         <View style={styles.mainActitivity}> 
-            <View style={styles.navigate} >
-               <Text style={[styles.cardTitle, {marginLeft: 10,fontSize: 25, fontWeight: '700'}]}>Customers</Text>
-               <TouchableOpacity 
-                  style={{flexDirection: 'row'}}               
-                  onPress={() => navigation.navigate('SuppliersScreen')}
-               >
-                  <Text style={[styles.cardTitle, {fontSize: 20, fontWeight: '700'}]}>Suppliers</Text>
-                  <Icon 
-                     style={{marginHorizontal: 5}}
-                     name="arrow-right-bold-circle-outline"
-                     size={30}
-                     color="#078bab"
-                  />
-               </TouchableOpacity>
-            </View>            
+         <View style={styles.mainActitivity}>          
             <View style={styles.searchBar}>
                <Icon style={{marginLeft: 10}} name="text-box-search-outline" size={20} color="#078bab" />
                
