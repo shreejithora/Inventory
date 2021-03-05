@@ -10,28 +10,28 @@ import {
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const HomeCard = (props) => {   
+const AdminCard = (props) => {   
    return(
-      <Animatable.View animation="fadeInLeftBig" duration={800} style={styles.card}>         
-         <TouchableOpacity onPress={() => {props.nav.navigate(props.tabName, {cus: props.cus, sup: props.sup, income: props.income, expense: props.expense})}}>
+      <Animatable.View animation="fadeInUpBig" duration={props.duration} style={styles.card}>         
+         <TouchableOpacity onPress={() => {}}>
             <View style={styles.cardContent}>
-               <Animatable.View animation="fadeInDown" duration={2000}>
+               <Animatable.View animation="fadeInDown" duration={1500}>
                <Icon
-                  name={props.iconName}
+                  name={props.admin.iconName}
                   color="#078bab"
                   size={30}
                />
                </Animatable.View>
-               <Text style={styles.cardTitle}>{props.cardName}</Text>
+               <Text style={[styles.cardTitle, {fontWeight: '700', fontSize: 18, marginVertical: 5}]}>{props.admin.adminName}</Text>
+               <Text style={[styles.cardTitle, {marginVertical: 5}]}>{props.admin.number}</Text>
+               <Text style={styles.cardTitle}>{props.admin.address}</Text>
             </View>
          </TouchableOpacity>
       </Animatable.View>
    )
 }
 
-// props.nav.navigation.navigate(props.tabName)
-
-export default HomeCard;
+export default AdminCard;
 
 const styles = StyleSheet.create({
    cardTitle:{
@@ -39,14 +39,12 @@ const styles = StyleSheet.create({
       fontSize: 15
    },
    card: {
-      flex: 1,
       borderRadius: 5,
       backgroundColor: '#fff',
-      width: 101,
-      height: 120,
+      width: '90%',
+      // height: '100%',
       marginVertical: 10,
-      marginLeft: 10,
-      marginRight: 10,
+      marginHorizontal: 5,
       shadowColor: "#000",
       shadowOffset: {
          width:  10,
@@ -61,6 +59,6 @@ const styles = StyleSheet.create({
       padding: 10,
       justifyContent: 'center',
       alignItems: 'center',
-      marginVertical: 20
+      marginVertical: 10
    }
 })

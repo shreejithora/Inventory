@@ -2,35 +2,35 @@ import React,{useState} from 'react';
 import { useEffect } from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
-import CustomersScreen from './CustomersScreen';
-import SuppliersScreen from './SuppliersScreen';
+import StaffScreen from './StaffScreen';
+import AdminScreen from './AdminScreen';
 
-const VendorsScreen = (props) => {
+const UsersScreen = (props) => {
    const [state, setState] = useState({
-      activeSuppliers: 1,
-      activeCustomers: 0,
+      activeAdmin: 1,
+      activeStaff: 0,
    })
 
    useEffect( () => {
       setState({
-         activeSuppliers: props.sup,
-         activeCustomers: props.cus
+         activeAdmin: props.admin,
+         activeStaff: props.staff
       })
    }, [props])
 
-   const handleSuppliers = () => {
+   const handleAdmin = () => {
       {
-         state.activeSuppliers ? 
+         state.activeAdmin ? 
          null : 
-         setState({activeSuppliers: !state.activeSuppliers})
+         setState({activeAdmin: !state.activeAdmin})
       }  
    }
 
-   const handleCustomers = () => {
+   const handleStaff = () => {
       {
-         state.activeCustomers ? 
+         state.activeStaff ? 
          null : 
-         setState({activeCustomers: !state.activeCustomers})
+         setState({activeStaff: !state.activeStaff})
       }  
    }
 
@@ -41,48 +41,48 @@ const VendorsScreen = (props) => {
                <TouchableOpacity 
                   style={[styles.tab1, {
                      borderBottomWidth: 2, 
-                     borderBottomColor: state.activeSuppliers ? '#078bab' : '#e6f1fa'
+                     borderBottomColor: state.activeAdmin ? '#078bab' : '#e6f1fa'
                   }]}
-                  onPress={() => handleSuppliers()}
+                  onPress={() => handleAdmin()}
                >               
                <Text 
                   style={{
                      color: '#078bab', 
-                     fontSize: state.activeSuppliers ? 20 : 17,
-                     fontWeight: state.activeSuppliers ? '700' : null
+                     fontSize: state.activeAdmin ? 20 : 17,
+                     fontWeight: state.activeAdmin ? '700' : null
                   }}
                >
-                  Suppliers</Text>
+                  Admin</Text>
                </TouchableOpacity>                                
                <TouchableOpacity 
                   style={[styles.tab2, {
-                     borderBottomWidth: 2, borderBottomColor: state.activeCustomers ? '#078bab' : '#e6f1fa'}]}                              
-                  onPress={() => handleCustomers()}
+                     borderBottomWidth: 2, borderBottomColor: state.activeStaff ? '#078bab' : '#e6f1fa'}]}                              
+                  onPress={() => handleStaff()}
                >               
                <Text 
                   style={{
                      color: '#078bab', 
-                     fontSize: state.activeCustomers ? 20 : 17,
-                     fontWeight: state.activeCustomers ? '700' : null
+                     fontSize: state.activeStaff ? 20 : 17,
+                     fontWeight: state.activeStaff ? '700' : null
                   }}
                >
-               Customers
+               Staff
                </Text>
                </TouchableOpacity>
             </View>
          </View>
          {
-            state.activeSuppliers 
+            state.activeAdmin 
             ? 
-            <SuppliersScreen />
+            <AdminScreen />
             : 
-            <CustomersScreen />
+            <StaffScreen />
          }
       </View>
    )
 }
 
-export default VendorsScreen;
+export default UsersScreen;
 
 const styles = StyleSheet.create({
    container: {

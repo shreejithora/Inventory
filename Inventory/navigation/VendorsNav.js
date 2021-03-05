@@ -12,7 +12,6 @@ const VendorsStack = createStackNavigator();
 const VendorsNav = ({navigation, route}) =>{
    return(
       <VendorsStack.Navigator 
-         initialRouteName={route.params == null ? 'SuppliersScreen' : route.params.screen}
          screenOptions= { {
             headerStyle: {
                backgroundColor: '#078bab',
@@ -22,26 +21,7 @@ const VendorsNav = ({navigation, route}) =>{
                fontWeight: 'bold'
             }
          }}
-      >
-         {/* <VendorsStack.Screen name="SuppliersScreen" component = {SuppliersScreen}
-            options= {{ 
-            title: 'Vendors',
-            headerLeft: () => (
-               <Icon.Button
-               name="menu"
-               size={25}   
-               backgroundColor= "#078bab"
-               onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
-               ),
-            headerRight: () => (
-               <Icon.Button 
-               name="home"
-               size={25}   
-               backgroundColor= "#078bab"
-               onPress = {  () => {navigation.navigate('HomeTab')}} ></Icon.Button>
-            )
-            }}
-         /> */}
+      >         
          <VendorsStack.Screen name="VendorsScreen" children = { () => <VendorsScreen cus={route.params.cus} sup={route.params.sup} /> }
             options= {{ 
             title: 'Vendors',

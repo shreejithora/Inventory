@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import HomeScreen from '../screens/TabScreens/HomeScreen';
 import EntriesScreen from '../screens/TabScreens/EntriesScreen/EntriesScreen';
 import ProductsScreen from '../screens/TabScreens/ProductsScreen';
+import { useState } from 'react';
 
 const HomeStack = createStackNavigator();
 const EntriesStack = createStackNavigator();
@@ -90,9 +91,9 @@ const HomeStackScreen=({navigation})=>{
 }
 
 const EntriesStackScreen=({navigation, route})=>{
+
    return(
-   <EntriesStack.Navigator 
-      initialRouteName={ route.params == null ? 'IncomeScreen' : route.params.screen}
+   <EntriesStack.Navigator       
       screenOptions= { {
          headerStyle: {
             backgroundColor: '#078bab',
@@ -103,19 +104,7 @@ const EntriesStackScreen=({navigation, route})=>{
          }
       }}
    >
-      {/* <EntriesStack.Screen name="IncomeScreen" component = {IncomeScreen}
-         options= {{ 
-         title: 'Income ',
-         headerLeft: () => (
-               <Icon.Button 
-               name="menu"
-               size={25}   
-               backgroundColor= "#078bab"
-               onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
-            )
-         }}
-      /> */}
-      <EntriesStack.Screen name="EntriesScreen" component = {EntriesScreen}
+      <EntriesStack.Screen name="EntriesScreen" children = {() => <EntriesScreen income={route.params == null ? 1 : route.params.income} expense={route.params == null ? 0 : route.params.expense} />}
          options= {{ 
          title: 'Entries ',
          headerLeft: () => (

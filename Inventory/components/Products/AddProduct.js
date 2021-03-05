@@ -20,7 +20,6 @@ const AddProduct = (props) => {
    const [productID, setProductID] = useState({
       product_id: '',
       isValidID: true,
-      exists: false,
    })
 
   const [productName, setProductName] = useState({
@@ -45,34 +44,18 @@ const AddProduct = (props) => {
       })    
    
       const regexWithValidID = /^\d{0,4}(\.\d{1,3})?$/ 
-
-      if (foundProduct.length == 0 || val.match(regexWithValidID) ) {
-         if ( /\D/.test(val) ) {
-             setProductID({
-               ...productID,
-               product_id: val,
-               isValidID: false,
-            })  
-         } else {
-            setProductID({
-               ...productID,
-               product_id: val,
-               isValidID: true,
-            }) 
-         }
-         if ( foundProduct.length == 0 ) {
-            setProductID({
-               ...productID,
-               product_id: val,
-               exists: false
-            })
-         }
-      } else {
+      
+      if (foundProduct.length == 0 && val.match(regexWithValidID) ) {
          setProductID({
             ...productID,
             product_id: val,
             isValidID: true,
-            exists: true
+         })            
+      } else {
+         setProductID({
+            ...productID,
+            product_id: val,
+            isValidID: false,
          })
       }
    }
@@ -167,23 +150,15 @@ const AddProduct = (props) => {
                      maxLength={10}
                      onChangeText={ (val) => handleProductIDChange(val)}
                      onEndEditing = { (e) => handleProductIDChange(e.nativeEvent.text)}
-                  />
-                  {  
-                     productID.exists ?
-                     <Animatable.Text 
-                        animation="fadeIn"
-                        style={styles.errMsg}>Product ID already exists
-                     </Animatable.Text> :
-                     null 
-                  } 
+                  />                  
                   {  
                      productID.isValidID ?
                      null :
                      <Animatable.Text 
                         animation="fadeIn"
-                        style={styles.errMsg}>Invalid ID</Animatable.Text> 
-                  } 
-                  
+                        style={styles.errMsg}>Invalid ID or Product ID already exists.
+                     </Animatable.Text> 
+                  }                   
                </View>  
                <View style={styles.inputs}>
                   <Text style={styles.texts}>Product Name*</Text>

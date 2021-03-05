@@ -64,13 +64,13 @@ const DrawerContent = (props) => {
                icon = { ({color, size}) => <Icon name="truck-fast-outline" color='black' size={size}/>}
                label="Suppliers"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {props.navigation.navigate('Vendors', { screen: 'SuppliersScreen' })}}
+               onPress = { () => {props.navigation.navigate('Vendors', { cus: 0, sup: 1 })}}
                />
                <DrawerItem 
                icon = { ({color, size}) => <Icon name="account-multiple-outline" color='black' size={size}/>}
                label="Customers"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {props.navigation.navigate('Vendors', { screen: 'CustomersScreen' })}}
+               onPress = { () => {props.navigation.navigate('Vendors', { cus: 1, sup: 0 })}}
                />
             </Drawer.Section>
             <Drawer.Section style={styles.menuDrawer} title="Entries">
@@ -78,13 +78,13 @@ const DrawerContent = (props) => {
                icon = { ({color, size}) => <Icon name="cash-plus" color='black' size={size}/>}
                label="Income"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {props.navigation.navigate('Entries', { screen: 'IncomeScreen' })}}
+               onPress = { () => {props.navigation.navigate('Entries', { income: 1, expense: 0 })}}
                />
                <DrawerItem 
                icon = { ({color, size}) => <Icon name="cash-minus" color='black' size={size}/>}
                label="Expense"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {props.navigation.navigate('Entries', { screen: 'ExpenseScreen' })}}
+               onPress = { () => {props.navigation.navigate('Entries', { income: 0, expense: 1 })}}
                />
             </Drawer.Section>
             <Drawer.Section style={styles.menuDrawer} title="Users">
@@ -92,13 +92,13 @@ const DrawerContent = (props) => {
                icon = { ({color, size}) => <Icon name="account-circle-outline" color='#000' size={size}/>}
                label="Admin"
                labelStyle= {{color: '#000'}}
-               onPress = { () => {props.navigation.navigate('Users', { screen: 'AdminScreen' })}}
+               onPress = { () => {props.navigation.navigate('Users', { admin: 1, staff: 0 })}}
                />
                <DrawerItem 
                icon = { ({color, size}) => <Icon name="account-group-outline" color='black' size={size}/>}
                label="Staff"
                labelStyle= {{color: 'black'}}
-               onPress = { () => {props.navigation.navigate('Users', { screen: 'StaffScreen' })}}
+               onPress = { () => {props.navigation.navigate('Users', { admin: 0, staff: 1 })}}
                />
             </Drawer.Section>
          </View>

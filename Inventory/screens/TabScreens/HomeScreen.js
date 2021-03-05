@@ -19,11 +19,12 @@ const HomeScreen = ({navigation}) => {
     <View style={styles.container}>                  
       <View style={styles.cardView}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>           
-          <HomeCard iconName={'chart-line'} tabName={'Products'} cardName={'Products'} nav={navigation}/>
-          <HomeCard iconName={'bank-transfer'} tabName={'Sales'} cardName={'Sales'} nav={navigation}/>
-          <HomeCard iconName={'checkbook'} cus={0} sup={1} tabName={'Vendors'} cardName={'Suppliers'} nav={navigation}/> 
-          <HomeCard iconName={'checkbook'} cus={1} sup={0} tabName={'Vendors'} cardName={'Customers'} nav={navigation}/> 
-          <HomeCard iconName={'account-cash'} tabName={'Entries'} cardName={'Entries'} nav={navigation}/>                               
+          <HomeCard iconName={'cart-outline'} tabName={'Products'} cardName={'Products'} nav={navigation}/>
+          <HomeCard iconName={'chart-line'} tabName={'Sales'} cardName={'Sales'} nav={navigation}/>
+          <HomeCard iconName={'truck-fast-outline'} cus={0} sup={1} tabName={'Vendors'} cardName={'Suppliers'} nav={navigation}/> 
+          <HomeCard iconName={'account-multiple-outline'} cus={1} sup={0} tabName={'Vendors'} cardName={'Customers'} nav={navigation}/> 
+          <HomeCard iconName={'cash-plus'} income={1} expense={0} tabName={'Entries'} cardName={'Income'} nav={navigation}/> 
+          <HomeCard iconName={'cash-minus'} income={0} expense={1} tabName={'Entries'} cardName={'Expense'} nav={navigation}/>                               
         </ScrollView>          
       </View>   
 
@@ -72,7 +73,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#e6f1fa',    
   },
   mainActitivity: {
-    // paddingVertical: 20,
     backgroundColor: '#e6f1fa',
     justifyContent: 'center',
   },
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     width: '90%',
-    height: 350,
+    height: 450,
     shadowColor: "#000",
     shadowOffset: {
         width:  2,
@@ -104,9 +104,6 @@ const styles = StyleSheet.create({
   activityTopicText: {
     fontSize: 20,
     fontWeight: '700'
-  },
-  activityDetails: {
-
   },
   activityCard: {
     width: '100%'
