@@ -60,11 +60,11 @@ const AdminScreen = ({navigation}) => {
                   )
                }          */}
                
-               <AdminCard admin={Admins[0]} duration={800} />
-               <AdminCard admin={Admins[1]} duration={1000} />
-               <AdminCard admin={Admins[2]} duration={1200} />
-               <AdminCard admin={Admins[3]} duration={1400} />
-               <AdminCard admin={Admins[4]} duration={1600} />               
+               <AdminCard admin={Admins[0]} duration={600} />
+               <AdminCard admin={Admins[1]} duration={800} />
+               <AdminCard admin={Admins[2]} duration={1000} />
+               <AdminCard admin={Admins[3]} duration={1200} />
+               <AdminCard admin={Admins[4]} duration={1400} />               
             </View>                                                
          </ScrollView>          
          </View> 

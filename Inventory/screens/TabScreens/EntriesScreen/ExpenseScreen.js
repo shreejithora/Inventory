@@ -6,25 +6,72 @@ import {
    TouchableOpacity, 
    ScrollView, 
    StyleSheet,
-   FlatList,
-   Button
+   FlatList
 } from 'react-native';
 
+import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ExpenseScreen = () => { 
 
+   const [state, setState] = useState({
+      status: 'today'
+   })
+
+   const dateData = 
+   [
+      {
+         label: 'Today', 
+         value: 'today', 
+         icon: () => <Icon 
+            name="timer-sand-empty" 
+            size={18} 
+            color= '#078bab' 
+         />
+      },
+      {
+         label: 'This Month', 
+         value: 'thismonth', 
+         icon: () => <Icon 
+            name="timer-sand" 
+            size={18} 
+            color= 'green' 
+         />
+      },
+      {
+         label: 'This Year', 
+         value: 'thisyear', 
+         icon: () => <Icon 
+            name="timer-sand-full" 
+            size={18} 
+            color= 'red' 
+         />
+      },
+   ]
+
+   const handleStatusChange = (val) => {
+
+      setState({
+         status: val
+      })
+   }
+
    return(
       <View style={styles.container}>
-         <View style={styles.mainActitivity}> 
-            {/* <View style={styles.searchBar}>
-               <Icon style={{marginLeft: 10}} name="text-box-search-outline" size={20} color="#078bab" />
-               
-               <TextInput style={{flex: 1, marginLeft: 5, color: '#000'}} 
-                  placeholder="Search" 
-                  onChangeText={ (val) => handleSearchText(val)} 
-               />            
-            </View>              */}
+         <View style={styles.mainActitivity}>
+            <View style={styles.picker}>
+               <DropDownPicker 
+                  items={dateData}
+                  defaultValue={state.status}
+                  containerStyle={{height: 40, width: '40%', alignSelf: 'flex-end'}}
+                  style={{backgroundColor: '#fafafa'}}
+                  itemStyle={{
+                     justifyContent: 'flex-start'
+                  }}
+                  dropDownStyle={{backgroundColor: '#fafafa'}}
+                  onChangeItem={item => handleStatusChange(item.value)}
+               />
+            </View>             
             <View style={styles.cardContent}>  
                <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'center', fontWeight: '700'}]}> ID</Text> 
                <Text style={[styles.cardTitle, {flex: 2, textAlign: 'center', fontWeight: '700'}]}>Product</Text>             
@@ -61,6 +108,10 @@ const styles = StyleSheet.create({
       flex: 1,
       position: 'relative',
       backgroundColor: '#e6f1fa',
+   },
+   picker: {
+      paddingHorizontal: 8,
+      paddingTop: 8
    },
    activityView: {
       borderRadius: 15,

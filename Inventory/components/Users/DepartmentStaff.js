@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 import { 
   View, 
+  Button,
   Text, 
   TouchableOpacity, 
   StyleSheet,  
@@ -12,28 +13,36 @@ import {
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const DepartmentStaff = (props) => {      
-   console.log(props.info)
-   console.log(props)
+import {NavContext} from '../../contexts/NavContext';
+
+const DepartmentStaff = (props) => {     
+
    return(
-      // <Animatable.View animation="fadeInUpBig" duration={props.duration} style={styles.card}>         
-      // <Text>Hello</Text>
-      //    <TouchableOpacity onPress={()=>{}}>
-      //       <View style={styles.cardContent}>
-      //          <Animatable.View animation="fadeInDown" duration={1500}>
-      //          <Icon
-      //             name="account-circle-outline"
-      //             color="#078bab"
-      //             size={30}
-      //          />
-      //          </Animatable.View>
-      //          <Text style={[styles.cardTitle, {fontWeight: '700', fontSize: 18, marginVertical: 5}]}>{props.info.department}</Text>
-      //          <Text style={[styles.cardTitle, {marginVertical: 5}]}>{props.admin.number}</Text>
-      //          <Text style={styles.cardTitle}>{props.dept.number}</Text>
-      //       </View>
-      //    </TouchableOpacity>
-      // </Animatable.View>
-      <Text>{props.info[0].department}</Text>
+      <View>         
+         {  
+            props.info == [] ?
+            <Text>No Users</Text>  :
+            props.info.map( item => (               
+               <Animatable.View animation="fadeInUpBig" duration={props.duration} style={styles.card} key={item.staff_id}>    
+                  <TouchableOpacity onPress={()=>{}}>
+                     <View style={styles.cardContent}>
+                        <Animatable.View animation="fadeInDown" duration={1200}>
+                        <Icon
+                           name="account-circle-outline"
+                           color="#078bab"
+                           size={30}
+                        />
+                        </Animatable.View>
+                        <Text style={[styles.cardTitle, {fontWeight: '700', fontSize: 18, marginVertical: 5}]}>{item.staff_id}</Text>
+                        <Text style={[styles.cardTitle, {marginVertical: 5}]}>{item.name}</Text>
+                        <Text style={styles.cardTitle}>{item.number}</Text>
+                        <Text style={styles.cardTitle}>{item.address}</Text>
+                     </View>
+                  </TouchableOpacity>
+               </Animatable.View>
+            ))
+         }
+      </View>      
    )
 }
 
@@ -45,6 +54,7 @@ const styles = StyleSheet.create({
       fontSize: 15
    },
    card: {
+      alignSelf: 'center',
       borderRadius: 5,
       backgroundColor: '#fff',
       width: '90%',

@@ -1,9 +1,19 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { useState } from 'react';
+import { Text, View } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const QuotationScreen = () => {
+
+   const [state, setState] = useState({
+      country: 'uk'
+   })
+
    return(
-      <Text>Quotations</Text>
+      <View>
+         <Text>Quotations</Text>      
+         <Text style={{textAlign: 'right'}}>Hello</Text>
+      </View>
    )
 }
 

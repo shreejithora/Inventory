@@ -5,7 +5,9 @@ import {
   StyleSheet, 
   ScrollView,
   TouchableOpacity,
-  FlatList
+  Button,
+  FlatList,
+  Alert
 } from 'react-native';
 
 import StaffCard from '../../components/Users/StaffCard';
@@ -14,7 +16,7 @@ import DepartmentStaff from '../../components/Users/DepartmentStaff';
 
 const StaffList = require('../../models/Staffs.json');
 
-const StaffScreen = ({navigation}) => {
+const StaffScreen = () => {
 
    const userCategory = [
       {
@@ -55,7 +57,6 @@ const StaffScreen = ({navigation}) => {
          allStaff: foundStaff,
          isValid: false
       });
-
    }
 
    return(
@@ -67,19 +68,30 @@ const StaffScreen = ({navigation}) => {
                <ScrollView showsVerticalScrollIndicator={false}> 
                   <View style={styles.cards}>                       
                      <StaffCard handleDepartment={handleDepartment} category={userCategory[0]} iconName={'bank'} duration={800} />
-                     <StaffCard handleDepartment={handleDepartment} category={userCategory[1]} iconName={'card-account-phone-outline'} duration={1000} />
-                     <StaffCard handleDepartment={handleDepartment} category={userCategory[2]} iconName={'buffer'} duration={1200} />
-                     <StaffCard handleDepartment={handleDepartment} category={userCategory[3]} iconName={'briefcase-plus-outline'} duration={1400} />
-                     <StaffCard handleDepartment={handleDepartment} category={userCategory[4]} iconName={'laptop'} duration={1600} />               
+                     <StaffCard handleDepartment={handleDepartment} category={userCategory[1]} iconName={'card-account-phone-outline'} duration={800} />
+                     <StaffCard handleDepartment={handleDepartment} category={userCategory[2]} iconName={'buffer'} duration={800} />
+                     <StaffCard handleDepartment={handleDepartment} category={userCategory[3]} iconName={'briefcase-plus-outline'} duration={800} />
+                     <StaffCard handleDepartment={handleDepartment} category={userCategory[4]} iconName={'laptop'} duration={800} />               
                   </View>
                </ScrollView>  :
-               <FlatList 
-                  data={staff.allStaff}
-                  keyExtractor={item => item.staff_id}
-                  renderItem = { ({item}) => {
-                     <DepartmentStaff info={item} duration={1000}/>
-                  }}
-               />
+               // <FlatList 
+               //    data={staff.allStaff}
+               //    keyExtractor={item => item.staff_id}
+               //    renderItem = { ({item}) => {
+                  <View>
+                  <Icon
+                     style={{alignSelf: 'flex-end', marginRight: 15}}
+                     name="arrow-right"
+                     size={30}
+                     color='#078bab'
+                     onPress={() => setStaff({isValid: true})}
+                  />
+                  <ScrollView showsVerticalScrollIndicator={false} style={{paddingBottom: 10, marginBottom: 10}}>                     
+                     <DepartmentStaff info={staff.allStaff} duration={1000}/>
+                  </ScrollView>
+                  </View>
+               //    }}
+               // />
             }                                               
                   
          </View> 

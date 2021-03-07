@@ -10,8 +10,10 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import SuppliersCard from "../../components/Vendors/Suppliers/SuppliersCard";
+import DropDownPicker from 'react-native-dropdown-picker';
 import Modal from "react-native-modal";
+
+import SuppliersCard from "../../components/Vendors/Suppliers/SuppliersCard";
 import AddSupplier from '../../components/Vendors/Suppliers/AddSupplier';
 const SuppliersList = require('../../models/Suppliers.json');
 
@@ -24,7 +26,39 @@ const SuppliersScreen = ({navigation}) => {
       filteredSuppliers: SuppliersList
    })
 
+   const [state, setState] = useState({
+      status: 'all'
+   })
 
+   const StatusData = [
+                     {
+                        label: 'All', 
+                        value: 'all', 
+                        icon: () => <Icon 
+                           name="checkbox-blank-circle-outline" 
+                           size={18} 
+                           color= '#078bab' 
+                        />
+                     },
+                     {
+                        label: 'Pending', 
+                        value: 'pending', 
+                        icon: () => <Icon 
+                           name="clock-time-nine" 
+                           size={18} 
+                           color= 'red' 
+                        />
+                     },
+                     {
+                        label: 'Recieved', 
+                        value: 'recieved', 
+                        icon: () => <Icon 
+                           name="checkbox-marked-circle" 
+                           size={18} 
+                           color= 'green' 
+                        />
+                     },
+                  ]
 
    const handleSearchText = textToSearch => {
       const foundSupplier = SuppliersList.filter( item => {
@@ -42,6 +76,27 @@ const SuppliersScreen = ({navigation}) => {
       })      
    }
 
+   const handleStatusChange = (val) => {
+
+      setState({
+         status: val
+      })
+
+      const selectedUsers = SuppliersList.filter(data => {        
+         return data.status.toLowerCase() == val.toLowerCase();
+      })
+      
+      if(val == 'all') {
+         setSuppliersData({
+            filteredSuppliers: SuppliersList
+         })
+      } else {
+         setSuppliersData({
+            filteredSuppliers: selectedUsers
+         })
+      } 
+   }
+
    return(
       <View style={styles.container}>
          <View style={styles.mainActitivity}>             
@@ -53,6 +108,19 @@ const SuppliersScreen = ({navigation}) => {
                   onChangeText={ (val) => handleSearchText(val)} 
                />            
             </View>             
+            <View style={styles.picker}>
+               <DropDownPicker 
+                  items={StatusData}
+                  defaultValue={state.status}
+                  containerStyle={{height: 40, width: '35%', alignSelf: 'flex-end'}}
+                  style={{backgroundColor: '#fafafa'}}
+                  itemStyle={{
+                     justifyContent: 'flex-start'
+                  }}
+                  dropDownStyle={{backgroundColor: '#fafafa'}}
+                  onChangeItem={item => handleStatusChange(item.value)}
+               />
+            </View>
             <View style={styles.cardContent}>  
                <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left', fontWeight: '700', marginLeft: 10}]}>ID</Text> 
                <Text style={[styles.cardTitle, {flex: 3, textAlign: 'left', fontWeight: '700'}]}>Name</Text>  
@@ -113,6 +181,10 @@ const styles = StyleSheet.create({
    container: {
       flex: 1,
       backgroundColor: '#e6f1fa',
+   },
+   picker: {
+      paddingHorizontal: 8,
+      paddingTop: 8
    },
    navigate: {
       marginRight: 5,

@@ -44,7 +44,6 @@ const SuppliersCard = ({items}) => {
             style={styles.detailModal}
             isVisible={supplierDetailModal} 
             onBackButtonPress = {() => setSupplierDetailModal(!supplierDetailModal)}
-            onBackdropPress={() => setSupplierDetailModal(!supplierDetailModal)}
             transparent={true} 
             animationIn='slideInUp' 
             animationOut='slideOutUp'

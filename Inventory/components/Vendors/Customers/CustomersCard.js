@@ -32,7 +32,6 @@ const CustomersCard = ({items}) => {
             style={styles.detailModal}
             isVisible={customerDetailModal} 
             onBackButtonPress = {() => setCustomerDetailModal(!customerDetailModal)}
-            onBackdropPress={() => setCustomerDetailModal(!customerDetailModal)}
             transparent={true} 
             animationIn='slideInUp' 
             animationOut='slideOutUp'

@@ -15,7 +15,7 @@ const AdminCard = (props) => {
       <Animatable.View animation="fadeInUpBig" duration={props.duration} style={styles.card}>         
          <TouchableOpacity onPress={() => {}}>
             <View style={styles.cardContent}>
-               <Animatable.View animation="fadeInDown" duration={1500}>
+               <Animatable.View animation="fadeInDown" duration={1200}>
                <Icon
                   name={props.admin.iconName}
                   color="#078bab"

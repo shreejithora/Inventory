@@ -38,7 +38,6 @@ const ProductCard = ({items}) => {
             style={styles.detailModal}
             isVisible={productDetailModal} 
             onBackButtonPress = {() => setProductDetailModal(!productDetailModal)}
-            onBackdropPress={() => setProductDetailModal(!productDetailModal)}
             transparent={true} 
             animationIn='slideInUp' 
             animationOut='slideOutUp'

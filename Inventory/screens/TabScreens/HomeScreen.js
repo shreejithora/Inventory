@@ -21,10 +21,10 @@ const HomeScreen = ({navigation}) => {
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>           
           <HomeCard iconName={'cart-outline'} tabName={'Products'} cardName={'Products'} nav={navigation}/>
           <HomeCard iconName={'chart-line'} tabName={'Sales'} cardName={'Sales'} nav={navigation}/>
-          <HomeCard iconName={'truck-fast-outline'} cus={0} sup={1} tabName={'Vendors'} cardName={'Suppliers'} nav={navigation}/> 
-          <HomeCard iconName={'account-multiple-outline'} cus={1} sup={0} tabName={'Vendors'} cardName={'Customers'} nav={navigation}/> 
           <HomeCard iconName={'cash-plus'} income={1} expense={0} tabName={'Entries'} cardName={'Income'} nav={navigation}/> 
-          <HomeCard iconName={'cash-minus'} income={0} expense={1} tabName={'Entries'} cardName={'Expense'} nav={navigation}/>                               
+          <HomeCard iconName={'cash-minus'} income={0} expense={1} tabName={'Entries'} cardName={'Expense'} nav={navigation}/> 
+          <HomeCard iconName={'truck-fast-outline'} cus={0} sup={1} tabName={'Vendors'} cardName={'Suppliers'} nav={navigation}/> 
+          <HomeCard iconName={'account-multiple-outline'} cus={1} sup={0} tabName={'Vendors'} cardName={'Customers'} nav={navigation}/>                                         
         </ScrollView>          
       </View>   
 

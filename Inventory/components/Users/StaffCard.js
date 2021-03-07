@@ -17,7 +17,7 @@ const StaffCard = (props) => {
       <Animatable.View animation="fadeInUpBig" duration={props.duration} style={styles.card}>         
          <TouchableOpacity onPress={() => props.handleDepartment(props.category.name)}>                    
             <View style={styles.cardContent}>
-               <Animatable.View animation="fadeInDown" duration={1500}>
+               <Animatable.View animation="fadeInDown" duration={1000}>
                <Icon
                   name={props.iconName}
                   color="#078bab"

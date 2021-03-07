@@ -21,7 +21,7 @@ const UsersNav = ({navigation, route}) =>{
             }
          }}
       >
-         <UsersStack.Screen name="UsersScreen" children = {() => <UsersScreen admin={route.params.admin} staff={route.params.staff} />}
+         <UsersStack.Screen name="UsersScreen" children = {() => <UsersScreen admin={route.params.admin} staff={route.params.staff}/>}
             options= {{ 
             title: 'Users ',
             headerLeft: () => (
