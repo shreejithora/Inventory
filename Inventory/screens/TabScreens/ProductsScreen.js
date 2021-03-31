@@ -19,7 +19,7 @@ const ProductsList = require('../../models/Products.json');
 
 const ProductsScreen = () => {
 
-   const [AddProductModal, setAddProductModal] = useState(false);   
+   const [addProductModal, setAddProductModal] = useState(false);   
 
    const [productData, setProductData] = useState({
       allProducts: ProductsList,
@@ -87,10 +87,11 @@ const ProductsScreen = () => {
 
          <Modal 
             style={styles.modal}
-            isVisible={AddProductModal} 
+            isVisible={addProductModal} 
             transparent={true} 
             animationIn='slideInUp' 
             animationOut='slideOutDown'
+            onBackButtonPress = {() => setAddProductModal(!addProductModal)}
             backdropTransitionInTiming={500}
             backdropTransitionOutTiming={500}
             animationInTiming={500}

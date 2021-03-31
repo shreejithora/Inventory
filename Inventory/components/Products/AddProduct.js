@@ -113,7 +113,7 @@ const AddProduct = (props) => {
       }
    }
    const handleAddProduct = () => {
-      if (productName != '' && productID.product_id != '' && productQuantity.product_quantity != '' && productPrice.product_price != '' && productName.product_name != ''){
+      if (productName != '' && productID.product_id != '' && productPrice.product_price != '' && productName.product_name != ''){
          if( productID.isValidID || productID.exists){
             if ( !productName.exists ) {
                if ( productQuantity.isValidProductQuantity ) {
