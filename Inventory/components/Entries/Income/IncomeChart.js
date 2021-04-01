@@ -10,9 +10,10 @@ import {
    VictoryTheme,
 } from 'victory-native';
 
-const IncomeChart = () => {
+const IncomeChart = ({data}) => {
+   console.log(data);
    return(
-      <View>
+      <View>         
          <VictoryChart
             theme={VictoryTheme.material}
             animate={{
@@ -21,13 +22,7 @@ const IncomeChart = () => {
             }}
          >
             <VictoryLine
-               data={[
-                  {x: new Date(2021, 1, 12), y: 1000}, 
-                  {x: new Date(2021, 1, 12), y: 2000},                  
-                  {x: new Date(2021, 1, 13), y: 2000},
-                  {x: new Date(2021, 1, 16), y: 8000},
-                  {x: new Date(2021, 1, 18), y: 5000}
-               ]}
+               data={data}
                style={{
                   data: {
                      stroke: '#000'

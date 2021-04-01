@@ -12,19 +12,111 @@ import {
 import Modal from 'react-native-modal';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 import ProductCard from '../../components/Products/ProductCard';
 import AddProduct from "../../components/Products/AddProduct";
+// import CategoryData from '../../models/CategoryData';
 const ProductsList = require('../../models/Products.json');
 
 const ProductsScreen = () => {
 
+   const CategoryData = 
+   [
+      {
+         label: 'All', 
+         value: 'all', 
+         icon: () => <Icon 
+            name="circle" 
+            size={18} 
+            color= '#078bab' 
+         />
+      },
+      {
+         label: 'Clothing', 
+         value: 'clothing', 
+         icon: () => <Icon 
+            name="tshirt-crew-outline" 
+            size={18} 
+            color= '#078bab' 
+         />
+      },
+      {
+         label: 'Electronics', 
+         value: 'electronics', 
+         icon: () => <Icon 
+            name="laptop-chromebook" 
+            size={18} 
+            color= '#078bab' 
+         />
+      },
+      {
+         label: 'Accessories', 
+         value: 'accessories', 
+         icon: () => <Icon 
+            name="account-tie-outline" 
+            size={18} 
+            color= '#078bab' 
+         />
+      },
+      {
+         label: 'Stationery', 
+         value: 'stationery', 
+         icon: () => <Icon 
+            name="book-open-page-variant" 
+            size={18} 
+            color= '#078bab' 
+         />
+      },
+      {
+         label: 'Bags', 
+         value: 'bag', 
+         icon: () => <Icon 
+            name="bag-personal-outline" 
+            size={18} 
+            color= '#078bab' 
+         />
+      },
+      {
+         label: 'Cosmetics', 
+         value: 'cosmetics', 
+         icon: () => <Icon 
+            name="auto-fix" 
+            size={18} 
+            color= '#078bab' 
+         />
+      },
+   ]
+
    const [addProductModal, setAddProductModal] = useState(false);   
+
+   const [state, setState] = useState({
+      status: ''
+   })
 
    const [productData, setProductData] = useState({
       allProducts: ProductsList,
       filteredProducts: ProductsList
    })
+
+   const handleStatusChange = (val) => {
+      setState({
+         status: val
+      })
+      const foundProduct = ProductsList.filter( item => {
+         return val == item.category
+      })
+
+      if(val == 'all'){
+         setProductData({
+            filteredProducts: ProductsList
+         })
+      } else {
+          setProductData({
+            filteredProducts: foundProduct
+         })
+      }     
+   }
 
    const handleSearchText = textToSearch => {
       const foundProduct = ProductsList.filter( item => {
@@ -33,11 +125,11 @@ const ProductsScreen = () => {
             item.name.toLowerCase().includes(textToSearch.toLowerCase()) ||
             item.quantity.toLowerCase().includes(textToSearch.toLowerCase())  ||
             item.price.toLowerCase().includes(textToSearch.toLowerCase()) ||
-            item.last_updated.toLowerCase().includes(textToSearch.toLowerCase()) 
+            item.last_updated.toLowerCase().includes(textToSearch.toLowerCase()) ||
+            item.category.toLowerCase().includes(textToSearch.toLowerCase()) ||
+            item.sub_category.toLowerCase().includes(textToSearch.toLowerCase()) 
          )
       })
-
-      console.log(foundProduct.length);
       
       setProductData({
          ...productData,
@@ -55,7 +147,21 @@ const ProductsScreen = () => {
                   placeholder="Search" 
                   onChangeText={ (val) => handleSearchText(val)} 
                />            
-            </View>             
+            </View>          
+            <View style={styles.picker}>
+               <DropDownPicker 
+                  items={CategoryData}
+                  placeholder="Category"
+                  defaultValue={state.status}
+                  containerStyle={{height: 40, width: '40%', alignSelf: 'flex-end'}}
+                  style={{backgroundColor: '#fafafa'}}
+                  itemStyle={{
+                     justifyContent: 'flex-start'
+                  }}
+                  dropDownStyle={{backgroundColor: '#fafafa'}}
+                  onChangeItem={item => handleStatusChange(item.value)}
+               />
+            </View>   
             <View style={styles.cardContent}>  
                <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'center', fontWeight: '700'}]}>ID</Text> 
                <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left', fontWeight: '700'}]}>Name</Text>  
@@ -117,6 +223,10 @@ const styles = StyleSheet.create({
    container: {
       flex: 1,
       backgroundColor: '#e6f1fa',
+   },
+   picker: {
+      paddingHorizontal: 8,
+      paddingTop: 8
    },
    mainActitivity: {
       flex: 1,

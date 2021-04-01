@@ -18,7 +18,8 @@ import QuotationNav from './navigation/QuotationNav';
 const Drawer = createDrawerNavigator();
 
 const App = () => {
-  const[loginstate,setLoginState]=useState(true);
+  const[loginstate,setLoginState]=useState(true
+  );
   return(
     <NavigationContainer>
       {loginstate ? 

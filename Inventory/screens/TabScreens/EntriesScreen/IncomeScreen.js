@@ -3,16 +3,11 @@ import React, { useState } from 'react';
 import { 
    Text, 
    View, 
-   TextInput,
    TouchableOpacity, 
-   ScrollView, 
    StyleSheet,
    FlatList
 } from 'react-native';
 
-import * as Animatable from 'react-native-animatable';
-
-import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IncomeCard from '../../../components/Entries/Income/IncomeCard';
 import IncomeChart from '../../../components/Entries/Income/IncomeChart';
@@ -32,119 +27,18 @@ const IncomeScreen = () => {
       filteredIncomes: IncomeList
    })
 
-   const [graph, setGraph] = useState(false)
+   const [graph, setGraph] = useState(true)
+
+   const [graphData, setGraphData] = useState([]);
 
    const [picker, setPicker] = useState({
-      all: true,
-      day: false,
+      all: false,
+      day: true,
       week: false,
       month: false,
       year: false
    })
-
-   const dateData = 
-   [
-      {
-         label: 'All', 
-         value: 'all', 
-         icon: () => <Icon 
-            name="circle" 
-            size={18} 
-            color= '#078bab' 
-         />
-      },
-      {
-         label: 'Today', 
-         value: 'today', 
-         icon: () => <Icon 
-            name="timer-sand-empty" 
-            size={18} 
-            color= '#078bab' 
-         />
-      },
-      {
-         label: 'This Month', 
-         value: 'thismonth', 
-         icon: () => <Icon 
-            name="timer-sand" 
-            size={18} 
-            color= 'green' 
-         />
-      },
-      {
-         label: 'This Year', 
-         value: 'thisyear', 
-         icon: () => <Icon 
-            name="timer-sand-full" 
-            size={18} 
-            color= 'red' 
-         />
-      },
-   ]
-
-   const handleStatusChange = (val) => {
-
-      setState({
-         status: val
-      })
-
-      const newDate = new Date();
-      let DateVal = 0;
-
-      if(val == 'all') {         
-         setIncomeData({
-            filteredIncomes: IncomeList
-         })         
-      }
-
-      if(val == 'today') {
-         const date = newDate.getFullYear()+'-'+(newDate.getMonth()+1)+'-'+newDate.getDate();        
-         const todayValue = IncomeList.filter( item => {
-            return item.last_updated == String(date)
-         })
-         setIncomeData({
-            filteredIncomes: todayValue
-         })
-         const len = todayValue.length;
-         for( let i=0; i<len; i++){
-            DateVal = (todayValue[i].sold_quantity * todayValue[i].price)+DateVal;
-         }
-         setValue(DateVal);
-      }
-
-      if(val == 'thismonth') {
-         const date = newDate.getFullYear()+'-'+(newDate.getMonth()+1);    
-         console.log(date);    
-         const monthValue = IncomeList.filter( item => {
-            return item.last_updated.substring(0,6) == String(date)
-         })
-         setIncomeData({
-            filteredIncomes: monthValue
-         })
-         const len = monthValue.length;
-         for( let i=0; i<len; i++){
-            DateVal = (monthValue[i].sold_quantity * monthValue[i].price)+DateVal;
-         }
-         setValue(DateVal);
-      }
-
-      if(val == 'thisyear') {
-         const date = newDate.getFullYear();    
-         console.log(date);    
-         const yearValue = IncomeList.filter( item => {
-            return item.last_updated.substring(0,4) == String(date)
-         })
-         setIncomeData({
-            filteredIncomes: yearValue
-         })
-         const len = yearValue.length;
-         for( let i=0; i<len; i++){
-            DateVal = (yearValue[i].sold_quantity * yearValue[i].price)+DateVal;
-         }
-         setValue(DateVal);
-      }
-   }
-
+   
    const handlePickerchange = val => {
 
       const newDate = new Date();
@@ -181,19 +75,35 @@ const IncomeScreen = () => {
             DateVal = (todayValue[i].sold_quantity * todayValue[i].price)+DateVal;
          }
          setValue(DateVal);
+
+         // let dataForGraph = [];
+
+         // for(let i= 0; i<len; i++){
+         //    const x = new Date(todayValue[i].last_updated)
+         //    const y = todayValue[i].sold_quantity * todayValue[i].price;
+         //    dataForGraph.push({x: x, y: y}) 
+         // }
+         // setGraphData(dataForGraph);
       }  
       else if(val == "week"){
          setPicker({ 
-             all: false,
+            all: false,
             day: false,
             week: true,
             month: false,
             year: false
-         });         
+         });    
+         let week = [];
+
+         for (let i = 0; i<7; i++) {
+            const first = newDate.getDate() + newDate.getDay() + 1;
+            const day = new Date(newDate.setDate(first)).toISOString().slice(0,10);
+            week.push(day)
+         }     
       }  
       else if(val == "month"){
          setPicker({ 
-             all: false,
+            all: false,
             day: false,
             week: false,
             month: true,
@@ -211,10 +121,31 @@ const IncomeScreen = () => {
             DateVal = (monthValue[i].sold_quantity * monthValue[i].price)+DateVal;
          }
          setValue(DateVal);
+
+         let dataForGraph = [];
+         let y = 0;
+
+         // for(let i= 0; i<len; i++){
+         //    const x = new Date(monthValue[i].last_updated)
+         //    for (let j = 0; j<len; j++){
+         //       const curr = new Date(monthValue[j].last_updated) 
+         //       if(x.getMonth().toString() == curr.getMonth().toString()){
+         //          y = monthValue[j].sold_quantity * monthValue[j].price + y;
+         //       }
+         //    }                        
+         //    dataForGraph.push({x: x, y: y})
+         // }
+         // setGraphData(dataForGraph);
+         for(let i= 0; i<len; i++){
+            const x = new Date(monthValue[i].last_updated)
+            const y = monthValue[i].sold_quantity * monthValue[i].price;
+            dataForGraph.push({x: x, y: y})
+         }
+         setGraphData(dataForGraph);
       }  
       else if(val == "year"){
          setPicker({ 
-             all: false,
+            all: false,
             day: false,
             week: false,
             month: false,
@@ -232,89 +163,48 @@ const IncomeScreen = () => {
             DateVal = (yearValue[i].sold_quantity * yearValue[i].price)+DateVal;
          }
          setValue(DateVal);
+
+         let dataForGraph = [];
+
+         for(let i= 0; i<len; i++){
+            const x = new Date(yearValue[i].last_updated)
+            const y = yearValue[i].sold_quantity * yearValue[i].price;
+            dataForGraph.push({x: x, y: y})
+         }
+         // console.log(dataForGraph);
+         setGraphData(dataForGraph);
       } 
    }
 
    return(
       <View style={styles.container}>
          <View style={styles.mainActitivity}> 
-            {/* <View style={styles.picker}>
-               <DropDownPicker 
-                  items={dateData}
-                  placeholder="Time Period"
-                  defaultValue={state.status}
-                  containerStyle={{height: 40, width: '40%', alignSelf: 'flex-end'}}
-                  style={{backgroundColor: '#fafafa'}}
-                  itemStyle={{
-                     justifyContent: 'flex-start'
-                  }}
-                  dropDownStyle={{backgroundColor: '#fafafa'}}
-                  onChangeItem={item => handleStatusChange(item.value)}
-               />
-            </View> */}
-            {
-               state.status == 'today' ?
-               <View style={styles.IncomeSection}>
-                  <Text style={styles.IncomeDisplay}>
-                     Today's Income: {value}
-                  </Text>
-                  <View style={{display: graph ? 'flex' : 'none' }}>
-                     <IncomeChart /> 
-                  </View>
-                  <TouchableOpacity style={{alignItems: 'center', flexDirection: 'row'}} onPress={() => setGraph(!graph)}>   
-                      <Text style={{color: '#078bab'}}>{graph ? "Close Graph" : "See Graph"}</Text>                                         
-                     <Icon  
-                        style={{padding: 5}}                       
-                        name={
-                           graph ? 
-                           "arrow-up-drop-circle-outline" : 
-                           "arrow-down-drop-circle-outline"
-                        } 
-                        size={30} 
-                        color="#078bab" 
-                     />                                        
-                  </TouchableOpacity>
-               </View> :
-               <View style={styles.IncomeSection}>
-                  <Text style={styles.IncomeDisplay}>
-                     Income: NRs. {value}
-                  </Text>
-                  <View style={{display: graph ? 'flex' : 'none' }}>
-                     <IncomeChart /> 
-                  </View>
-                  <TouchableOpacity style={{alignItems: 'center', flexDirection: 'row'}} onPress={() => setGraph(!graph)}>   
-                      <Text style={{color: '#078bab'}}>{graph ? "Close Graph" : "See Graph"}</Text>                                         
-                     <Icon  
-                        style={{padding: 5}}                       
-                        name={
-                           graph ? 
-                           "arrow-up-drop-circle-outline" : 
-                           "arrow-down-drop-circle-outline"
-                        } 
-                        size={30} 
-                        color="#078bab" 
-                     />                                        
-                  </TouchableOpacity>
+         {
+            picker.all ?
+            null :
+            <View style={styles.IncomeSection}>               
+               <Text style={styles.IncomeDisplay}>                  
+                  Income: NRs. {value}                 
+               </Text>              
+               <View style={{display: graph ? 'flex' : 'none' }}>
+                  <IncomeChart data={graphData} /> 
                </View>
-            }
-            {
-               state.status == 'thismonth' ?
-               <View style={styles.IncomeSection}>
-                  <Text style={styles.IncomeDisplay}>
-                     This Month's Income: {value}
-                  </Text>
-               </View> :
-               null
-            }
-            {
-               state.status == 'thisyear' ?
-               <View style={styles.IncomeSection}>
-                  <Text style={styles.IncomeDisplay}>
-                     This Year's Income: {value}
-                  </Text>
-               </View> :
-               null
-            }      
+               <TouchableOpacity style={{alignItems: 'center', flexDirection: 'row'}} onPress={() => setGraph(!graph)}>   
+                     <Text style={{color: '#078bab'}}>{graph ? "Close Graph" : "See Graph"}</Text>                                         
+                  <Icon  
+                     style={{padding: 5}}                       
+                     name={
+                        graph ? 
+                        "arrow-up-drop-circle-outline" : 
+                        "arrow-down-drop-circle-outline"
+                     } 
+                     size={30} 
+                     color="#078bab" 
+                  />                                        
+               </TouchableOpacity>
+            </View>
+         }            
+            
             <View style={styles.pickDate}>
                <TouchableOpacity style={{padding: 8, borderRadius: 50 ,backgroundColor: picker.all ? '#fafafa' : null}} onPress={() => handlePickerchange("all")}>
                   <Text style={styles.DateTexts}>All</Text>
@@ -396,23 +286,7 @@ const styles = StyleSheet.create({
       flex: 1,
       position: 'relative',
       backgroundColor: '#e6f1fa',
-   },
-   activityView: {
-      borderRadius: 15,
-      alignSelf: 'center',
-      alignItems: 'center',
-      backgroundColor: '#fff',
-      width: '90%',
-      shadowColor: "#000",
-      shadowOffset: {
-         width:  2,
-         height: 3,
-      },
-      shadowOpacity: 0.8,
-      shadowRadius: 10,
-
-      elevation: 7,
-   },
+   },   
    cardContent: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -423,34 +297,6 @@ const styles = StyleSheet.create({
       marginHorizontal: 5,
       color: '#078bab',
       fontSize: 18,
-   },
-   searchBar: {
-      marginHorizontal: 10,
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginTop: 10,
-      borderColor: '#078bab',
-      borderWidth: 1,
-      borderRadius: 50,
-      height: 40      
-   },
-   activityTopicText: {
-      fontSize: 20,
-      fontWeight: '700'
-   },
-   icon: {
-      padding: 20,      
-      backgroundColor: '#078bab', 
-      borderRadius: 50 ,
-      shadowColor: "#000",
-      shadowOffset: {
-         width:  2,
-         height: 3,
-      },
-      shadowOpacity: 0.8,
-      shadowRadius: 10,
-
-      elevation: 12,
    },
    errorDisplay: {
       flex: 1,

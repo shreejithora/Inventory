@@ -2,130 +2,189 @@
    {
       "product_id": "1111",
       "name": "Leather black boots",
+      "category": "clothing",
+      "sub_category": "shoes",
       "quantity": "5",
       "price": "1200",
       "last_updated": "2021-8-16 | Monday | 2:00PM"
    },
    {
       "product_id": "1112",
-      "name": "Bag",
+      "name": "Hemp Bag",
+      "category": "bag",
+      "sub_category": "back carry",
       "quantity": "10000",
       "price": "12000",
       "last_updated": "2021-8-30 | Sunday | 2:00PM"
    },
    {
       "product_id": "1113",
-      "name": "Book",
+      "name": "Harry Potter: Goblet of Fire",
+      "category": "stationery",
+      "sub_category": "book",
       "quantity": "15",
       "price": "100",
       "last_updated": "2021-8-17 | Sunday | 2:00PM"
    },
    {
       "product_id": "1114",
-      "name": "Cream",
+      "name": "Night Cream",
+      "category": "cosmetics",
+      "sub_category": "cream",
       "quantity": "24",
-      "price": "200"
-   ,"last_updated": "2021-8-18 | Sunday | 2:00PM"},
+      "price": "200",
+      "last_updated": "2021-8-18 | Sunday | 2:00PM"
+   },
    {
       "product_id": "1115",
-      "name": "Jacket",
+      "name": "Winter Down Jacket",
+      "category": "clothing",
+      "sub_category": "jacket",
       "quantity": "100",
-      "price": "1500"
-   ,"last_updated": "2021-8-20 | Sunday | 2:00PM"},
+      "price": "1500",
+      "last_updated": "2021-8-20 | Sunday | 2:00PM"
+   },
    {
       "product_id": "1101",
-      "name": "Shoes",
+      "name": "Vitamin C Serum",
+      "category": "cosmetics",
+      "sub_category": "serum",
       "quantity": "5",
-      "price": "1200"
-   ,"last_updated": "2021-8-11 | Sunday | 2:00PM"},
+      "price": "1200",
+      "last_updated": "2021-8-11 | Sunday | 2:00PM"
+   },
    {
       "product_id": "1117",
-      "name": "Shoes",
+      "name": "Pink Hand Bag",
+      "category": "bag",
+      "sub_category": "hand bag",
       "quantity": "5",
-      "price": "1200"
-   ,"last_updated": "2021-8-04 | Sunday | 2:00PM"},
+      "price": "1200",
+      "last_updated": "2021-8-04 | Sunday | 2:00PM"
+   },
    {
       "product_id": "1118",
-      "name": "Shoes",
+      "name": "Redmi note 7 pro",
+      "category": "mobile",
+      "sub_category": "Mi / Redmi",
       "quantity": "5",
-      "price": "1200"
-   ,"last_updated": "2021-8-22 | Sunday | 2:00PM"},
+      "price": "1200",
+      "last_updated": "2021-8-22 | Sunday | 2:00PM"
+   },
    {
       "product_id": "1119",
-      "name": "Shoes",
+      "name": "Woollen Leg Warmer",
+      "category": "Clothing",
+      "sub_category": "Leg / Winter / Wool",
       "quantity": "5",
-      "price": "1200"
-   ,"last_updated": "2021-8-27 | Sunday | 2:00PM"},
+      "price": "1200",
+      "last_updated": "2021-8-27 | Sunday | 2:00PM"
+   },
    {
       "product_id": "1120",
-      "name": "Shoes",
+      "name": "Diamond Crystal Necklace",
+      "category": "accessories",
+      "sub_category": "necklace",
       "quantity": "5",
-      "price": "1200"
-   ,"last_updated": "2021-8-12 | Sunday | 2:00PM"},
+      "price": "1200",
+      "last_updated": "2021-8-12 | Sunday | 2:00PM"
+   },
    {
       "product_id": "1121",
-      "name": "Shoes",
+      "name": "Platinum Ring with diamond stone",
+      "category": "accessories",
+      "sub_category": "ring",
       "quantity": "5",
-      "price": "1200"
-   ,"last_updated": "2021-8-09 | Sunday | 2:00PM"},
+      "price": "1200",
+      "last_updated": "2021-8-09 | Sunday | 2:00PM"
+   },
    {
       "product_id": "1122",
-      "name": "Shoes",
+      "name": "Ink Pen with Pointed Tip",
+      "category": "stationery",
+      "sub_category": "pen",
       "quantity": "5",
-      "price": "1200"
-   ,"last_updated": "2021-8-08 | Sunday | 2:00PM"},
+      "price": "1200",
+      "last_updated": "2021-8-08 | Sunday | 2:00PM"
+   },
    {
       "product_id": "1123",
-      "name": "Shoes",
+      "name": "Doms Pencil",
+      "category": "stationery",
+      "sub_category": "pencil",
       "quantity": "5",
-      "price": "1200"
-   ,"last_updated": "2021-8-04 | Sunday | 2:00PM"},
+      "price": "1200","last_updated": "2021-8-04 | Sunday | 2:00PM"
+   },
    {
       "product_id": "1124",
-      "name": "Shoes",
+      "name": "Nataraj Pencil",
+      "category": "stationery",
+      "sub_category": "pencil",
       "quantity": "5",
-      "price": "1200"
-   ,"last_updated": "2021-8-03 | Sunday | 2:00PM"},
+      "price": "1200",
+      "last_updated": "2021-8-03 | Sunday | 2:00PM"
+   },
    {
       "product_id": "1125",
-      "name": "Shoes",
+      "name": "Nike flat Sneakers",
+      "category": "clothing",
+      "sub_category": "shoes",
       "quantity": "5",
-      "price": "1200"
-   ,"last_updated": "2021-8-18 | Sunday | 2:00PM"},
+      "price": "1200",
+      "last_updated": "2021-8-18 | Sunday | 2:00PM"
+   },
    {
       "product_id": "1126",
-      "name": "Shoes",
+      "name": "Samsung Note 9",
+      "category": "electronics",
+      "sub_category": "mobile | samsung",
       "quantity": "5",
-      "price": "1200"
-   ,"last_updated": "2021-8-15 | Sunday | 2:00PM"},
+      "price": "1200",
+      "last_updated": "2021-8-15 | Sunday | 2:00PM"
+   },
    {
       "product_id": "1127",
-      "name": "Shoes",
+      "name": "Samsung S10+",
+      "category": "electronics",
+      "sub_category": "mobile | samsung",
       "quantity": "5",
-      "price": "1200"
-   ,"last_updated": "2021-8-11 | Sunday | 2:00PM"},
+      "price": "1200",
+      "last_updated": "2021-8-11 | Sunday | 2:00PM"
+   },
    {
       "product_id": "1128",
-      "name": "Shoes",
+      "name": "21 inch LCD TV | Konika",
+      "category": "electronics",
+      "sub_category": "tv",
       "quantity": "5",
-      "price": "1200"
-   ,"last_updated": "2021-8-10 | Sunday | 2:00PM"},
+      "price": "1200",
+      "last_updated": "2021-8-10 | Sunday | 2:00PM"
+   },
    {
       "product_id": "1129",
-      "name": "Shoes",
+      "name": "22 inch LED Smart TV | Himstar",
+      "category": "electronics",
+      "sub_category": "tv",
       "quantity": "5",
-      "price": "1200"
-   ,"last_updated": "2021-8-29 | Sunday | 2:00PM"},
+      "price": "1200",
+      "last_updated": "2021-8-29 | Sunday | 2:00PM"
+   },
    {
       "product_id": "1130",
-      "name": "Shoes",
+      "name": "Samsung Gear s2",
+      "category": "electronics",
+      "sub_category": "handwatch | watch",
       "quantity": "5",
-      "price": "1200"
-   ,"last_updated": "2021-8-24 | Sunday | 2:00PM"},
+      "price": "1200",
+      "last_updated": "2021-8-24 | Sunday | 2:00PM"
+   },
    {
       "product_id": "1131",
-      "name": "Shoes",
+      "name": "Pencil Hill Red Bottoms",
+      "category": "clothing",
+      "sub_category": "shoes",
       "quantity": "5",
-      "price": "1200"
-   ,"last_updated": "2021-8-27 | Sunday | 2:00PM"}
+      "price": "1200",
+      "last_updated": "2021-8-27 | Sunday | 2:00PM"
+   }
 ]

@@ -4,14 +4,14 @@
       "name": "Shoes",
       "sold_quantity": "12",
       "price": "1500",
-      "last_updated": "2021-3-31"
+      "last_updated": "2021-4-1"
    },
    {
       "product_id": "1112",
       "name": "Bag",
       "sold_quantity": "100",
       "price": "2000",
-      "last_updated": "2021-3-31"
+      "last_updated": "2021-4-1"
    },
    {
       "product_id": "1113",
