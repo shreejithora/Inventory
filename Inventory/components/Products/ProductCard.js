@@ -5,6 +5,7 @@ import {
   Text, 
   TouchableOpacity, 
   StyleSheet,
+  Image
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
@@ -21,15 +22,50 @@ const ProductCard = ({items}) => {
 
    return(
       <View>
-         <Animatable.View animation="fadeInUp" duration={1000} style={styles.card}>
+         <Animatable.View animation="fadeInUp" duration={1200} style={styles.card}>
             <TouchableOpacity onPress={() => setProductDetailModal(!productDetailModal)}>
                <View style={styles.cardContent}>  
-                  <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.product_id}</Text> 
+                  <View style={{flex: 1}}>
+                     <Image 
+                        source={require('../../assets/logo.png')}
+                        style={{height: 40, width: 40, borderRadius: 50, borderColor:'#078bab', borderWidth: 1, padding: 5}}
+                     />                     
+                  </View>
+                  <View style={{flexDirection: 'column', flex: 4, marginRight: 10}}>
+                     <View>
+                        <Text style={styles.texts}>{items.name} <Text style={[styles.texts, {fontSize: 15, color: '#39bcdb', fontStyle: 'italic'}]}>( {items.category} )</Text></Text>                     
+                     </View>
+                     <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                        <Text 
+                           style={[styles.texts, 
+                              {
+                                 fontStyle: 'italic', 
+                                 fontSize: 16, 
+                                 color: items.quantity <= 50 ? 'red' : 'green'
+                              }]}>
+                              Stocks: {items.quantity}  
+                           <Icon 
+                              name={ items.quantity <= 50 ? "arrow-down" : "arrow-up"} 
+                              color={items.quantity <= 50 ? "red" : "green"}
+                              size={15}
+                           />
+                           {
+                              items.quantity <= 50 ?
+                              <View style={{paddingHorizontal: 5, borderRadius: 20, backgroundColor: 'red'}}>
+                                 <Text style={[styles.texts, {fontStyle: 'italic', color: '#fff', fontSize: 12, fontWeight: '700'}]}>Low</Text>
+                              </View> :
+                              null
+                           }
+                           </Text>
+                        <Text style={[styles.texts, {fontWeight: '700'}]}>Rs. {items.price}</Text>
+                     </View>
+                  </View>
+                  {/* <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.product_id}</Text> 
                   <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left'}]}>
                      {items.name.length > 12 ? items.name.slice(0,11)+'...' : items.name}
                   </Text>  
                   <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{items.quantity}</Text>            
-                  <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{items.price}</Text>
+                  <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{items.price}</Text> */}
                </View>         
             </TouchableOpacity>
             
@@ -110,20 +146,23 @@ const styles = StyleSheet.create({
       color: '#078bab',
       fontSize: 18,
    },
+   texts: {
+      color: '#078bab',
+      fontWeight: 'normal',
+      fontSize: 18
+   },
    card: {
       padding: 15,
-      backgroundColor: '#fff',
+      
       flex: 1,
       // marginVertical: 5,
-      marginLeft: 5,
-      marginRight: 5,   
-      borderBottomColor: '#f4f4f4',
-      borderBottomWidth: 1,   
-      
+      margin: 5,   
+     borderRadius: 20 
    },
    cardContent: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      backgroundColor: '#fafafa',
       borderRadius: 15,
    },
    cardInfo: {      

@@ -74,16 +74,7 @@ const IncomeScreen = () => {
          for( let i=0; i<len; i++){
             DateVal = (todayValue[i].sold_quantity * todayValue[i].price)+DateVal;
          }
-         setValue(DateVal);
-
-         // let dataForGraph = [];
-
-         // for(let i= 0; i<len; i++){
-         //    const x = new Date(todayValue[i].last_updated)
-         //    const y = todayValue[i].sold_quantity * todayValue[i].price;
-         //    dataForGraph.push({x: x, y: y}) 
-         // }
-         // setGraphData(dataForGraph);
+         setValue(DateVal);      
       }  
       else if(val == "week"){
          setPicker({ 
@@ -171,7 +162,6 @@ const IncomeScreen = () => {
             const y = yearValue[i].sold_quantity * yearValue[i].price;
             dataForGraph.push({x: x, y: y})
          }
-         // console.log(dataForGraph);
          setGraphData(dataForGraph);
       } 
    }
@@ -206,20 +196,20 @@ const IncomeScreen = () => {
          }            
             
             <View style={styles.pickDate}>
-               <TouchableOpacity style={{padding: 8, borderRadius: 50 ,backgroundColor: picker.all ? '#fafafa' : null}} onPress={() => handlePickerchange("all")}>
-                  <Text style={styles.DateTexts}>All</Text>
+               <TouchableOpacity style={picker.all ? styles.picked : null} onPress={() => handlePickerchange("all")}>
+                  <Text style={[styles.DateTexts, {color: picker.all ? '#fff' : '#078bab'}]}>All</Text>
                </TouchableOpacity>
-               <TouchableOpacity style={{padding: 8, borderRadius: 50 ,backgroundColor: picker.day ? '#fafafa' : null}} onPress={() => handlePickerchange("day")}>
-                  <Text style={styles.DateTexts}>1D</Text>
+               <TouchableOpacity style={picker.day ? styles.picked : null} onPress={() => handlePickerchange("day")}>
+                  <Text style={[styles.DateTexts, {color: picker.day ? '#fff' : '#078bab'}]}>1D</Text>
                </TouchableOpacity>
-               <TouchableOpacity style={{padding: 8, borderRadius: 50 ,backgroundColor: picker.week ? '#fafafa' : null}} onPress={() => handlePickerchange("week")}>
-                  <Text style={styles.DateTexts}>1W</Text>
+               <TouchableOpacity style={picker.week ? styles.picked : null} onPress={() => handlePickerchange("week")}>
+                  <Text style={[styles.DateTexts, {color: picker.week ? '#fff' : '#078bab'}]}>1W</Text>
                </TouchableOpacity>
-               <TouchableOpacity style={{padding: 8, borderRadius: 50 ,backgroundColor: picker.month ? '#fafafa' : null}} onPress={() => handlePickerchange("month")}>
-                  <Text style={styles.DateTexts}>1M</Text>
+               <TouchableOpacity style={picker.month ? styles.picked : null} onPress={() => handlePickerchange("month")}>
+                  <Text style={[styles.DateTexts, {color: picker.month ? '#fff' : '#078bab'}]}>1M</Text>
                </TouchableOpacity>
-               <TouchableOpacity style={{padding: 8, borderRadius: 50 ,backgroundColor: picker.year ? '#fafafa' : null}} onPress={() => handlePickerchange("year")}>
-                  <Text style={styles.DateTexts}>1Y</Text>
+               <TouchableOpacity style={picker.year ? styles.picked : null} onPress={() => handlePickerchange("year")}>
+                  <Text style={[styles.DateTexts, {color: picker.year ? '#fff' : '#078bab'}]}>1Y</Text>
                </TouchableOpacity>
             </View>                
             <View style={styles.cardContent}>  
@@ -278,9 +268,17 @@ const styles = StyleSheet.create({
       justifyContent: 'space-around',
       paddingVertical: 10
    },
+   picked: {
+      padding: 8,
+      width: '15%',
+      borderRadius: 50,
+      backgroundColor: '#078bab'
+   },
    DateTexts: {
+      fontWeight: '700',
       color: '#078bab',
-      fontSize: 18,      
+      fontSize: 18, 
+      alignSelf: 'center'     
    },
    mainActitivity: {
       flex: 1,

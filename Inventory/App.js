@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 
 import 'react-native-gesture-handler';
+// import * as Animatable from 'react-native-animatable';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -14,15 +15,40 @@ import UsersNav from './navigation/UsersNav';
 import VendorsNav from './navigation/VendorsNav';
 import SalesNav from './navigation/SalesNav';
 import QuotationNav from './navigation/QuotationNav';
+import { useEffect } from 'react';
 
 const Drawer = createDrawerNavigator();
 
 const App = () => {
-  const[loginstate,setLoginState]=useState(true
-  );
+  const[loginState,setLoginState]=useState({
+    isLoading: true,
+    display: false
+  });
+
+  useEffect(() => {
+    setTimeout( () => {
+      setLoginState({
+        isLoading: false,
+        display: true
+      })
+    }, 5000);
+  }, [loginState.isLoading])
+
+  if( loginState.isLoading ) {
+    return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#078bab'}}>
+          <Image 
+            animation="fadeIn"
+            source={require('./assets/logo.png')}
+            style={{height: 200, width: 200, borderRadius: 100}}
+          />
+          <Text style={{fontSize: 30, color: '#fff'}}>Welcome</Text>
+        </View>
+    )
+  }
   return(
     <NavigationContainer>
-      {loginstate ? 
+      {loginState.display ? 
       <Drawer.Navigator drawerContent={ props => <DrawerContent {...props}/>}>
         <Drawer.Screen name="Home" component = { HomeTabNav } />
         <Drawer.Screen name="Users" component = { UsersNav } />

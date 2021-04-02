@@ -1,12 +1,14 @@
 import React,{useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
+import Heads from '../../../components/Heads';
+
 import IncomeScreen from './IncomeScreen';
 import ExpenseScreen from './ExpenseScreen';
 import { useEffect } from 'react';
 
-const EntriesScreen = (props) => {
-   
+const EntriesScreen = (props, {navigation}) => {
+   console.log(navigation)
    useEffect( () => {
       setState({
          activeIncome: props.income,
@@ -37,6 +39,7 @@ const EntriesScreen = (props) => {
 
    return (
       <View style={styles.container}>
+         <Heads nav={navigation} title="Entries" tabBool={1} />
          <View style={styles.transact}>
             <View style={styles.tabs}>      
                <TouchableOpacity 

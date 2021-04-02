@@ -5,18 +5,21 @@ import {
   StyleSheet, 
   ScrollView,
   TouchableOpacity,
-  FlatList
+  FlatList,
+  Button
 } from 'react-native';
 
 import HomeCard from '../../components/HomeCard';
 import ActivityCard from '../../components/ActivityCard';
+import Heads from '../../components/Heads';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const SalesList = require('../../models/Sales.json');
 
 const HomeScreen = ({navigation}) => {
   return(
-    <View style={styles.container}>                  
+    <View style={styles.container}>  
+      <Heads nav={navigation} title="Inventory" tabBool={1} />
       <View style={styles.cardView}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>           
           <HomeCard iconName={'cart-outline'} tabName={'Products'} cardName={'Products'} nav={navigation}/>
@@ -102,6 +105,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   activityTopicText: {
+    color: '#078bab',
     fontSize: 20,
     fontWeight: '700'
   },

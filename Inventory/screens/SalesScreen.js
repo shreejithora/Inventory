@@ -10,10 +10,11 @@ import {
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import Heads from '../components/Heads';
 import SalesCard from '../components/Sales/SalesCard';
 const SalesList = require('../models/Sales.json');
 
-const SalesScreen = () => {
+const SalesScreen = ({navigation}) => {
 
    const [AddProductModal, setAddProductModal] = useState(false);   
 
@@ -42,6 +43,7 @@ const SalesScreen = () => {
 
    return(
       <View style={styles.container}>
+         <Heads nav={navigation} title="Sales" tabBool={0} />
          <View style={styles.mainActitivity}> 
             <View style={styles.searchBar}>
                <Icon style={{marginLeft: 10}} name="text-box-search-outline" size={20} color="#078bab" />
