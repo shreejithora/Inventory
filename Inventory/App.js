@@ -7,6 +7,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import DrawerContent from './screens/Drawer/DrawerContent';
+import { useState } from 'react';
+import RootStackScreen from './screens/RootStacks/RootStackScreen';
 import HomeTabNav from './navigation/HomeTabNav';
 import UsersNav from './navigation/UsersNav';
 import VendorsNav from './navigation/VendorsNav';
@@ -16,8 +18,10 @@ import QuotationNav from './navigation/QuotationNav';
 const Drawer = createDrawerNavigator();
 
 const App = () => {
+  const[loginstate,setLoginState]=useState(false);
   return(
     <NavigationContainer>
+      {loginstate ? 
       <Drawer.Navigator drawerContent={ props => <DrawerContent {...props}/>}>
         <Drawer.Screen name="Home" component = { HomeTabNav } />
         <Drawer.Screen name="Users" component = { UsersNav } />
@@ -25,7 +29,10 @@ const App = () => {
         <Drawer.Screen name="Sales" component = { SalesNav } />
         <Drawer.Screen name="Quotation" component = { QuotationNav } />
       </Drawer.Navigator>
-    </NavigationContainer>
+    :
+    <RootStackScreen/>
+}
+</NavigationContainer>
   )
 }
 
