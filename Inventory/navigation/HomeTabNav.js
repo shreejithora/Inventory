@@ -76,7 +76,7 @@ const EntriesStackScreen=({navigation, route})=>{
 
    return(
    <EntriesStack.Navigator headerMode="none">
-      <EntriesStack.Screen name="EntriesScreen" children = {() => <EntriesScreen income={route.params == null ? 1 : route.params.income} expense={route.params == null ? 0 : route.params.expense} />}/>
+      <EntriesStack.Screen name="EntriesScreen" children = {() => <EntriesScreen income={route.params == null ? 1 : route.params.income} expense={route.params == null ? 0 : route.params.expense} navigation={navigation} />}/>
    </EntriesStack.Navigator>
    )
 }

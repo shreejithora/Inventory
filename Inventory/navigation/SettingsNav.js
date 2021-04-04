@@ -13,34 +13,8 @@ const SettingsStack = createStackNavigator();
 
 const SettingsNav = ({navigation}) =>{
    return(
-      <SettingsStack.Navigator screenOptions= { {
-         headerStyle: {
-            backgroundColor: '#078bab',
-         },
-         headerTintColor: '#fff',
-         headerTitleStyle: {
-            fontWeight: 'bold'
-         }
-      }}>
-         <SettingsStack.Screen name="SettingsScreen" component = {SettingsScreen}
-            options= {{ 
-            title: 'Settings ',
-            headerLeft: () => (
-               <Icon.Button 
-               name="menu"
-               size={25}   
-               backgroundColor= "#078bab"
-               onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
-               ),
-            headerRight: () => (
-               <Icon.Button 
-               name="home"
-               size={25}   
-               backgroundColor= "#078bab"
-               onPress = {  () => {navigation.navigate('HomeTab')}} ></Icon.Button>
-            )
-            }}
-         />
+      <SettingsStack.Navigator headerMode="none">
+         <SettingsStack.Screen name="SettingsScreen" component = {SettingsScreen}/>
          <SettingsStack.Screen name="PreferancesScreen" component = {PreferencesScreen}
             options={{
                title: 'Preferences Screen'

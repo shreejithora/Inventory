@@ -8,11 +8,13 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import Heads from '../components/Heads';
 import QuotationCard from '../components/Quotations/QuotationCard';
 
 const ProductsList = require('../models/Products.json');
 
-const QuotationScreen = () => {
+const QuotationScreen = ({navigation}) => {
 
    const [productData, setProductData] = useState({
       allProducts: ProductsList,
@@ -40,6 +42,7 @@ const QuotationScreen = () => {
 
    return(
       <View style={styles.container}>
+         <Heads nav={navigation} title="Quotation" tabBool={0} />
          <View style={styles.mainActitivity}> 
             <View style={styles.searchBar}>
                <Icon style={{marginLeft: 10}} name="text-box-search-outline" size={20} color="#078bab" />

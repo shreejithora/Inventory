@@ -137,10 +137,10 @@ const ProductsScreen = ({navigation}) => {
    })
 
    const len = ProductsList.length
-
    useEffect( () => {
       for(let i=0; i<=len; i++) {
          setProductCounter(productCounter++);
+         console.log(productCounter);
       }
    }, []);
 
@@ -221,7 +221,7 @@ const ProductsScreen = ({navigation}) => {
                <View style={styles.searchBar}>
                   <Icon style={{marginLeft: 10}} name="text-box-search-outline" size={20} color="#078bab" />
                   
-                  <TextInput style={{ marginLeft: 5, color: '#000'}} 
+                  <TextInput style={{ marginLeft: 5, width: '100%' ,color: '#000'}} 
                      placeholder="Search" 
                      onChangeText={ (val) => handleSearchText(val)} 
                   />            

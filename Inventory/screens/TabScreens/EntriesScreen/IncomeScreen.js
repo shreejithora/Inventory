@@ -122,14 +122,15 @@ const IncomeScreen = () => {
          //       const curr = new Date(monthValue[j].last_updated) 
          //       if(x.getMonth().toString() == curr.getMonth().toString()){
          //          y = monthValue[j].sold_quantity * monthValue[j].price + y;
-         //       }
+         //          console.log(y)
+         //       }  
          //    }                        
          //    dataForGraph.push({x: x, y: y})
          // }
          // setGraphData(dataForGraph);
          for(let i= 0; i<len; i++){
-            const x = new Date(monthValue[i].last_updated)
-            const y = monthValue[i].sold_quantity * monthValue[i].price;
+            const y = new Date(monthValue[i].last_updated)
+            const x = monthValue[i].sold_quantity * monthValue[i].price;
             dataForGraph.push({x: x, y: y})
          }
          setGraphData(dataForGraph);
@@ -158,8 +159,8 @@ const IncomeScreen = () => {
          let dataForGraph = [];
 
          for(let i= 0; i<len; i++){
-            const x = new Date(yearValue[i].last_updated)
-            const y = yearValue[i].sold_quantity * yearValue[i].price;
+            const y = new Date(yearValue[i].last_updated)
+            const x = yearValue[i].sold_quantity * yearValue[i].price;
             dataForGraph.push({x: x, y: y})
          }
          setGraphData(dataForGraph);

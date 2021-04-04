@@ -1,10 +1,20 @@
 import React from 'react';
 
-import { Text } from 'react-native';
+import { 
+   View, 
+   Text } 
+from 'react-native';
 
-const SecurityScreen = () => {
+import StackHeads from '../../components/StackHeads';
+
+const SecurityScreen = ({navigation}) => {
    return(
-      <Text>Hello</Text>
+        <View>
+         <StackHeads nav={navigation} title="Security" />
+         <View>
+            <Text>Security</Text>
+         </View>
+      </View>
    )
 }
 

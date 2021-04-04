@@ -28,7 +28,10 @@ const HomeScreen = ({navigation}) => {
           <HomeCard iconName={'cash-minus'} income={0} expense={1} tabName={'Entries'} cardName={'Expense'} nav={navigation}/> 
           <HomeCard iconName={'truck-fast-outline'} cus={0} sup={1} tabName={'Vendors'} cardName={'Suppliers'} nav={navigation}/> 
           <HomeCard iconName={'account-multiple-outline'} cus={1} sup={0} tabName={'Vendors'} cardName={'Customers'} nav={navigation}/>                                         
-        </ScrollView>          
+        </ScrollView>   
+        <TouchableOpacity onPress={() => console.log('hi')}>
+          <Icon name="arrow-right" size={25} color='#078bab' style={{alignSelf: 'flex-end', marginRight: 20}} />
+        </TouchableOpacity>       
       </View>   
 
       {/* Table of Cards */}
@@ -57,7 +60,8 @@ const HomeScreen = ({navigation}) => {
               </TouchableOpacity>
             </View> 
           </View>
-        </View>  
+        </View>
+      {/* </ScrollView>   */}
     </View>
   )
 }
@@ -76,8 +80,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#e6f1fa',    
   },
   mainActitivity: {
+    marginTop: -20,
     backgroundColor: '#e6f1fa',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   activityView: {
     padding: 6,
@@ -86,7 +91,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     width: '90%',
-    height: 450,
+    height: '80%',
     shadowColor: "#000",
     shadowOffset: {
         width:  2,

@@ -3,7 +3,9 @@ import React from 'react';;
 import {
    View,
    Text,
-   StyleSheet  
+   StyleSheet,
+   TouchableOpacity,
+   Touchable
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import  * as Animatable from 'react-native-animatable';
@@ -14,33 +16,45 @@ const Heads = ({nav, title, tabBool}) => {
          <Animatable.View 
             animation="bounceIn"
             duration={1000}
-            style={{flexDirection: 'row', alignItems: 'center'}}>      
-            <Icon.Button 
-               style={styles.navButton}
-               name="arrow-right-thick"
-               size={30}   
-               color="#078bab"
-               backgroundColor= "#e6f1fa"
-               onPress = {  () => {nav.openDrawer()}} />
-            <Text style={styles.headerText}>{title}</Text>
+         > 
+            <TouchableOpacity 
+               style={{
+                  flexDirection: 'row', 
+                  alignItems: 'center',
+               }}
+               onPress = {  () => {nav.openDrawer()}} 
+            >
+               <Icon
+                  style={styles.navButton}
+                  name="arrow-right-thick"
+                  size={30}   
+                  color="#078bab"
+                  backgroundColor= "#e6f1fa"
+               />
+               <Text style={styles.headerText}>{title}</Text>
+         </TouchableOpacity>
          </Animatable.View>
          {
             tabBool ?
-            <Icon.Button                
-               style={{alignSelf: 'stretch'}}
-               name="bell-outline" 
-               size={28} 
-               color="#078bab" 
-               backgroundColor="#e6f1fa"
-            /> :      
-            <Icon.Button                
-               style={{alignSelf: 'stretch'}}
-               name="home-outline" 
-               size={28} 
-               color="#078bab" 
-               backgroundColor="#e6f1fa"
-               onPress={ () => nav.navigate('HomeTab')}
-            />
+            <TouchableOpacity>
+               <Icon             
+                  style={{alignSelf: 'stretch', marginRight: 10}}
+                  name="bell-outline" 
+                  size={28} 
+                  color="#078bab" 
+                  backgroundColor="#e6f1fa"
+               />
+            </TouchableOpacity> :      
+            <TouchableOpacity>
+               <Icon
+                  style={{alignSelf: 'stretch', marginRight: 10}}
+                  name="home-outline" 
+                  size={28} 
+                  color="#078bab" 
+                  backgroundColor="#e6f1fa"
+                  onPress={ () => nav.navigate('HomeTab')}
+               />
+            </TouchableOpacity>
          }
       </View>
    )
@@ -60,8 +74,9 @@ const styles = StyleSheet.create({
       width: '100%'
    },
    headerText: {
+      marginLeft: 10,
       fontFamily: 'sans-serif-medium',
-      fontSize: 22,
+      fontSize: 25,
       fontWeight: '700',
       textAlign: "left",
       color: '#078bab',
