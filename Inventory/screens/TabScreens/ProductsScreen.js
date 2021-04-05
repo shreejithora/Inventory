@@ -140,7 +140,6 @@ const ProductsScreen = ({navigation}) => {
    useEffect( () => {
       for(let i=0; i<=len; i++) {
          setProductCounter(productCounter++);
-         console.log(productCounter);
       }
    }, []);
 

@@ -1,24 +1,23 @@
-import React from 'react';
+
+import React, {useContext} from 'react';
+
 import { 
    View,
    Text, 
-   TextInput,
-   Button,
+   TextInput,   
    TouchableOpacity,
-   Platform,
    StyleSheet,
-   Image,
-   BackHandler,
-   Alert
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 
-// import { UserContext } from '../../components/UserContext';
-// import Users from '../../models/users';
+import { UserContext } from '../../../context/UserContext';
 
 const SignInScreen = ({ navigation }) => {
+
+   const { login } = useContext(UserContext)
+
    const [data, setData] = React.useState({
       username: '',      
       checkInputChange: false,
@@ -31,8 +30,6 @@ const SignInScreen = ({ navigation }) => {
       secureTextEntry: true,
    })
 
-//    const { signIn } = React.useContext(UserContext);   
-
    const updateSecureTextEntry = () => {
       setPassword({
          ...password,
@@ -40,27 +37,7 @@ const SignInScreen = ({ navigation }) => {
       })
    }
 
-//    const loginHandle = (phone, pass) => {
-//       const foundUser = Users.filter( item => {
-//          return phone == item.phone && pass == item.password; 
-//       });
-
-//       if (data.phone.length == 0 || password.password.length == 0) {
-//          Alert.alert('Invalid Input !', 'Phone or Password fields cannot be empty.', [{text: 'Ok'}]);
-//          return;
-//       }
-
-//       if (foundUser.length == 0) {
-//          Alert.alert('Invalid User!', 'Phone or Password is Incorrect.', [{text: 'Ok'}]);
-//          return;
-//       }
-//       signIn(foundUser);
-//    }
-
-   const handleValidUser = (val) => {
-     //  const userPhone = Users.filter( item => {
-     //     return number == item.phone
-     //  })
+   const handleValidUser = (val) => {    
       if ( val.length>=4){
          setData({
             ...data,
