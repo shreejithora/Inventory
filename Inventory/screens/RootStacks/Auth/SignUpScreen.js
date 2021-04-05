@@ -119,6 +119,14 @@ const regexPass="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])([a-zA-Z0-9@$!
      { label: "Super Admin", value: 0},
      { label: "Employees", value: 1},
    ]);
+   
+   const Registerhandle=(email,username,password,confirmPassword)=>{
+     if(email=="" || username=="" || password=="" || confirmPassword=="")
+         Alert.alert('Invalid Input','Email or username or password or confirmpassword field cannot be empty.',[{text:'Okay'}])
+         navigation.navigate('SignInScreen')
+         return;
+   }
+    
 
    // const handleRegister = (phone, password, confirmPassword) => {
    //    signUp(phone, password)
@@ -246,9 +254,22 @@ const regexPass="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])([a-zA-Z0-9@$!
             </View>   
             <TouchableOpacity 
                style={[styles.button, {backgroundColor: '#fff', borderWidth: 1, borderColor: '#078bab'}]}
-               onPress={ () => {navigation.navigate('SignInScreen')}}>
+               //  onPress={ () => {navigation.navigate('SignInScreen')}}>
+               onPress={()=>Registerhandle(data.email,data.username,data.password,data.confirmPassword)}>
                <Text style={[styles.texts,{color: '#078bab', fontWeight: 'bold'}]}>Register</Text>
             </TouchableOpacity>
+<<<<<<< HEAD
+=======
+            {/* <TouchableOpacity
+                  onPress={()=>Registerhandle(data.email,data.username,data.password,data.confirmPassword)}
+            >
+            </TouchableOpacity> */}
+             {/* <TouchableOpacity 
+               style={styles.button}
+               onPress={ () => {alert('clicked')}}>
+               <Text style={[styles.texts,{color: '#fff', fontWeight: 'bold'}]}>Login</Text>
+            </TouchableOpacity> */}
+>>>>>>> 70c097ea39f791fceb7741246fbc4bd9ebb2ff3a
          </View>
          </ScrollView>
       </Animatable.View>
