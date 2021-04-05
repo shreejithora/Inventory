@@ -9,19 +9,26 @@ import {
    StyleSheet,
 } from 'react-native';
 
+import * as SecureStore from 'expo-secure-store';
+import firestore from '@react-native-firebase/firestore';
+
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 
 import { UserContext } from '../../../context/UserContext';
 
+// export enum SecureStoreEnum {
+//   TOKEN = 'token',
+// }
+
 const SignInScreen = ({ navigation }) => {
 
-   const { login } = useContext(UserContext)
+   const { login } = useContext(UserContext);
 
-   const [data, setData] = React.useState({
-      username: '',      
+   const [email, setData] = React.useState({
+      email: '',      
       checkInputChange: false,
-      isValidUser: true,
+      isValidEmail: true,
    })
 
    const [password, setPassword] = React.useState({
@@ -37,67 +44,85 @@ const SignInScreen = ({ navigation }) => {
       })
    }
 
-   const handleValidUser = (val) => {    
-      if ( val.length>=4){
-         setData({
-            ...data,
-            username: val,
-            isValidUser: true
-         })
-      } else {
-         setData({
-            ...data,
-            username: val,
-            isValidUser:false
-         })
+   const [token, setToken] = useState<string>('');   
+   const atoken = "12345"   
+
+   const loginHandle = async(mail, pass) => {   
+
+      SecureStore.setItemAsync(SecureStoreEnum.TOKEN, atoken)
+      setToken(atoken);
+
+      if (email.email.length == 0 || password.password.length == 0) {
+         Alert.alert('Invalid Input !', 'Phone or Password fields cannot be empty.', [{text: 'Ok'}]);
+         return;
       }
+
+      if (foundUser.length == 0) {
+         Alert.alert('Invalid User!', 'Email or Password is Incorrect.', [{text: 'Ok'}]);
+         return;
+      }
+      login(foundUser);
    }
-   
-   
-   const handleValidPass = (pass) => {
-      if (pass.length < 8 && pass.length > 0){
-         setPassword({
-            ...password,
-            password: pass,
-            isValidPass: false
+const regexEmail="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\.[a-z]$"
+   const handleValidEmail = (val) => {
+      if (val.match(regexEmail)){
+         setData({
+            ...email,
+            email: val,
+            isValidEmail: true
          })
       } else {
+         setData({
+            ...email,
+            email: val,
+            isValidEmail:false
+         })
+       }
+   }
+   const regexPass="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])([a-zA-Z0-9@$!%*?&]{8,})$"
+   const handleValidPass = (pass) => {
+    if(pass.match(regexPass)){
          setPassword({
             ...password,
             password: pass,
             isValidPass: true
          })
+      } else {
+         setPassword({
+            ...password,
+            password: pass,
+            isValidPass: false
+         })
       }
-   };
-
+   }
 
  return (
       <View style={styles.container}>
       <View style={styles.header}>
-         {/* <Animatable.Image 
+         <Animatable.Image 
             animation="fadeInDown"
-            source = {require('./../../assets/userImage/nagarik.png')}
+            source = {require('../../../assets/logo.png')}
             style={styles.logo}
             resizeMode="stretch"
-         /> */}
+         />
       </View>
       <Animatable.View 
          animation="fadeInUpBig"
          style={styles.footer}>
          <View style={styles.fields}>
             <View style={styles.inputs}>
-               <Text style={styles.texts}>Username</Text>
+               <Text style={styles.texts}>Email</Text>
                <TextInput
                   style={styles.textInputs}
-                  placeholder="Username" 
-                  onChangeText = { (val) => {handleValidUser(val)}}
-                  onEndEditing = { (e) => handleValidUser(e.nativeEvent.text)}
+                  placeholder="Email" 
+                  onChangeText = { (val) => {handleValidEmail(val)}}
+                  onEndEditing = { (e) => handleValidEmail(e.nativeEvent.text)}
                />
             </View>
             {  
-               data.isValidUser ?
+               email.isValidEmail ?
                null :
-               <Animatable.Text animation="fadeIn" style={styles.errMsg}>Username must be 4 chars long.</Animatable.Text>
+               <Animatable.Text animation="fadeIn" style={styles.errMsg}>Email doesn't match</Animatable.Text>
             } 
 
             <View style={styles.inputs}>
@@ -131,12 +156,12 @@ const SignInScreen = ({ navigation }) => {
             {  
                password.isValidPass ?
                null :
-               <Animatable.Text animation="fadeIn" style={styles.errMsg}>The Password must be 8 chars long.</Animatable.Text>
+               <Animatable.Text animation="fadeIn" style={styles.errMsg}>Password doesn't match.</Animatable.Text>
             } 
 
             <TouchableOpacity 
                style={styles.button}
-               onPress={ () => {navigation.navigate('Home')}}
+               onPress={ () => {loginHandle}}
                >
                <Text style={[styles.texts,{color: '#fff', fontWeight: 'bold'}]}>Login</Text>
             </TouchableOpacity>

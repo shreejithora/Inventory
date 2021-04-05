@@ -1,40 +1,92 @@
-import React, {useState}from 'react';
+import 
+   React, 
+   {
+      useState,
+      useContext
+   }
+from 'react';
+
 import { 
    View,
    Text, 
    TextInput,
-   Button,
    TouchableOpacity,
-   Platform,
    StyleSheet,
-   Image,
-   BackHandler,
-   ScrollView
+   ScrollView,
+   Alert
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import RadioForm from 'react-native-radio-form';
 
+// import {UserContext} from '../../../context/UserContext';
+
 const SignInScreen = ({ navigation }) => {
+
+   // const {login} = useContext(UserContext)
+
    const [data, setData] = React.useState({
-      phone: '',
+      email: '',
+      username:'',
       password: '',
       confirmPassword: '',
       checkInputChange: false,
       secureTextEntry: true,
       confirmSecureTextEntry: true,
-      isValidPhone: true,
-      isValidPass: true
+      isValidEmail: true,
+      isValidUser:true,
+      isValidPass: true,
+      isValidConfirmPass:true
    })
-
+const regexEmail="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\.[a-z]$"
+const handleValidEmail=(val)=>{
+     if(val.match(regexEmail)){
+          setData({
+               ...data,
+               email:val,
+               isValidEmail:true
+          })
+     }else{
+          setData({
+               ...data,
+               email:val,
+               isValidEmail:false
+          })
+     }
+}
+const regexName= "^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$"
+const handleValidUser=(val)=>{
+   if(val.match(regexName)){
+      setData({
+         ...data,
+         username:val,
+         isValidUser:true
+      })
+   }else{
+      setData({
+         ...data,
+         username:val,
+         isValidUser:false
+      })
+   }
+}
+const regexPass="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])([a-zA-Z0-9@$!%*?&]{8,})$"
    const handlePassChange = (val) => {
+      if(val.match(regexPass)){
          setData({
             ...data,
-            password: val
+            password: val,
+            isValidPass:true
          })
+      }else{
+         setData({
+            ...data,
+            password: val,
+            isValidPass:false
+         })
+      }
    }
-
    const updateSecureTextEntry = () => {
       setData({
          ...data,
@@ -48,14 +100,21 @@ const SignInScreen = ({ navigation }) => {
          confirmSecureTextEntry: !data.confirmSecureTextEntry
       })
    }
-
    const handleConfirmPassChange = (val) => {
+     if(data.password==val){
       setData({
          ...data,
-         confirmPassword: val
+         confirmPassword: val,
+         isValidConfirmPass:true
       })
+   }else{
+       setData({
+          ...data,
+          confirmPassword:val,
+          isValidConfirmPass:false
+       })
    }
-
+   }
    const[users,setUsers]=useState([
      { label: "Super Admin", value: 0},
      { label: "Employees", value: 1},
@@ -68,25 +127,47 @@ const SignInScreen = ({ navigation }) => {
  return (
    <View style={styles.container}>
       <View style={styles.header}>
-         {/* <Animatable.Image 
+         <Animatable.Image 
             animation="fadeInDown"
-            source = {require('./../../assets/userImage/nagarik.png')}
+            source = {require('../../../assets/logo.png')}
             style={styles.logo}
             resizeMode="stretch"
-         /> */}
+         />
       </View>
-      
+     
       <Animatable.View 
          animation="fadeInUpBig"
          style={styles.footer}>
+ <ScrollView>
          <View style={styles.fields}>
             <View style={styles.inputs}>
-               <Text style={styles.texts}>Phone / Account Number</Text>
+               <Text style={styles.texts}>Email</Text>
                <TextInput
                   style={styles.textInputs}
-                  placeholder="Phone / Account Number" 
-               />
+                  placeholder="Email Address" 
+                  onChangeText={(val)=>handleValidEmail(val)}
+                  onEndEditing={(e)=>handleValidEmail(e.nativeEvent.text)}
+               />               
             </View>
+            {
+               data.isValidEmail?
+               null:
+               <Animatable.Text animation='fadeIn' style={styles.errMsg}>Invalid email address</Animatable.Text>
+            }
+            <View style={styles.inputs}>
+               <Text style={styles.texts}>Username</Text>
+               <TextInput
+                  style={styles.textInputs}
+                  placeholder="Username" 
+                  onChangeText={(val)=>handleValidUser(val)}
+                  onEndEditing={(e)=>handleValidUser(e.nativeEvent.text)}
+               />               
+            </View>
+            {
+               data.isValidUser?
+               null:
+               <Animatable.Text animation='fadeIn' style={styles.errMsg}>Invalid Username</Animatable.Text>
+            }
             <View style={styles.inputs}>
                <Text style={styles.texts}>Password</Text>
                <View style={{flexDirection: 'row'}}>
@@ -113,9 +194,15 @@ const SignInScreen = ({ navigation }) => {
                      /> }
                   
                   </TouchableOpacity>
-               </View>
+               </View>               
             </View>
-
+            {
+               data.isValidPass?
+               null:
+               <Animatable.Text animation='fadeIn' style={styles.errMsg}>1.At least 8 characters long,{'\n'}
+               2.One lowercase one uppercase,{'\n'}3.One number and one special character,{'\n'}
+               4.No whitespaces.</Animatable.Text>
+            }            
              <View style={styles.inputs}>
                <Text style={styles.texts}>Password Confirmation</Text>
                <View style={{flexDirection: 'row'}}>
@@ -140,40 +227,36 @@ const SignInScreen = ({ navigation }) => {
                         color="grey"
                         size= {20}
                      /> }
-                  
                   </TouchableOpacity>
-               </View>
-                        
+               </View>                        
             </View>
+            {
+               data.isValidConfirmPass?
+               null:
+               <Animatable.Text animation='fadeIn' style={styles.errMsg}>Password doesn't match</Animatable.Text>
+            }
             <View style={styles.inputs}>
             <Text style={styles.texts}>User Roles</Text>
                <RadioForm 
-                                 dataSource={users}
-                                 initial={2}
-                              //    onPress={ (value) => setLoanFields({...loanFields, income: value})}
-                                 circleSize={20}
-                                 outerColor="#078bab"
-                              />
-                 </View>   
-
-            
+                  dataSource={users}
+                  initial={2}                              
+                  circleSize={20}
+                  outerColor="#078bab"
+               />
+            </View>   
             <TouchableOpacity 
                style={[styles.button, {backgroundColor: '#fff', borderWidth: 1, borderColor: '#078bab'}]}
                onPress={ () => {navigation.navigate('SignInScreen')}}>
                <Text style={[styles.texts,{color: '#078bab', fontWeight: 'bold'}]}>Register</Text>
             </TouchableOpacity>
-             {/* <TouchableOpacity 
-               style={styles.button}
-               onPress={ () => {alert('clicked')}}>
-               <Text style={[styles.texts,{color: '#fff', fontWeight: 'bold'}]}>Login</Text>
-            </TouchableOpacity> */}
          </View>
+         </ScrollView>
       </Animatable.View>
     
    </View>
 
  );
-}
+ }
 
 export default SignInScreen;
 
@@ -245,4 +328,9 @@ const styles =  StyleSheet.create({
       borderTopLeftRadius: 30,
       borderTopRightRadius: 30 
    },
+   errMsg: {
+     marginLeft: 20,
+     color: 'red',
+     fontSize: 12
+  },
 })

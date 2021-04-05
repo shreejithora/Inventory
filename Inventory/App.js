@@ -15,8 +15,8 @@ import {UserProvider} from './context/UserContext';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import * as SecureStore from 'expo-secure-store';
-import auth from '@react-native-firebase/auth';
+// import * as SecureStore from 'expo-secure-store';
+// import auth from '@react-native-firebase/auth';
 
 import RootStackScreen from './screens/RootStacks/RootStackScreen';
 import DrawerContent from './screens/Drawer/DrawerContent';
@@ -99,35 +99,35 @@ const App = () => {
     }
   }), []);
 
-  useEffect(() => {
-    setTimeout( async() => {
-      let userToken;
-      userToken = null;
-      try{
-        userToken = await SecureStore.getItemAsync('userToken');
-      } catch (e) {
-        Alert.alert('Error !', e, [{text: 'Ok'}]);
-      }
-      dispatch({ type: 'RETRIEVE_TOKEN', token: userToken})
-    }, 1000);
-  }, [])
+  // useEffect(() => {
+  //   setTimeout( async() => {
+  //     let userToken;
+  //     userToken = null;
+  //     try{
+  //       userToken = await SecureStore.getItemAsync('userToken');
+  //     } catch (e) {
+  //       Alert.alert('Error !', e, [{text: 'Ok'}]);
+  //     }
+  //     dispatch({ type: 'RETRIEVE_TOKEN', token: userToken})
+  //   }, 1000);
+  // }, [])
 
-  if( loginState.isLoading ) {
-    return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#078bab'}}>
-          <Image 
-            animation="fadeIn"
-            source={require('./assets/logo.png')}
-            style={{height: 200, width: 200, borderRadius: 100}}
-          />
-        </View>
-    )
-  }
+  // if( loginState.isLoading ) {
+  //   return (
+  //       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#078bab'}}>
+  //         <Image 
+  //           animation="fadeIn"
+  //           source={require('./assets/logo.png')}
+  //           style={{height: 200, width: 200, borderRadius: 100}}
+  //         />
+  //       </View>
+  //   )
+  // }
   return(
     <UserProvider value={authContext}>
     <NavigationContainer>
       {
-        loginState.userToken == null ? 
+        loginState.isLoading != true ? 
         <RootStackScreen/> :
         <Drawer.Navigator drawerContent={ props => <DrawerContent {...props}/>}>
           <Drawer.Screen name="Home" component = { HomeTabNav } />

@@ -10,20 +10,20 @@ const SplashScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        {/* <Animatable.Image 
+        <Animatable.Image 
           animation = "bounceIn"
-          source = {require('../assets/userImage/nagarik.png')}
+          source = {require('../../assets/logo.png')}
           style = {styles.logo}
           resizeMode = "stretch"
-        /> */}
-        <Animatable.Text style={styles.name} animation= "bounceIn">NAGARIK</Animatable.Text>
+        />
+        <Animatable.Text style={styles.name} animation= "bounceIn">INVENTORY</Animatable.Text>
       </View>
       <Animatable.View 
         animation = "fadeInUpBig"
         style={styles.footer}
       >
-        <Text style={styles.heading}>A higher financial altitude.</Text>
-        <Text style={{color: 'white', fontFamily: 'sans-serif-light'}}>Connect with us</Text>
+        <Text style={styles.heading}>A Higher Stocking Experience</Text>
+        <Text style={{color: '#078bab', fontFamily: 'sans-serif-light'}}>Store your Products</Text>
         <TouchableOpacity 
         onPress={ () => {navigation.navigate('SignInScreen')}}>
           <View style={styles.signIn}>
@@ -44,13 +44,13 @@ export default SplashScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a4b80'
+    backgroundColor: '#078bab'
   },
   header: {
     flex: 2,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#0a4b80'
+    backgroundColor: '#078bab'
   },
   logo: {
     borderRadius: 50
@@ -64,14 +64,14 @@ const styles = StyleSheet.create({
   },  
   heading: {
     fontFamily: 'sans-serif',
-    color: '#fff',
+    color: '#078bab',
     marginLeft: 15,
     fontWeight: 'bold',
     fontSize: 25
   },
   signIn: {
     flexDirection: 'row',
-    backgroundColor: '#0874cc',
+    backgroundColor: '#078bab',
     marginTop: 15,
     padding: 15,
     height: 50,
@@ -83,14 +83,14 @@ const styles = StyleSheet.create({
   signText:{
     marginRight: 5,
     fontSize: 15,
-    color: '#fff',
+    color: '#fafafa',
     fontWeight: 'bold'
   },
   footer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#065ba1',
+    backgroundColor: '#e6f1fa',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30 
   }
