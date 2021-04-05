@@ -27,7 +27,14 @@ const QuotationNav = ({navigation}) =>{
                size={25}   
                backgroundColor= "#078bab"
                onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
-               )
+               ),
+            headerRight: () => (
+               <Icon.Button 
+               name="home"
+               size={25}   
+               backgroundColor= "#078bab"
+               onPress = {  () => {navigation.navigate('HomeTab')}} ></Icon.Button>
+            )
             }}
          />
       </QuotationStack.Navigator>

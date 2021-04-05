@@ -9,7 +9,7 @@ import {
 const ProductInfo = ({item}) => {
    return(
       <View  style={styles.productInfo}>
-         <Image style={styles.barcode} source={require('../assets/barcodes/1113.png')} />
+         <Image style={styles.barcode} source={require('../../assets/barcodes/1113.png')} />
 
          <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>ProductID:</Text> {item.product_id}</Text>
          <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Product:</Text> {item.name}</Text>

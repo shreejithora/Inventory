@@ -9,26 +9,35 @@ const SalesStack = createStackNavigator();
 
 const SalesNav = ({navigation}) =>{
    return(
-      <SalesStack.Navigator screenOptions= { {
-         headerStyle: {
-            backgroundColor: '#078bab',
-         },
-         headerTintColor: '#fff',
-         headerTitleStyle: {
-            fontWeight: 'bold'
-         }
-      }}>
+      <SalesStack.Navigator headerMode="none"
+         // screenOptions= { {
+         //    headerStyle: {
+         //       backgroundColor: '#078bab',
+         //    },
+         //    headerTintColor: '#fff',
+         //    headerTitleStyle: {
+         //       fontWeight: 'bold'
+         //    }
+         // }}
+      >
          <SalesStack.Screen name="SalesScreen" component = {SalesScreen}
-            options= {{
-            title: 'Sales ',
-            headerLeft: () => (
-               <Icon.Button 
-               name="menu"
-               size={25}   
-               backgroundColor= "#078bab"
-               onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
-               )
-            }}
+            // options= {{
+            // title: 'Sales ',
+            // headerLeft: () => (
+            //    <Icon.Button 
+            //    name="menu"
+            //    size={25}   
+            //    backgroundColor= "#078bab"
+            //    onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
+            //    ),
+            // headerRight: () => (
+            //    <Icon.Button 
+            //    name="home"
+            //    size={25}   
+            //    backgroundColor= "#078bab"
+            //    onPress = {  () => {navigation.navigate('HomeTab')}} ></Icon.Button>
+            // )
+            // }}
          />
       </SalesStack.Navigator>
    

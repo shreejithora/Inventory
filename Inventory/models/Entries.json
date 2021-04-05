@@ -1,0 +1,107 @@
+[
+   {
+      "product_id": "1111",
+      "name": "Shoes",
+      "sold_quantity": "12",
+      "price": "1500",
+      "last_updated": "2021-4-1"
+   },
+   {
+      "product_id": "1112",
+      "name": "Bag",
+      "sold_quantity": "100",
+      "price": "2000",
+      "last_updated": "2021-4-1"
+   },
+   {
+      "product_id": "1113",
+      "name": "Book",
+      "sold_quantity": "15",
+      "price": "100",
+      "last_updated": "2021-4-31"
+   },
+   {
+      "product_id": "1114",
+      "name": "Cream",
+      "sold_quantity": "24",
+      "price": "200",
+      "last_updated": "2021-4-10"
+   },
+   {
+      "product_id": "1115",
+      "name": "Jacket",
+      "sold_quantity": "100",
+      "price": "1500",
+      "last_updated": "2021-3-10"
+   },
+   {
+      "product_id": "1116",
+      "name": "Pencil",
+      "sold_quantity": "19",
+      "price": "1000",
+      "last_updated": "2021-4-12"
+   },
+   {
+      "product_id": "1117",
+      "name": "Locket",
+      "sold_quantity": "500",
+      "price": "2300",
+      "last_updated": "2021-2-12"
+   },
+   {
+      "product_id": "1118",
+      "name": "Hook",
+      "sold_quantity": "45",
+      "price": "1900",
+      "last_updated": "2021-2-14"
+   },
+   {
+      "product_id": "1119",
+      "name": "Ludo",
+      "sold_quantity": "67",
+      "price": "1100",
+      "last_updated": "2021-2-14"
+   },
+   {
+      "product_id": "1120",
+      "name": "Pen",
+      "sold_quantity": "12",
+      "price": "1600",
+      "last_updated": "2021-3-16"
+   },
+   {
+      "product_id": "1121",
+      "name": "bracelet",
+      "sold_quantity": "32",
+      "price": "1400",
+      "last_updated": "2021-1-16"
+   },
+   {
+      "product_id": "1122",
+      "name": "Colors",
+      "sold_quantity": "54",
+      "price": "1000",
+      "last_updated": "2021-1-18"
+   },
+   {
+      "product_id": "1123",
+      "name": "marker",
+      "sold_quantity": "87",
+      "price": "4500",
+      "last_updated": "2021-1-18"
+   },
+   {
+      "product_id": "1124",
+      "name": "Phone",
+      "sold_quantity": "634",
+      "price": "1600",
+      "last_updated": "2021-3-20"
+   },
+   {
+      "product_id": "1125",
+      "name": "Laptop",
+      "sold_quantity": "235",
+      "price": "1500",
+      "last_updated": "2021-1-20"
+   }
+]

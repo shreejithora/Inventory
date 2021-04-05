@@ -13,14 +13,13 @@ import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView } from "react-native-gesture-handler";
 
-const ProductsList = require('../models/Products.json');
+const ProductsList = require('../../models/Products.json');
 
 const AddProduct = (props) => {
 
    const [productID, setProductID] = useState({
       product_id: '',
       isValidID: true,
-      exists: false,
    })
 
   const [productName, setProductName] = useState({
@@ -42,41 +41,29 @@ const AddProduct = (props) => {
 
       const foundProduct = ProductsList.filter( item => {
          return item.product_id == val
-      })
-
-      if (foundProduct.length == 0) {
+      })    
+   
+      const regexWithValidID = /^\d{0,4}(\.\d{1,3})?$/ 
+      
+      if (foundProduct.length == 0 && val.match(regexWithValidID) ) {
          setProductID({
             ...productID,
-            exists: false
-         })
+            product_id: val,
+            isValidID: true,
+         })            
       } else {
-         setProductID({
-            ...productID,
-            exists: true
-         })
-      }
-
-      if( /\D/.test(val) ){   
          setProductID({
             ...productID,
             product_id: val,
             isValidID: false,
          })
-      } else {
-         setProductID({
-            ...productID,
-            product_id: val,
-            isValidID: true,
-            exists: true
-         })
-      }      
+      }
    }
 
    const handleProductNameChange = (val) => { 
       const foundProduct = ProductsList.filter( item => {
          return item.name == val
       })
-console.log(foundProduct);
       if( foundProduct.length == 0  ){
          setProductName({
             ...productName,
@@ -109,33 +96,38 @@ console.log(foundProduct);
       }
    }
 
-   const handlePriceChange = (val) => {   
-      if( /\D/.test(val) ){
+   const handlePriceChange = (val) => {  
+      const regexWithValidPrice = /^\d{0,8}(\.\d{1,4})?$/ 
+      if( val.match(regexWithValidPrice) ) {
          setProductPrice({
             ...productPrice,
             product_price: val,
-            isValidProductPrice: false
+            isValidProductPrice: true
          })
       } else {
           setProductPrice({
             ...productPrice,
             product_price: val,
-            isValidProductPrice: true
+            isValidProductPrice: false
          })
       }
    }
    const handleAddProduct = () => {
-      if (productName != '' && productID.product_id != '' && productQuantity.product_quantity != '' && productPrice.product_price != ''){
-         if( productID.isValidID ){
-            if ( productQuantity.isValidProductQuantity ) {
-               if(  productPrice.isValidProductPrice ) {
-                  props.onAddProduct(false);
-                  Alert.alert('Product Added!','Product ID:'+productID.product_id+'  with Product Name: '+productName, [{text: 'Ok'}]);
+      if (productName != '' && productID.product_id != '' && productPrice.product_price != '' && productName.product_name != ''){
+         if( productID.isValidID || productID.exists){
+            if ( !productName.exists ) {
+               if ( productQuantity.isValidProductQuantity ) {
+                  if(  productPrice.isValidProductPrice ) {
+                     props.onAddProduct(false);
+                     Alert.alert('Product Added!','Product ID:'+productID.product_id+'  with Product Name: '+productName.product_name, [{text: 'Ok'}]);
+                  } else {
+                     Alert.alert('Invalid Input!','Please enter a Valid Price for the product', [{text: 'Ok'}]);                  
+                  }
                } else {
-                  Alert.alert('Invalid Input!','Please enter a Valid Price for the product', [{text: 'Ok'}]);                  
+                  Alert.alert('Invalid input', 'Please enter a Valid Quantity', [{text: 'Ok'}]);
                }
             } else {
-               Alert.alert('Invalid input', 'Please enter a Valid Quantity', [{text: 'Ok'}]);
+               Alert.alert('Invalid input', 'Please enter a Valid Product Name. Such name already exists', [{text: 'Ok'}]);
             }
          } else {
             Alert.alert('Invalid input', 'Please enter a Valid Product ID', [{text: 'Ok'}]);
@@ -150,33 +142,26 @@ console.log(foundProduct);
          <View style={styles.modalForm}>           
             <View style={styles.fields}>                         
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Product ID</Text>
+                  <Text style={styles.texts}>Product ID*</Text>
                   <TextInput
                      keyboardType='numeric'
                      style={styles.textInputs}
-                     placeholder="Product ID..." 
+                     placeholder="Product ID...(eg. 1111)" 
                      maxLength={10}
                      onChangeText={ (val) => handleProductIDChange(val)}
                      onEndEditing = { (e) => handleProductIDChange(e.nativeEvent.text)}
-                  />
+                  />                  
                   {  
                      productID.isValidID ?
                      null :
                      <Animatable.Text 
                         animation="fadeIn"
-                        style={styles.errMsg}>Invalid ID</Animatable.Text> 
-                  } 
-                  {  
-                     productID.exists ?
-                     <Animatable.Text 
-                        animation="fadeIn"
-                        style={styles.errMsg}>Product ID already exists
-                     </Animatable.Text> :
-                     null 
-                  } 
+                        style={styles.errMsg}>Invalid ID or Product ID already exists.
+                     </Animatable.Text> 
+                  }                   
                </View>  
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Product Name</Text>
+                  <Text style={styles.texts}>Product Name*</Text>
                   <TextInput
                      style={styles.textInputs}
                      keyboardType="ascii-capable"
@@ -196,9 +181,10 @@ console.log(foundProduct);
                <View style={styles.inputs}>
                   <Text style={styles.texts}>Quantity</Text>
                   <TextInput
+                     defaultValue='0'
                      style={styles.textInputs}
                      keyboardType="numeric"
-                     placeholder="Quantity..." 
+                     placeholder="Quantity...(eg. 1 or eg. 200)" 
                      onChangeText={ (val) => handleQuantityChange(val)}
                      onEndEditing = { (e) => handleQuantityChange(e.nativeEvent.text)}
                   />   
@@ -211,11 +197,11 @@ console.log(foundProduct);
                   }               
                </View> 
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Price</Text>
+                  <Text style={styles.texts}>Price* (In Rs.)</Text>
                   <TextInput
                      style={styles.textInputs}
                      keyboardType="numeric"
-                     placeholder="Price..." 
+                     placeholder="Price...(eg. 200 or eg. 200.12)" 
                      onChangeText={ (val) => handlePriceChange(val)}
                      onEndEditing = { (e) => handlePriceChange(e.nativeEvent.text)}
                   />      

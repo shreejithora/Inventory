@@ -1,0 +1,72 @@
+[
+   {
+      "supplier_id": "101",
+      "name": "Hari Products Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "maitighar - 5",
+      "status": "recieved"      
+   },
+   {
+      "supplier_id": "102",
+      "name": "Krishna Products Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "Samakhusi, kathmandu - 5",
+      "status": "pending"      
+   },
+   {
+      "supplier_id": "103",
+      "name": "Tanka Products Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "lokanthali - 5",
+      "status": "recieved"      
+   },
+   {
+      "supplier_id": "104",
+      "name": "nanglo Products Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "jadibuti - 5",
+      "status": "pending"      
+   },
+   {
+      "supplier_id": "105",
+      "name": "Batti Products Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "thimi - 5",
+      "status": "pending"      
+   },
+   {
+      "supplier_id": "106",
+      "name": "Pani Products Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "kalanki - 5",
+      "status": "recieved"    
+   },
+   {
+      "supplier_id": "107",
+      "name": "Jadibuti Products Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "Gongabu - 5",
+      "status": "recieved"      
+   },
+   {
+      "supplier_id": "108",
+      "name": "Luga Products Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "Hadigaun - 5",
+      "status": "pending"      
+   },
+   {
+      "supplier_id": "109",
+      "name": "Lubha Products Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "byasi, Bhaktapur - 5",
+      "status": "pending"      
+   },
+   {
+      "supplier_id": "110",
+      "name": "Anu Products Pvt. Ltd.",
+      "phone": "9841987547",
+      "address": "Baneshwor - 5",
+      "status": "pending"      
+   }
+]

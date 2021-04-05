@@ -26,8 +26,7 @@ const ActivityCard = ({items}) => {
                </View>  
             </View>         
          </TouchableOpacity>
-      </Animatable.View>
-      
+      </Animatable.View>      
    )
 }
 
@@ -41,22 +40,15 @@ const styles = StyleSheet.create({
       fontWeight: '700'
    },
    card: {
+      borderRadius: 20,
       padding: 15,
       backgroundColor: '#fff',
       flex: 1,
-      marginTop: 5,
-      marginLeft: 5,
-      marginRight: 5,   
       borderBottomColor: '#f4f4f4',
       borderBottomWidth: 1,   
    },
    cardContent: {
-      flexDirection: 'row',
-      justifyContent: 'space-between'
+      // flexDirection: 'row',
+      // justifyContent: 'space-between'
    },
-   cardInfo: {      
-      marginLeft: 5,
-      flexDirection: 'row',
-      justifyContent: 'space-between'
-   }
 })
