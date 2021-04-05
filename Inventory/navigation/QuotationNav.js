@@ -9,36 +9,9 @@ const QuotationStack = createStackNavigator();
 
 const QuotationNav = ({navigation}) =>{
    return(
-      <QuotationStack.Navigator screenOptions= { {
-         headerStyle: {
-            backgroundColor: '#078bab',
-         },
-         headerTintColor: '#fff',
-         headerTitleStyle: {
-            fontWeight: 'bold'
-         }
-      }}>
-         <QuotationStack.Screen name="QuotationScreen" component = {QuotationScreen}
-            options= {{ 
-            title: 'Quotation ',
-            headerLeft: () => (
-               <Icon.Button 
-               name="menu"
-               size={25}   
-               backgroundColor= "#078bab"
-               onPress = {  () => {navigation.openDrawer()}} ></Icon.Button>
-               ),
-            headerRight: () => (
-               <Icon.Button 
-               name="home"
-               size={25}   
-               backgroundColor= "#078bab"
-               onPress = {  () => {navigation.navigate('HomeTab')}} ></Icon.Button>
-            )
-            }}
-         />
-      </QuotationStack.Navigator>
-   
+      <QuotationStack.Navigator headerMode="none">
+         <QuotationStack.Screen name="QuotationScreen" component = {QuotationScreen}/>
+      </QuotationStack.Navigator>   
    )
  }
 

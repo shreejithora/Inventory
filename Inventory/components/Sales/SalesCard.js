@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
    },
    card: {
       padding: 10,
-      backgroundColor: '#fff',
+      backgroundColor: '#fafafa',
       flex: 1,
       // marginVertical: 5,
       marginLeft: 5,
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
       flex: 1,
       borderRadius: 30,
       marginVertical: 100,
-      backgroundColor: '#e6f1fa',
+      backgroundColor: '#fafafa',
       marginHorizontal: 20,
       bottom: 0
    },

@@ -7,14 +7,13 @@ import IncomeScreen from './IncomeScreen';
 import ExpenseScreen from './ExpenseScreen';
 import { useEffect } from 'react';
 
-const EntriesScreen = (props, {navigation}) => {
-   console.log(navigation)
+const EntriesScreen = ({navigation, income, expense}) => {
    useEffect( () => {
       setState({
-         activeIncome: props.income,
-         activeExpense: props.expense
+         activeIncome: income,
+         activeExpense: expense
       })
-   }, [props])
+   }, [income, expense])
 
    const [state, setState] = useState({
       activeIncome: 1,
@@ -95,8 +94,7 @@ const styles = StyleSheet.create({
    },
    transact: {
       paddingHorizontal: 15,
-      marginTop: 20,
-      marginBottom: 15,
+      marginVertical: 10
    },
    tabs: {
       flexDirection: 'row',

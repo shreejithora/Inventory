@@ -18,7 +18,7 @@
       "name": "Book",
       "sold_quantity": "15",
       "price": "100",
-      "last_updated": "2021-4-31"
+      "last_updated": "2021-4-30"
    },
    {
       "product_id": "1114",
@@ -30,7 +30,7 @@
    {
       "product_id": "1115",
       "name": "Jacket",
-      "sold_quantity": "100",
+      "sold_quantity": "10",
       "price": "1500",
       "last_updated": "2021-3-10"
    },

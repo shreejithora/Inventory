@@ -2,10 +2,11 @@ import React,{useState} from 'react';
 import { useEffect } from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
+import Heads from '../../components/Heads';
 import StaffScreen from './StaffScreen';
 import AdminScreen from './AdminScreen';
 
-const UsersScreen = (props) => {
+const UsersScreen = ({navigation, admin, staff}) => {
    const [state, setState] = useState({
       activeAdmin: 1,
       activeStaff: 0,
@@ -13,10 +14,10 @@ const UsersScreen = (props) => {
 
    useEffect( () => {
       setState({
-         activeAdmin: props.admin,
-         activeStaff: props.staff
+         activeAdmin: admin,
+         activeStaff: staff
       })
-   }, [props])
+   }, [])
 
    const handleAdmin = () => {
       {
@@ -36,6 +37,7 @@ const UsersScreen = (props) => {
 
    return (
       <View style={styles.container}>
+         <Heads nav={navigation} title="Users" tabBool={0} />
          <View style={styles.transact}>
             <View style={styles.tabs}>      
                <TouchableOpacity 

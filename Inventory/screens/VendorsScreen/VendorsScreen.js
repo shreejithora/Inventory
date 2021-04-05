@@ -2,10 +2,11 @@ import React,{useState} from 'react';
 import { useEffect } from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
+import Heads from '../../components/Heads';
 import CustomersScreen from './CustomersScreen';
 import SuppliersScreen from './SuppliersScreen';
 
-const VendorsScreen = (props) => {
+const VendorsScreen = ({navigation, sup, cus}) => {
    const [state, setState] = useState({
       activeSuppliers: 1,
       activeCustomers: 0,
@@ -13,10 +14,10 @@ const VendorsScreen = (props) => {
 
    useEffect( () => {
       setState({
-         activeSuppliers: props.sup,
-         activeCustomers: props.cus
+         activeSuppliers: sup,
+         activeCustomers: cus
       })
-   }, [props])
+   }, [sup, cus])
 
    const handleSuppliers = () => {
       {
@@ -36,6 +37,7 @@ const VendorsScreen = (props) => {
 
    return (
       <View style={styles.container}>
+         <Heads nav={navigation} title="Vendors" tabBool={0} />
          <View style={styles.transact}>
             <View style={styles.tabs}>      
                <TouchableOpacity 
@@ -91,8 +93,7 @@ const styles = StyleSheet.create({
    },
    transact: {
       paddingHorizontal: 15,
-      marginTop: 20,
-      marginBottom: 15,
+      marginVertical: 10
    },
    tabs: {
       flexDirection: 'row',

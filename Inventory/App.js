@@ -41,7 +41,6 @@ const App = () => {
             source={require('./assets/logo.png')}
             style={{height: 200, width: 200, borderRadius: 100}}
           />
-          <Text style={{fontSize: 30, color: '#fff'}}>Welcome</Text>
         </View>
     )
   }

@@ -1,10 +1,20 @@
 import React from 'react';
 
-import { Text } from 'react-native';
+import { 
+   View,
+   Text } 
+from 'react-native';
 
-const AppearanceScreen = () => {
+import StackHeads from '../../components/StackHeads';
+
+const AppearanceScreen = ({navigation}) => {
    return(
-      <Text>Appearance</Text>
+        <View>
+         <StackHeads nav={navigation} title="Appearance" />
+         <View>
+            <Text>Appearance</Text>
+         </View>
+      </View>
    )
 }
 

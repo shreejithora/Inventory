@@ -11,6 +11,7 @@ import {
 } from 'victory-native';
 
 const IncomeChart = ({data}) => {
+   // console.log(data)
    return(
       <View>         
          <VictoryChart

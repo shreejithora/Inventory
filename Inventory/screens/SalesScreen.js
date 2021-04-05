@@ -8,15 +8,17 @@ import {
    FlatList,   
 } from 'react-native';
 
+import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import AddSales from '../components/Sales/AddSales';
 import Heads from '../components/Heads';
 import SalesCard from '../components/Sales/SalesCard';
 const SalesList = require('../models/Sales.json');
 
 const SalesScreen = ({navigation}) => {
 
-   const [AddProductModal, setAddProductModal] = useState(false);   
+   const [addSalesModal, setAddSalesModal] = useState(false);   
 
    const [salesData, setsalesData] = useState({
       allSales: SalesList,
@@ -78,10 +80,33 @@ const SalesScreen = ({navigation}) => {
          </View>      
          <TouchableOpacity          
             style={{position: 'absolute', bottom: 25, right: 25,}}
-            onPress={() => {}}
+            onPress={() => {setAddSalesModal(true)}}
          >            
             <Icon name="plus" size={30} color='#e6f1fa' style={styles.icon}/>              
-         </TouchableOpacity>                      
+         </TouchableOpacity>      
+
+         <Modal 
+            style={styles.modal}
+            isVisible={addSalesModal} 
+            transparent={true} 
+            animationIn='slideInUp' 
+            animationOut='slideOutDown'
+            onBackButtonPress = {() => setAddSalesModal(!addSalesModal)}
+            backdropTransitionInTiming={500}
+            backdropTransitionOutTiming={500}
+            animationInTiming={500}
+            animationOutTiming={500}> 
+            <View style={styles.modalView}>       
+               <Icon 
+                  style={styles.buttonIcon}
+                  name="close"
+                  size={30}
+                  color="#078bab"                                   
+                  onPress={ () => setAddSalesModal(false)}
+               />   
+               <AddSales onAddSales={setAddSalesModal}/>                                   
+            </View>                                           
+         </Modal>                         
       </View>    
    )
 }

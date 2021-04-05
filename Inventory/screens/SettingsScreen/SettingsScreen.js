@@ -12,12 +12,15 @@ import {
    Text, 
 } from 'react-native-paper';
 
+import Heads from '../../components/Heads';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const SettingsScreen = ({navigation}) => {
 
    return (
    <View style={styles.container}>
+      <Heads nav={navigation} title="Settings" tabBool={0} />
+      <View style={{padding: 10}}>
          <TouchableOpacity onPress={() => navigation.navigate('PreferancesScreen')}>
             <View style={styles.settingsOption}>
                <Icon name="account-outline" size={25} color='#078bab' />
@@ -54,6 +57,7 @@ const SettingsScreen = ({navigation}) => {
                </View>
             </View>
          </TouchableOpacity>
+      </View>
    </View>
    );
 }
@@ -63,7 +67,6 @@ export default SettingsScreen;
 const styles = StyleSheet.create({
    container: {
       flex: 1,
-      padding: 10
    },
    settingsOption: {
       flexDirection: 'row', 

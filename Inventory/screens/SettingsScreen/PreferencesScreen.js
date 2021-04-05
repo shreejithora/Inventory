@@ -1,10 +1,20 @@
 import React from 'react';
 
-import { Text } from 'react-native';
+import { 
+   Text, 
+   View } 
+from 'react-native';
 
-const PreferencesScreen = () => {
+import StackHeads from '../../components/StackHeads';
+
+const PreferencesScreen = ({navigation}) => {
    return(
-      <Text>Preferences</Text>
+      <View>
+         <StackHeads nav={navigation} title="Preferences" />
+         <View>
+            <Text>Preferences</Text>
+         </View>
+      </View>
    )
 }
 
