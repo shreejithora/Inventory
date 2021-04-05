@@ -75,21 +75,12 @@ const regexEmail="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\.[a-z]$"
          })
        }
    }
-   const regexPass="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])([a-zA-Z0-9@$!%*?&]{8,})$"
    const handleValidPass = (pass) => {
-    if(pass.match(regexPass)){
          setPassword({
             ...password,
             password: pass,
             isValidPass: true
          })
-      } else {
-         setPassword({
-            ...password,
-            password: pass,
-            isValidPass: false
-         })
-      }
    }
 
  return (
