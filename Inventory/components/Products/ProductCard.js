@@ -31,7 +31,7 @@ const ProductCard = ({items}) => {
                         style={{height: 40, width: 40, borderRadius: 50, borderColor:'#078bab', borderWidth: 1, padding: 5}}
                      />                     
                   </View>
-                  <View style={{flexDirection: 'column', flex: 4, marginRight: 10}}>
+                   <View style={{flexDirection: 'column', flex: 4, marginRight: 10}}> 
                      <View>
                         <Text style={styles.texts}>{items.name} <Text style={[styles.texts, {fontSize: 15, color: '#39bcdb', fontStyle: 'italic'}]}>( {items.category} )</Text></Text>                     
                      </View>
@@ -59,7 +59,7 @@ const ProductCard = ({items}) => {
                            </Text>
                         <Text style={[styles.texts, {fontWeight: '700'}]}>Rs. {items.price}</Text>
                      </View>
-                  </View>
+                  </View> 
                   {/* <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.product_id}</Text> 
                   <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left'}]}>
                      {items.name.length > 12 ? items.name.slice(0,11)+'...' : items.name}

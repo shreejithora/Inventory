@@ -28,7 +28,7 @@ const App = () => {
     setTimeout( () => {
       setLoginState({
         isLoading: false,
-        display: false,
+        display: true,
       })
     }, 5000);
   }, [loginState.isLoading])

@@ -9,6 +9,7 @@ import {
    Button, 
 } from 'react-native';
 
+import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Modal from "react-native-modal";
@@ -121,11 +122,6 @@ const SuppliersScreen = ({navigation}) => {
                   onChangeItem={item => handleStatusChange(item.value)}
                />
             </View>
-            <View style={styles.cardContent}>  
-               <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left', fontWeight: '700', marginLeft: 10}]}>ID</Text> 
-               <Text style={[styles.cardTitle, {flex: 3, textAlign: 'left', fontWeight: '700'}]}>Name</Text>  
-               <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left', fontWeight: '700'}]}>Status</Text> 
-            </View> 
             { 
                suppliersData.filteredSuppliers == null ?
                <View opacity={0.5} style={styles.errorDisplay}>
@@ -133,6 +129,10 @@ const SuppliersScreen = ({navigation}) => {
                   <Text style={styles.errorMsg}>No Match Found</Text>  
                                  
                </View> :
+                <Animatable.View 
+                animation="fadeInUpBig"
+                duration={800}
+                style={{flex: 1,backgroundColor: '#fafafa', borderTopLeftRadius: 30, borderTopRightRadius: 30, marginTop: 20}}>
                <FlatList 
                   data = {suppliersData.filteredSuppliers}
                   keyExtractor = {item => item.supplier_id}
@@ -140,6 +140,7 @@ const SuppliersScreen = ({navigation}) => {
                      <SuppliersCard items={item}/>                                           
                   }
                />
+               </Animatable.View>
             }           
          </View>      
          <TouchableOpacity          

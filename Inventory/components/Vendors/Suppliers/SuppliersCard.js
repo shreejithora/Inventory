@@ -22,20 +22,50 @@ const SuppliersCard = ({items}) => {
          <Animatable.View animation="fadeInUp" duration={1000} style={styles.card}>
             <TouchableOpacity onPress={() => setSupplierDetailModal(!supplierDetailModal)}>
                <View style={styles.cardContent}>  
-                  <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.supplier_id}</Text> 
-                  <Text style={[styles.cardTitle, {flex: 3, textAlign: 'left'}]}>
-                     {items.name.length > 13 ? items.name.slice(0,13)+'...' : items.name}
-                  </Text>  
-                  <View style={{flexDirection: 'row', flex: 2, alignItems: 'center'}}>                     
-                     <Icon 
-                        name={ items.status  == 'pending' ? "clock-time-nine" : "checkbox-marked-circle" } 
-                        size={18} 
-                        color={ items.status  == 'pending' ? "red" : "green" }  
-                     />
-                     <Text style={[styles.cardTitle, { textAlign: 'left', marginLeft: 10, color: items.status  == 'pending' ? "red" : "green"}]}>
-                        {items.status}
-                     </Text> 
-                  </View>                                  
+               <View style={{flex: 1}}>
+                     <Icon
+                          name="account" 
+                          color="#078bab" 
+                          size={30}
+                     />                     
+                  </View>
+               <View style={{flexDirection: 'column', flex: 4, marginRight: 10}}> 
+                        <View>
+                        <Text style={[styles.cardTitle, {flex: 3, textAlign: 'left'}]}>
+                           { items.name}
+                  </Text>                  
+                        </View>
+                        <View style={{flexDirection: 'row', justifyContent:'space-between', alignItems: 'center'}}>
+                           <Text style={{fontStyle:'italic',fontSize:15,color:'#078bab'}} >
+                                 <Icon
+                                       name="email"
+                                       size={20}
+                                       color='#078bab'
+                                 />
+                                 {items.email}
+                           </Text>
+                        </View>
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                        <Text style={{fontStyle:'italic',fontSize:15,color:'#078bab'}} >
+                                 <Icon
+                                       name="home"
+                                       size={20}
+                                       color='#078bab'
+                                 />
+                                 {items.address}
+                           </Text>
+                        </View>
+                        <View style={{flexDirection: 'row', justifyContent:'space-between', alignItems: 'center'}}>
+                           <Text style={{fontStyle:'italic',fontSize:15,color:'#078bab',fontWeight:'700'}} >
+                                 <Icon
+                                       name="phone"
+                                       size={20}
+                                       color='#078bab'
+                                 />
+                                 {items.phone}
+                           </Text>
+                        </View>
+                     </View> 
                </View>         
             </TouchableOpacity>
             

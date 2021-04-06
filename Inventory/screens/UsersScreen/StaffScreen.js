@@ -27,18 +27,7 @@ const StaffScreen = () => {
          id: '102',
          name: 'Reception'
       },
-      {
-         id: '103',
-         name: 'Marketting'
-      },
-      {
-         id: '104',
-         name: 'Sales'
-      },
-      {
-         id: '105',
-         name: 'IT'
-      },
+     
    ]
 
    const [staff, setStaff] = useState({
@@ -69,9 +58,7 @@ const StaffScreen = () => {
                   <View style={styles.cards}>                       
                      <StaffCard handleDepartment={handleDepartment} category={userCategory[0]} iconName={'bank'} duration={800} />
                      <StaffCard handleDepartment={handleDepartment} category={userCategory[1]} iconName={'card-account-phone-outline'} duration={800} />
-                     <StaffCard handleDepartment={handleDepartment} category={userCategory[2]} iconName={'buffer'} duration={800} />
-                     <StaffCard handleDepartment={handleDepartment} category={userCategory[3]} iconName={'briefcase-plus-outline'} duration={800} />
-                     <StaffCard handleDepartment={handleDepartment} category={userCategory[4]} iconName={'laptop'} duration={800} />               
+                                 
                   </View>
                </ScrollView>  :
                // <FlatList 
