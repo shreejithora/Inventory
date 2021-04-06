@@ -1,14 +1,17 @@
-import React, {useState}from 'react';
+import 
+   React, 
+   {
+      useState,
+      useContext
+   }
+from 'react';
+
 import { 
    View,
    Text, 
    TextInput,
-   Button,
    TouchableOpacity,
-   Platform,
    StyleSheet,
-   Image,
-   BackHandler,
    ScrollView,
    Alert
 } from 'react-native';
@@ -17,7 +20,12 @@ import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import RadioForm from 'react-native-radio-form';
 
+// import {UserContext} from '../../../context/UserContext';
+
 const SignInScreen = ({ navigation }) => {
+
+   // const {login} = useContext(UserContext)
+
    const [data, setData] = React.useState({
       email: '',
       username:'',
@@ -127,12 +135,12 @@ const regexPass="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])([a-zA-Z0-9@$!
  return (
    <View style={styles.container}>
       <View style={styles.header}>
-         {/* <Animatable.Image 
+         <Animatable.Image 
             animation="fadeInDown"
-            source = {require('./../../assets/userImage/nagarik.png')}
+            source = {require('../../../assets/logo.png')}
             style={styles.logo}
             resizeMode="stretch"
-         /> */}
+         />
       </View>
      
       <Animatable.View 
@@ -147,13 +155,13 @@ const regexPass="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])([a-zA-Z0-9@$!
                   placeholder="Email Address" 
                   onChangeText={(val)=>handleValidEmail(val)}
                   onEndEditing={(e)=>handleValidEmail(e.nativeEvent.text)}
-               />
-               {
-                    data.isValidEmail?
-                    null:
-                    <Animatable.Text animation='fadeIn' style={styles.errMsg}>Invalid email address</Animatable.Text>
-               }
+               />               
             </View>
+            {
+               data.isValidEmail?
+               null:
+               <Animatable.Text animation='fadeIn' style={styles.errMsg}>Invalid email address</Animatable.Text>
+            }
             <View style={styles.inputs}>
                <Text style={styles.texts}>Username</Text>
                <TextInput
@@ -161,13 +169,13 @@ const regexPass="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])([a-zA-Z0-9@$!
                   placeholder="Username" 
                   onChangeText={(val)=>handleValidUser(val)}
                   onEndEditing={(e)=>handleValidUser(e.nativeEvent.text)}
-               />
-               {
-                    data.isValidUser?
-                    null:
-                    <Animatable.Text animation='fadeIn' style={styles.errMsg}>Invalid Username</Animatable.Text>
-               }
+               />               
             </View>
+            {
+               data.isValidUser?
+               null:
+               <Animatable.Text animation='fadeIn' style={styles.errMsg}>Invalid Username</Animatable.Text>
+            }
             <View style={styles.inputs}>
                <Text style={styles.texts}>Password</Text>
                <View style={{flexDirection: 'row'}}>
@@ -194,17 +202,15 @@ const regexPass="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])([a-zA-Z0-9@$!
                      /> }
                   
                   </TouchableOpacity>
-               </View>
-               {
+               </View>               
+            </View>
+            {
                data.isValidPass?
                null:
                <Animatable.Text animation='fadeIn' style={styles.errMsg}>1.At least 8 characters long,{'\n'}
                2.One lowercase one uppercase,{'\n'}3.One number and one special character,{'\n'}
                4.No whitespaces.</Animatable.Text>
-            }
-
-            </View>
-            
+            }            
              <View style={styles.inputs}>
                <Text style={styles.texts}>Password Confirmation</Text>
                <View style={{flexDirection: 'row'}}>
@@ -230,25 +236,22 @@ const regexPass="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])([a-zA-Z0-9@$!
                         size= {20}
                      /> }
                   </TouchableOpacity>
-               </View> 
-                        {
-                           data.isValidConfirmPass?
-                           null:
-                           <Animatable.Text animation='fadeIn' style={styles.errMsg}>Password doesn't match</Animatable.Text>
-                        }
+               </View>                        
             </View>
+            {
+               data.isValidConfirmPass?
+               null:
+               <Animatable.Text animation='fadeIn' style={styles.errMsg}>Password doesn't match</Animatable.Text>
+            }
             <View style={styles.inputs}>
             <Text style={styles.texts}>User Roles</Text>
                <RadioForm 
-                                 dataSource={users}
-                                 initial={2}
-                              //    onPress={ (value) => setLoanFields({...loanFields, income: value})}
-                                 circleSize={20}
-                                 outerColor="#078bab"
-                              />
-                 </View>   
-
-            
+                  dataSource={users}
+                  initial={2}                              
+                  circleSize={20}
+                  outerColor="#078bab"
+               />
+            </View>   
             <TouchableOpacity 
                style={[styles.button, {backgroundColor: '#fff', borderWidth: 1, borderColor: '#078bab'}]}
                //  onPress={ () => {navigation.navigate('SignInScreen')}}>

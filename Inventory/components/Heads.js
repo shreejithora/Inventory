@@ -5,7 +5,6 @@ import {
    Text,
    StyleSheet,
    TouchableOpacity,
-   Touchable
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import  * as Animatable from 'react-native-animatable';
@@ -26,8 +25,8 @@ const Heads = ({nav, title, tabBool}) => {
             >
                <Icon
                   style={styles.navButton}
-                  name="arrow-right-thick"
-                  size={30}   
+                  name="menu-open"
+                  size={35}   
                   color="#078bab"
                   backgroundColor= "#e6f1fa"
                />

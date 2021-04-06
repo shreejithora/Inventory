@@ -1,4 +1,10 @@
-import React, { useState } from 'react';
+import 
+   React, 
+   { 
+      useState,
+      useContext 
+   } 
+from 'react';
 
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 
@@ -17,7 +23,11 @@ import Modal from 'react-native-modal';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import { UserContext } from '../../context/UserContext'; 
+
 const DrawerContent = (props) => {
+
+   const { signOut } = useContext(UserContext);
 
    const [modalToggle, setModalToggle] = useState(false);
 
@@ -119,7 +129,7 @@ const DrawerContent = (props) => {
          <DrawerItem 
             icon = { ({color, size}) => <Icon name="exit-to-app" color={color} size={size}/>}
             label="Sign Out"
-            onPress = { () => {}}
+            onPress = { () => {signOut()}}
          />
          </Drawer.Section>
          <Modal 

@@ -58,7 +58,7 @@ const CustomersScreen = ({navigation}) => {
             </View> 
             { 
                customersData.filteredCustomers == null ?
-               <View opacity={0.5} style={styles.errorDisplay}>
+               <View opacity={0.5} style={[styles.errorDisplay, {fontSize: 16}]}>
                   <Icon name="clipboard-alert-outline" size={30} color='#078bab'/>
                   <Text style={styles.errorMsg}>No Match Found</Text>  
                                  

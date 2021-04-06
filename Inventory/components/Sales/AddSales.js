@@ -89,11 +89,11 @@ const AddSales = (props) => {
          <View style={styles.modalForm}>           
             <View style={styles.fields}>                         
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Product ID*</Text>
+                  <Text style={styles.texts}>Product code*</Text>
                   <TextInput
                      keyboardType='numeric'
                      style={styles.textInputs}
-                     placeholder="Product ID...(eg. 1111)" 
+                     placeholder="Product code...(eg. 111.001)" 
                      maxLength={10}
                      onChangeText={ (val) => handleProductIDChange(val)}
                      onEndEditing = { (e) => handleProductIDChange(e.nativeEvent.text)}
