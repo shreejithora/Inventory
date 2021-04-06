@@ -258,8 +258,6 @@ const regexPass="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])([a-zA-Z0-9@$!
                onPress={()=>Registerhandle(data.email,data.username,data.password,data.confirmPassword)}>
                <Text style={[styles.texts,{color: '#078bab', fontWeight: 'bold'}]}>Register</Text>
             </TouchableOpacity>
-<<<<<<< HEAD
-=======
             {/* <TouchableOpacity
                   onPress={()=>Registerhandle(data.email,data.username,data.password,data.confirmPassword)}
             >
@@ -269,7 +267,6 @@ const regexPass="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])([a-zA-Z0-9@$!
                onPress={ () => {alert('clicked')}}>
                <Text style={[styles.texts,{color: '#fff', fontWeight: 'bold'}]}>Login</Text>
             </TouchableOpacity> */}
->>>>>>> 70c097ea39f791fceb7741246fbc4bd9ebb2ff3a
          </View>
          </ScrollView>
       </Animatable.View>

@@ -14,13 +14,15 @@ import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DropDownPicker from 'react-native-dropdown-picker';
 
+import firestore from '@react-native-firebase/firestore';
+
 import Heads from '../../components/Heads';
 import TotalProducts from '../../components/Products/ProductsStatus/TotalProducts';
 import Stocks from '../../components/Products/ProductsStatus/Stocks';
 import ProductCard from '../../components/Products/ProductCard';
 import AddProduct from "../../components/Products/AddProduct";
 import { useEffect } from 'react';
-const ProductsList = require('../../models/Products.json');
+// const ProductsList = require('../../models/Products.json');
 
 const ProductsScreen = ({navigation}) => {
 
@@ -124,23 +126,41 @@ const ProductsScreen = ({navigation}) => {
 
    const [addProductModal, setAddProductModal] = useState(false);   
 
-   let [productCounter, setProductCounter] = useState(0);
+   const [productCounter, setProductCounter] = useState(0);
 
    const [state, setState] = useState({
       Catstatus: '',
       FilterStatus: ''
    })
 
+   const [ProductsList, setProductsList] = useState([])
+
    const [productData, setProductData] = useState({
       allProducts: ProductsList,
       filteredProducts: ProductsList
    })
 
-   const len = ProductsList.length
+   console.log(ProductsList);
+
    useEffect( () => {
-      for(let i=0; i<=len; i++) {
-         setProductCounter(productCounter++);
-      }
+      // for(let i=0; i<=len; i++) {
+      //    setProductCounter(productCounter++);
+      // }
+      const ok = async() => {
+            try{
+            await firestore()
+               .collection('Products')
+               .get()
+               .then( querySnapshot => {
+                  setProductCounter(querySnapshot.size)   
+                  setProductsList(querySnapshot);
+               });
+         } catch (e) {
+            console.log(e)
+         }
+      }      
+      ok();
+
    }, []);
 
    const handleStatusChange = (val) => {

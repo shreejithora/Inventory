@@ -1,7 +1,6 @@
 import 
   React, 
   {
-    useState, 
     useEffect, 
     useReducer, 
     useMemo
@@ -15,8 +14,8 @@ import {UserProvider} from './context/UserContext';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-// import * as SecureStore from 'expo-secure-store';
-// import auth from '@react-native-firebase/auth';
+import * as SecureStore from 'expo-secure-store';
+import auth from '@react-native-firebase/auth';
 
 import RootStackScreen from './screens/RootStacks/RootStackScreen';
 import DrawerContent from './screens/Drawer/DrawerContent';
@@ -49,6 +48,7 @@ const App = () => {
       };
       case 'LOGIN': return {
         ...prevState,
+        userToken: action.token,
         email: action.email,
         isLoading: false
       };
@@ -74,19 +74,20 @@ const App = () => {
   const [loginState, dispatch] = useReducer(LoginReducer, initialLoginState);
 
   const authContext = useMemo( () => ({
-    login: async( e_mail, password ) => {
+    login: async( e_mail, password, userToken ) => {      
       try{
-        await auth().signInWithEmailAndPassword(e_mail, password)
+        await SecureStore.setItemAsync('token', userToken)      
       } catch (e){
-        Alert.alert('Error !', e, [{text: 'Ok'}])
+        console.log(e)
       }
-      dispatch({type: 'LOGIN', email: e_mail });
+      dispatch({type: 'LOGIN', email: e_mail, token: userToken});
     },
     signOut: async() => {
       try{
-        await auth().signOut();
+        await SecureStore.deleteItemAsync('token')
+        // await auth().signOut();
       } catch (e) {
-        Alert.alert('Error !', e, [{text: 'Ok'}])
+        console.log(e)
       }
       dispatch({ type: 'SIGNOUT'})
     },
@@ -99,35 +100,36 @@ const App = () => {
     }
   }), []);
 
-  // useEffect(() => {
-  //   setTimeout( async() => {
-  //     let userToken;
-  //     userToken = null;
-  //     try{
-  //       userToken = await SecureStore.getItemAsync('userToken');
-  //     } catch (e) {
-  //       Alert.alert('Error !', e, [{text: 'Ok'}]);
-  //     }
-  //     dispatch({ type: 'RETRIEVE_TOKEN', token: userToken})
-  //   }, 1000);
-  // }, [])
+  useEffect(() => {
+    setTimeout( async() => {
+      let userToken;
+      userToken = null;
+      try{
+        userToken = await SecureStore.getItemAsync('token');
+        console.log(userToken)
+      } catch (e) {
+        console.log(e)
+      }
+      dispatch({ type: 'RETRIEVE_TOKEN', token: userToken})
+    }, 1000);
+  }, [])
 
-  // if( loginState.isLoading ) {
-  //   return (
-  //       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#078bab'}}>
-  //         <Image 
-  //           animation="fadeIn"
-  //           source={require('./assets/logo.png')}
-  //           style={{height: 200, width: 200, borderRadius: 100}}
-  //         />
-  //       </View>
-  //   )
-  // }
+  if( loginState.isLoading ) {
+    return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#078bab'}}>
+          <Image 
+            animation="fadeIn"
+            source={require('./assets/logo.png')}
+            style={{height: 200, width: 200, borderRadius: 100}}
+          />
+        </View>
+    )
+  }
   return(
     <UserProvider value={authContext}>
     <NavigationContainer>
       {
-        loginState.isLoading != true ? 
+        loginState.userToken == null ? 
         <RootStackScreen/> :
         <Drawer.Navigator drawerContent={ props => <DrawerContent {...props}/>}>
           <Drawer.Screen name="Home" component = { HomeTabNav } />

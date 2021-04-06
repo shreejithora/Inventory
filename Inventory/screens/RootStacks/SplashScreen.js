@@ -16,7 +16,6 @@ const SplashScreen = ({ navigation }) => {
           style = {styles.logo}
           resizeMode = "stretch"
         />
-        <Animatable.Text style={styles.name} animation= "bounceIn">INVENTORY</Animatable.Text>
       </View>
       <Animatable.View 
         animation = "fadeInUpBig"

@@ -12,10 +12,73 @@ import * as Animatable from 'react-native-animatable';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView } from "react-native-gesture-handler";
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const ProductsList = require('../../models/Products.json');
 
 const AddProduct = (props) => {
+
+   const categoryData = 
+   [
+      {
+         label: 'Clothing', 
+         value: 'clothing', 
+         icon: () => <Icon 
+            name="tshirt-crew-outline" 
+            size={18} 
+            color= '#078bab' 
+         />
+      },
+      {
+         label: 'Electronics', 
+         value: 'electronics', 
+         icon: () => <Icon 
+            name="laptop-chromebook" 
+            size={18} 
+            color= '#078bab' 
+         />
+      },
+      {
+         label: 'Accessories', 
+         value: 'accessories', 
+         icon: () => <Icon 
+            name="account-tie-outline" 
+            size={18} 
+            color= '#078bab' 
+         />
+      },
+      {
+         label: 'Stationery', 
+         value: 'stationery', 
+         icon: () => <Icon 
+            name="book-open-page-variant" 
+            size={18} 
+            color= '#078bab' 
+         />
+      },
+      {
+         label: 'Bags', 
+         value: 'bag', 
+         icon: () => <Icon 
+            name="bag-personal-outline" 
+            size={18} 
+            color= '#078bab' 
+         />
+      },
+      {
+         label: 'Cosmetics', 
+         value: 'cosmetics', 
+         icon: () => <Icon 
+            name="auto-fix" 
+            size={18} 
+            color= '#078bab' 
+         />
+      },
+   ]
+
+   const [state, setState] = useState({
+      Catstatus: '',
+   })
 
    const [productID, setProductID] = useState({
       product_id: '',
@@ -112,6 +175,13 @@ const AddProduct = (props) => {
          })
       }
    }
+
+   const handleStatusChange = (val)=> {
+      setState({
+         Catstatus: val
+      })
+   }
+
    const handleAddProduct = () => {
       if (productName != '' && productID.product_id != '' && productPrice.product_price != '' && productName.product_name != ''){
          if( productID.isValidID || productID.exists){
@@ -141,25 +211,7 @@ const AddProduct = (props) => {
       <ScrollView>
          <View style={styles.modalForm}>           
             <View style={styles.fields}>                         
-               <View style={styles.inputs}>
-                  <Text style={styles.texts}>Product ID*</Text>
-                  <TextInput
-                     keyboardType='numeric'
-                     style={styles.textInputs}
-                     placeholder="Product ID...(eg. 1111)" 
-                     maxLength={10}
-                     onChangeText={ (val) => handleProductIDChange(val)}
-                     onEndEditing = { (e) => handleProductIDChange(e.nativeEvent.text)}
-                  />                  
-                  {  
-                     productID.isValidID ?
-                     null :
-                     <Animatable.Text 
-                        animation="fadeIn"
-                        style={styles.errMsg}>Invalid ID or Product ID already exists.
-                     </Animatable.Text> 
-                  }                   
-               </View>  
+                 
                <View style={styles.inputs}>
                   <Text style={styles.texts}>Product Name*</Text>
                   <TextInput
@@ -177,6 +229,40 @@ const AddProduct = (props) => {
                      </Animatable.Text> :
                      null
                   }                 
+               </View>
+               <View style={styles.picker}>
+                     <DropDownPicker 
+                        items={categoryData}
+                        placeholder="Category"
+                        defaultValue={state.CatStatus}
+                        containerStyle={{height: 40, width: '100%', alignSelf: 'center'}}
+                        style={{backgroundColor: '#fafafa'}}
+                        itemStyle={{
+                           justifyContent: 'center'
+                        }}
+                        dropDownStyle={{backgroundColor: '#fafafa', width: '100%'}}
+                        onChangeItem={item => handleStatusChange(item.value)}
+                     />
+                  </View>
+               <View style={styles.inputs}>
+                  <Text style={styles.texts}>Product code*</Text>
+                  <TextInput
+                     keyboardType='numeric'
+                     editable={false}
+                     style={styles.textInputs}
+                     placeholder="Product code...(eg. 111.001)" 
+                     maxLength={10}
+                     onChangeText={ (val) => handleProductIDChange(val)}
+                     onEndEditing = { (e) => handleProductIDChange(e.nativeEvent.text)}
+                  />                  
+                  {  
+                     productID.isValidID ?
+                     null :
+                     <Animatable.Text 
+                        animation="fadeIn"
+                        style={styles.errMsg}>Invalid ID or Product ID already exists.
+                     </Animatable.Text> 
+                  }                   
                </View>
                <View style={styles.inputs}>
                   <Text style={styles.texts}>Quantity</Text>
@@ -197,7 +283,41 @@ const AddProduct = (props) => {
                   }               
                </View> 
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Price* (In Rs.)</Text>
+                  <Text style={styles.texts}>Cost Price* (In Rs.)</Text>
+                  <TextInput
+                     style={styles.textInputs}
+                     keyboardType="numeric"
+                     placeholder="Price...(eg. 200 or eg. 200.12)" 
+                     onChangeText={ (val) => handlePriceChange(val)}
+                     onEndEditing = { (e) => handlePriceChange(e.nativeEvent.text)}
+                  />      
+                  {  
+                     productPrice.isValidProductPrice ?
+                     null :
+                     <Animatable.Text 
+                        animation="fadeIn"
+                        style={styles.errMsg}>Invalid Price</Animatable.Text> 
+                  }            
+               </View>
+               <View style={styles.inputs}>
+                  <Text style={styles.texts}>Margin* (%)</Text>
+                  <TextInput
+                     style={styles.textInputs}
+                     keyboardType="numeric"
+                     placeholder="Price...(eg. 200 or eg. 200.12)" 
+                     onChangeText={ (val) => handlePriceChange(val)}
+                     onEndEditing = { (e) => handlePriceChange(e.nativeEvent.text)}
+                  />      
+                  {  
+                     productPrice.isValidProductPrice ?
+                     null :
+                     <Animatable.Text 
+                        animation="fadeIn"
+                        style={styles.errMsg}>Invalid Price</Animatable.Text> 
+                  }            
+               </View>
+               <View style={styles.inputs}>
+                  <Text style={styles.texts}>Market Price* (In Rs.)</Text>
                   <TextInput
                      style={styles.textInputs}
                      keyboardType="numeric"
@@ -230,7 +350,8 @@ export default AddProduct;
 
 const styles = StyleSheet.create({
    modalForm: {
-      padding: 15
+      padding: 15,
+      marginBottom: 30,
    },
    modalText: {   
       marginTop: 50,
@@ -250,7 +371,7 @@ const styles = StyleSheet.create({
    },
    texts: {
       fontSize: 20,
-      color: '#065ba1'
+      color: '#078bab'
    },
    textInputs: {
       height: 40,
@@ -269,6 +390,11 @@ const styles = StyleSheet.create({
       borderRadius: 25,
       alignItems: 'center',
       justifyContent: 'center'
+   },
+   picker: {
+      width: '100%',
+      paddingHorizontal: 8,
+      paddingTop: 8
    },
    errMsg: {
       color: 'red',
