@@ -29,9 +29,9 @@ const HomeScreen = ({navigation}) => {
           <HomeCard iconName={'truck-fast-outline'} cus={0} sup={1} tabName={'Vendors'} cardName={'Suppliers'} nav={navigation}/> 
           <HomeCard iconName={'account-multiple-outline'} cus={1} sup={0} tabName={'Vendors'} cardName={'Customers'} nav={navigation}/>                                         
         </ScrollView>   
-        <TouchableOpacity onPress={() => console.log('hi')}>
+        {/* <TouchableOpacity onPress={() => console.log('hi')}>
           <Icon name="arrow-right" size={25} color='#078bab' style={{alignSelf: 'flex-end', marginRight: 20}} />
-        </TouchableOpacity>       
+        </TouchableOpacity>        */}
       </View>   
 
       {/* Table of Cards */}
