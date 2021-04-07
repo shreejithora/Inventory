@@ -24,6 +24,8 @@ import AddProduct from "../../components/Products/AddProduct";
 import { useEffect } from 'react';
 // const ProductsList = require('../../models/Products.json');
 
+const ProductsList = [];
+
 const ProductsScreen = ({navigation}) => {
 
    const FilterData = 
@@ -133,35 +135,38 @@ const ProductsScreen = ({navigation}) => {
       FilterStatus: ''
    })
 
-   const [ProductsList, setProductsList] = useState([])
+   const [stateChange, setStateChange] = useState(0)
+
+   // const a =0;
 
    const [productData, setProductData] = useState({
-      allProducts: ProductsList,
-      filteredProducts: ProductsList
+      allProducts: null,
+      filteredProducts: null
    })
 
-   console.log(ProductsList);
-
-   useEffect( () => {
-      // for(let i=0; i<=len; i++) {
-      //    setProductCounter(productCounter++);
-      // }
+   useEffect( () => {    
       const ok = async() => {
             try{
             await firestore()
                .collection('Products')
                .get()
                .then( querySnapshot => {
-                  setProductCounter(querySnapshot.size)   
-                  setProductsList(querySnapshot);
-               });
+                  setProductCounter(querySnapshot.size)  
+                  querySnapshot.forEach( documentSnapshot => {
+                     ProductsList.push(documentSnapshot.data());                     
+                  })
+               });            
+            setProductData({
+               allProducts: ProductsList,
+               filteredProducts: ProductsList
+            })
          } catch (e) {
             console.log(e)
          }
       }      
       ok();
 
-   }, []);
+   }, [stateChange]);   
 
    const handleStatusChange = (val) => {
       setState({
@@ -205,23 +210,31 @@ const ProductsScreen = ({navigation}) => {
       }     
    }
 
-   const handleSearchText = textToSearch => {
-      const foundProduct = ProductsList.filter( item => {
-         return ( 
-            item.product_id.toLowerCase().includes(textToSearch.toLowerCase()) || 
-            item.name.toLowerCase().includes(textToSearch.toLowerCase()) ||
-            item.quantity.toLowerCase().includes(textToSearch.toLowerCase())  ||
-            item.price.toLowerCase().includes(textToSearch.toLowerCase()) ||
-            item.last_updated.toLowerCase().includes(textToSearch.toLowerCase()) ||
-            item.category.toLowerCase().includes(textToSearch.toLowerCase()) ||
-            item.sub_category.toLowerCase().includes(textToSearch.toLowerCase()) 
-         )
-      })
+   const handleSearchText = async(textToSearch) => {
+
+      try{
+         const foundProduct = await ProductsList.filter( item => {
+            return ( 
+               item.product_code.toString().includes(textToSearch) || 
+               item.product_name.toString().includes(textToSearch) ||
+               item.quantity.toString().includes(textToSearch)  ||
+               item.market_price.toString().includes(textToSearch) ||
+               item.category.toLowerCase().includes(textToSearch.toLowerCase()) 
+               // item.sub_category.toLowerCase().includes(textToSearch.toLowerCase()) 
+            )
+         })
       
-      setProductData({
-         ...productData,
-         filteredProducts: foundProduct.length == 0 ? null : foundProduct         
-      })      
+         await setProductData({
+            ...productData,
+            filteredProducts: foundProduct.length == 0 ? null : foundProduct         
+         })      
+      } catch(e) {
+         console.log(e)
+      } 
+   }
+
+   const handleStateChange = () => {
+      setStateChange(1)
    }
 
    return(
@@ -295,8 +308,8 @@ const ProductsScreen = ({navigation}) => {
                   style={{flex: 1,backgroundColor: '#fafafa', borderTopLeftRadius: 30, borderTopRightRadius: 30, marginTop: 20}}>
                   <FlatList 
                      data = {productData.filteredProducts}
-                     keyExtractor = {item => item.product_id}
-                     renderItem = { ({item}) =>                  
+                     keyExtractor = {item => String(item.product_code)}
+                     renderItem = { ({item}) =>          
                         <ProductCard items={item}/>                                    
                      }
                   />
@@ -329,7 +342,7 @@ const ProductsScreen = ({navigation}) => {
                   color="#078bab"                                   
                   onPress={ () => setAddProductModal(false)}
                />   
-               <AddProduct onAddProduct={setAddProductModal}/>                                   
+               <AddProduct onAddProduct={setAddProductModal} stateChange={handleStateChange}/>                                   
             </View>                                           
          </Modal>         
       </View>    

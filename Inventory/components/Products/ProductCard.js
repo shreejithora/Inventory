@@ -14,7 +14,7 @@ import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ProductInfo from "./ProductInfo";
 
-const ProductsList = require('../../models/Products.json');
+// const ProductsList = require('../../models/Products.json');
 
 const ProductCard = ({items}) => {
 
@@ -33,7 +33,7 @@ const ProductCard = ({items}) => {
                   </View>
                    <View style={{flexDirection: 'column', flex: 4, marginRight: 10}}> 
                      <View>
-                        <Text style={styles.texts}>{items.name} <Text style={[styles.texts, {fontSize: 15, color: '#39bcdb', fontStyle: 'italic'}]}>( {items.category} )</Text></Text>                     
+                        <Text style={styles.texts}>{items.product_name} <Text style={[styles.texts, {fontSize: 15, color: '#39bcdb', fontStyle: 'italic'}]}>( {items.category} )</Text></Text>                     
                      </View>
                      <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                         <Text 
@@ -57,15 +57,9 @@ const ProductCard = ({items}) => {
                               null
                            }
                            </Text>
-                        <Text style={[styles.texts, {fontWeight: '700'}]}>Rs. {items.price}</Text>
+                        <Text style={[styles.texts, {fontWeight: '700'}]}>Rs. {items.market_price}</Text>
                      </View>
-                  </View> 
-                  {/* <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.product_id}</Text> 
-                  <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left'}]}>
-                     {items.name.length > 12 ? items.name.slice(0,11)+'...' : items.name}
-                  </Text>  
-                  <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{items.quantity}</Text>            
-                  <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{items.price}</Text> */}
+                  </View>                 
                </View>         
             </TouchableOpacity>
             

@@ -101,15 +101,6 @@ const App = () => {
   }), []);
 
   useEffect(() => {
-<<<<<<< HEAD
-    setTimeout( () => {
-      setLoginState({
-        isLoading: false,
-        display: true,
-      })
-    }, 5000);
-  }, [loginState.isLoading])
-=======
     setTimeout( async() => {
       let userToken;
       userToken = null;
@@ -122,7 +113,6 @@ const App = () => {
       dispatch({ type: 'RETRIEVE_TOKEN', token: userToken})
     }, 1000);
   }, [])
->>>>>>> 573621a759580c940617f437f246152973ce34dd
 
   if( loginState.isLoading ) {
     return (

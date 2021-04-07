@@ -8,6 +8,8 @@ import {
    Alert,
    } from 'react-native';
 
+import firestore from '@react-native-firebase/firestore';
+
 import * as Animatable from 'react-native-animatable';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -80,8 +82,8 @@ const AddProduct = (props) => {
       Catstatus: '',
    })
 
-   const [productID, setProductID] = useState({
-      product_id: '',
+   const [productCode, setProductCode] = useState({
+      product_code: null,
       isValidID: true,
    })
 
@@ -91,37 +93,33 @@ const AddProduct = (props) => {
   })
 
   const [productQuantity, setProductQuantity] = useState({
-     product_quantity: '',
+     product_quantity: 0,
      isValidProductQuantity: true
   })
 
-  const [productPrice, setProductPrice] = useState({
-     product_price: '',
-     isValidProductPrice: true
+  const [marketPrice, setMarketPrice] = useState({
+     market_price: null,
+     isValidMarketPrice: true
   })
 
-   const handleProductIDChange = (val) => {
+  const [margin, setMargin] = useState({
+     margin: null,
+     isValidMargin: true
+  })
 
-      const foundProduct = ProductsList.filter( item => {
-         return item.product_id == val
-      })    
-   
-      const regexWithValidID = /^\d{0,4}(\.\d{1,3})?$/ 
-      
-      if (foundProduct.length == 0 && val.match(regexWithValidID) ) {
-         setProductID({
-            ...productID,
-            product_id: val,
-            isValidID: true,
-         })            
-      } else {
-         setProductID({
-            ...productID,
-            product_id: val,
-            isValidID: false,
-         })
-      }
-   }
+  const [costPrice, setCostPrice] = useState({
+     cost_price: null,
+     isValidCostPrice: true
+  })
+
+  const [ codes, setCodes] = useState({
+     clothing: 100.001,
+     electronics: 200.001,
+     accessories: 300.001,
+     stationery: 400.001,
+     bag: 500.001,
+     cosmetics: 600.001,
+  })
 
    const handleProductNameChange = (val) => { 
       const foundProduct = ProductsList.filter( item => {
@@ -159,39 +157,196 @@ const AddProduct = (props) => {
       }
    }
 
-   const handlePriceChange = (val) => {  
+   const handleMarketPriceChange = (val) => {  
       const regexWithValidPrice = /^\d{0,8}(\.\d{1,4})?$/ 
       if( val.match(regexWithValidPrice) ) {
-         setProductPrice({
-            ...productPrice,
-            product_price: val,
-            isValidProductPrice: true
+         setMarketPrice({
+            ...marketPrice,
+            market_price: val,
+            isValidMarketPrice: true
          })
       } else {
-          setProductPrice({
-            ...productPrice,
-            product_price: val,
-            isValidProductPrice: false
+          setMarketPrice({
+            ...marketPrice,
+            market_price: val,
+            isValidMarketPrice: false
          })
       }
    }
 
-   const handleStatusChange = (val)=> {
+   const handleMargin = (val) => {  
+      const regexWithValidPrice = /^\d{0,8}(\.\d{1,4})?$/ 
+      if( val.match(regexWithValidPrice) ) {
+         setMargin({
+            ...margin,
+            margin: val,
+            isValidMargin: true
+         })
+      } else {
+          setMargin({
+            ...margin,
+            margin: val,
+            isValidMargin: false
+         })
+      }
+   }
+
+   const handleCostPriceChange = (val) => {  
+      const regexWithValidPrice = /^\d{0,8}(\.\d{1,4})?$/ 
+      if( val.match(regexWithValidPrice) ) {
+         setCostPrice({
+            ...costPrice,
+            cost_price: val,
+            isValidCostPrice: true
+         })
+      } else {
+          setCostPrice({
+            ...costPrice,
+            cost_price: val,
+            isValidCostPrice: false
+         })
+      }
+   }
+
+   let code = [];
+
+   const handleStatusChange = async(val)=> {
       setState({
          Catstatus: val
       })
+
+      let len = 0;
+
+      try{
+         await firestore()
+            .collection('Products')
+            .where('category', '==', val)
+            .get()
+            .then( querySnapshot => {
+               querySnapshot.forEach( documentSnapshot => {
+                  code.push(documentSnapshot.data().product_code)                  
+                  len++;               
+               })
+            })
+         let temp = 0;
+         if( len == 0){
+            temp = null;
+         }
+         else if( len == 1){                      
+            temp = code[0]
+         } else{
+            for(let i = 0; i < len; i++ ){
+               for( let j = 0; j < len; j++){
+                  if(code[i] > code[j]){
+                     temp = code[i];
+                     code[i] = code[j];
+                     code[j] = temp;
+                  }
+               }
+            }
+         }
+         if( val == "clothing" ){
+            if( temp == null ){
+               temp = codes.clothing + 0.001
+               setProductCode*{product_code: codes.clothing.toFixed(3)}
+            } else {
+               temp = temp + 0.001
+               setCodes({clothing: temp.toFixed(3)})
+               setProductCode({product_code: temp.toFixed(3)})
+            }   
+         }
+         if( val == "electronics"){
+            if( temp == null ){
+               temp = codes.electronics + 0.001
+               setProductCode({product_code: codes.electronics.toFixed(3)})
+            } else {
+               temp = temp + 0.001
+               setCodes({electronics: temp.toFixed(3)})
+               setProductCode({product_code: temp.toFixed(3)})
+            }            
+         }
+         if( val == "accessories"){
+            if( temp == null ){
+               temp = codes.accessories + 0.001
+               setProductCode({product_code: codes.accessories.toFixed(3)})
+            } else {
+               temp = temp + 0.001
+               setCodes({accessories: temp.toFixed(3)})
+               setProductCode({product_code: temp.toFixed(3)})
+            }  
+         }
+         if( val == "stationery"){
+            if( temp == null ){
+               temp = codes.stationery + 0.001
+               setProductCode({product_code: codes.stationery.toFixed(3)})
+            } else {
+               temp = temp + 0.001
+               setCodes({stationery: temp.toFixed(3)})
+               setProductCode({product_code: temp.toFixed(3)})
+            }  
+         }
+         if( val == "bag" && temp != null){
+            if( temp == null ){
+               temp = codes.bag + 0.001
+               setProductCode({product_code: codes.bag.toFixed(3)})
+            } else {
+               temp = temp + 0.001
+               setCodes({bag: temp.toFixed(3)})
+               setProductCode({product_code: temp.toFixed(3)})
+            }              
+         }
+         if( val == "cosmetics" && temp != null){
+            if( temp == null ){
+               temp = codes.cosmetics + 0.001
+               setProductCode({product_code: codes.cosmetics.toFixed(3)})
+            } else {
+               temp = temp + 0.001
+               setCodes({cosmetics: temp.toFixed(3)})
+               setProductCode({product_code: temp.toFixed(3)})
+            }  
+         }
+      } catch (e) {
+         console.log(e)
+      }
    }
 
    const handleAddProduct = () => {
-      if (productName != '' && productID.product_id != '' && productPrice.product_price != '' && productName.product_name != ''){
-         if( productID.isValidID || productID.exists){
+      if ( productName.product_name != '' && productCode.product_code != null && costPrice.cost_price != null && margin.margin != null && marketPrice.market_price != null && state.Catstatus != ''){
+         if( productCode.product_code != null){
             if ( !productName.exists ) {
                if ( productQuantity.isValidProductQuantity ) {
-                  if(  productPrice.isValidProductPrice ) {
-                     props.onAddProduct(false);
-                     Alert.alert('Product Added!','Product ID:'+productID.product_id+'  with Product Name: '+productName.product_name, [{text: 'Ok'}]);
+                  if(  costPrice.isValidCostPrice ) {
+                     if( margin.isValidMargin ) {
+                        if( marketPrice.isValidMarketPrice ) {
+                           props.onAddProduct(false);
+                           try{                        
+                              firestore()
+                                 .collection('Products')
+                                 .add({
+                                    category: state.Catstatus,
+                                    product_name: productName.product_name,
+                                    product_code: Number(productCode.product_code),
+                                    cost_price: Number(costPrice.cost_price),
+                                    margin: Number(margin.margin),
+                                    market_price: Number(marketPrice.market_price),
+                                    quantity: productQuantity.product_quantity,
+                                    product_updated: [new Date()]
+                                 }). then( () => {
+                                    Alert.alert('Product Added!','Product Code:'+productCode.product_code+'  with Product Name: '+productName.product_name, [{text: 'Ok'}]);
+                                    props.stateChange
+                                 })
+                           } catch(e) {
+                              console.log(e)
+                           }
+                           
+                        } else {
+                           Alert.alert('Invalid Input!','Please enter a Valid Market Price for the product', [{text: 'Ok'}]);
+                        }
+                     }  else {
+                        Alert.alert('Invalid Input!','Please enter a Valid Margin Price for the product', [{text: 'Ok'}]);
+                     }                   
                   } else {
-                     Alert.alert('Invalid Input!','Please enter a Valid Price for the product', [{text: 'Ok'}]);                  
+                     Alert.alert('Invalid Input!','Please enter a Valid Cost Price for the product', [{text: 'Ok'}]);                  
                   }
                } else {
                   Alert.alert('Invalid input', 'Please enter a Valid Quantity', [{text: 'Ok'}]);
@@ -245,24 +400,16 @@ const AddProduct = (props) => {
                      />
                   </View>
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Product code*</Text>
-                  <TextInput
+                  <Text style={styles.texts}>Product code: {productCode.product_code}</Text>
+                  {/* <Text>{productCode.product_code}</Text> */}
+                  {/* <TextInput
                      keyboardType='numeric'
                      editable={false}
-                     style={styles.textInputs}
-                     placeholder="Product code...(eg. 111.001)" 
+                     style={styles.textInputs}                                        
                      maxLength={10}
-                     onChangeText={ (val) => handleProductIDChange(val)}
-                     onEndEditing = { (e) => handleProductIDChange(e.nativeEvent.text)}
-                  />                  
-                  {  
-                     productID.isValidID ?
-                     null :
-                     <Animatable.Text 
-                        animation="fadeIn"
-                        style={styles.errMsg}>Invalid ID or Product ID already exists.
-                     </Animatable.Text> 
-                  }                   
+                     onChangeText={ (val) => handleProductCodeChange(val)}
+                     onEndEditing = { (e) => handleProductCodeChange(e.nativeEvent.text)}
+                  />                   */}                                    
                </View>
                <View style={styles.inputs}>
                   <Text style={styles.texts}>Quantity</Text>
@@ -288,11 +435,11 @@ const AddProduct = (props) => {
                      style={styles.textInputs}
                      keyboardType="numeric"
                      placeholder="Price...(eg. 200 or eg. 200.12)" 
-                     onChangeText={ (val) => handlePriceChange(val)}
-                     onEndEditing = { (e) => handlePriceChange(e.nativeEvent.text)}
+                     onChangeText={ (val) => handleCostPriceChange(val)}
+                     onEndEditing = { (e) => handleCostPriceChange(e.nativeEvent.text)}
                   />      
                   {  
-                     productPrice.isValidProductPrice ?
+                     costPrice.isValidCostPrice ?
                      null :
                      <Animatable.Text 
                         animation="fadeIn"
@@ -305,11 +452,11 @@ const AddProduct = (props) => {
                      style={styles.textInputs}
                      keyboardType="numeric"
                      placeholder="Price...(eg. 200 or eg. 200.12)" 
-                     onChangeText={ (val) => handlePriceChange(val)}
-                     onEndEditing = { (e) => handlePriceChange(e.nativeEvent.text)}
+                     onChangeText={ (val) => handleMargin(val)}
+                     onEndEditing = { (e) => handleMargin(e.nativeEvent.text)}
                   />      
                   {  
-                     productPrice.isValidProductPrice ?
+                     margin.isValidMargin ?
                      null :
                      <Animatable.Text 
                         animation="fadeIn"
@@ -322,11 +469,11 @@ const AddProduct = (props) => {
                      style={styles.textInputs}
                      keyboardType="numeric"
                      placeholder="Price...(eg. 200 or eg. 200.12)" 
-                     onChangeText={ (val) => handlePriceChange(val)}
-                     onEndEditing = { (e) => handlePriceChange(e.nativeEvent.text)}
+                     onChangeText={ (val) => handleMarketPriceChange(val)}
+                     onEndEditing = { (e) => handleMarketPriceChange(e.nativeEvent.text)}
                   />      
                   {  
-                     productPrice.isValidProductPrice ?
+                     marketPrice.isValidMarketPrice ?
                      null :
                      <Animatable.Text 
                         animation="fadeIn"
