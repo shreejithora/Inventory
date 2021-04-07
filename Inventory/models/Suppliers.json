@@ -2,13 +2,15 @@
    {
       "supplier_id": "101",
       "name": "Hari Products Pvt. Ltd.",
+      "email":"HariProducts@gmail.com",
       "phone": "9841987547",
-      "address": "maitighar - 5",
+      "address": "Maitighar - 5",
       "status": "recieved"      
    },
    {
       "supplier_id": "102",
       "name": "Krishna Products Pvt. Ltd.",
+      "email":"KrishnaProducts@gmail.com",
       "phone": "9841987547",
       "address": "Samakhusi, kathmandu - 5",
       "status": "pending"      
@@ -16,34 +18,39 @@
    {
       "supplier_id": "103",
       "name": "Tanka Products Pvt. Ltd.",
+      "email":"TankaProducts@gmail.com",
       "phone": "9841987547",
-      "address": "lokanthali - 5",
+      "address": "Lokanthali - 5",
       "status": "recieved"      
    },
    {
       "supplier_id": "104",
-      "name": "nanglo Products Pvt. Ltd.",
+      "name": "Nanglo Products Pvt. Ltd.",
+      "email":"NangloProducts@gmail.com",
       "phone": "9841987547",
-      "address": "jadibuti - 5",
+      "address": "Jadibuti - 5",
       "status": "pending"      
    },
    {
       "supplier_id": "105",
       "name": "Batti Products Pvt. Ltd.",
+      "email":"BattiProducts@gmail.com",
       "phone": "9841987547",
-      "address": "thimi - 5",
+      "address": "Thimi - 5",
       "status": "pending"      
    },
    {
       "supplier_id": "106",
       "name": "Pani Products Pvt. Ltd.",
+      "email":"PaniProducts@gmail.com",
       "phone": "9841987547",
-      "address": "kalanki - 5",
+      "address": "Kalanki - 5",
       "status": "recieved"    
    },
    {
       "supplier_id": "107",
       "name": "Jadibuti Products Pvt. Ltd.",
+      "email":"JadibutiProducts@gmail.com",
       "phone": "9841987547",
       "address": "Gongabu - 5",
       "status": "recieved"      
@@ -51,6 +58,7 @@
    {
       "supplier_id": "108",
       "name": "Luga Products Pvt. Ltd.",
+      "email":"LugaaProduts@gmail.com",
       "phone": "9841987547",
       "address": "Hadigaun - 5",
       "status": "pending"      
@@ -58,13 +66,15 @@
    {
       "supplier_id": "109",
       "name": "Lubha Products Pvt. Ltd.",
+      "email":"LubhaProducts@gmail.com",
       "phone": "9841987547",
-      "address": "byasi, Bhaktapur - 5",
+      "address": "Byasi, Bhaktapur - 5",
       "status": "pending"      
    },
    {
       "supplier_id": "110",
       "name": "Anu Products Pvt. Ltd.",
+      "email":"AnuProducts@gmail.com",
       "phone": "9841987547",
       "address": "Baneshwor - 5",
       "status": "pending"      

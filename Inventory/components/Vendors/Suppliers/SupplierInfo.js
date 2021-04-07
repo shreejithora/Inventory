@@ -11,7 +11,8 @@ const SupplierInfo = ({item}) => {
       <View  style={styles.SupplierInfo}>      
          <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Supplier ID:</Text> {item.supplier_id}</Text>
          <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Supplier:</Text> {item.name}</Text>
-         <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>phone:</Text> {item.phone}</Text>
+         <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Phone:</Text> {item.phone}</Text>
+         <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Email:</Text> {item.email}</Text>
          <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Address:</Text> {item.address}</Text>
          <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Status:</Text> <Text style={{color: item.status == 'pending' ? 'red' : 'green', fontStyle: 'italic'}}>{item.status}</Text></Text>
 
