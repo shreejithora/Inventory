@@ -30,7 +30,7 @@ const AddSales = (props) => {
      isValidProductQuantity: true
   })  
 
-   const handleProductIDChange = (val) => {
+   const handleProductCodeChange = (val) => {
 
       const foundProduct = ProductsList.filter( item => {
          return item.product_id == val
@@ -87,23 +87,42 @@ const AddSales = (props) => {
    return (
       <ScrollView>
          <View style={styles.modalForm}>           
-            <View style={styles.fields}>                         
+            <View style={styles.fields}>  
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Product code*</Text>
+                     <Text style={styles.texts}>Customer*</Text>                  
+                     <TextInput
+                        keyboardType='numeric'
+                        style={styles.textInputs}
+                        placeholder="Customer...(eg. Hari Products..)" 
+                        onChangeText={ (val) => handleProductCodeChange(val)}
+                        onEndEditing = { (e) => handleProductCodeChange(e.nativeEvent.text)}
+                     />                  
+                     {  
+                        productID.isValidID ?
+                        null :
+                        <Animatable.Text 
+                           animation="fadeIn"
+                           style={styles.errMsg}>Invalid Code
+                        </Animatable.Text> 
+                     }                   
+                  </View>
+
+               <View style={styles.inputs}>
+                  <Text style={styles.texts}>Product code*</Text>                  
                   <TextInput
                      keyboardType='numeric'
                      style={styles.textInputs}
                      placeholder="Product code...(eg. 111.001)" 
                      maxLength={10}
-                     onChangeText={ (val) => handleProductIDChange(val)}
-                     onEndEditing = { (e) => handleProductIDChange(e.nativeEvent.text)}
+                     onChangeText={ (val) => handleProductCodeChange(val)}
+                     onEndEditing = { (e) => handleProductCodeChange(e.nativeEvent.text)}
                   />                  
                   {  
                      productID.isValidID ?
                      null :
                      <Animatable.Text 
                         animation="fadeIn"
-                        style={styles.errMsg}>Invalid ID
+                        style={styles.errMsg}>Invalid Code
                      </Animatable.Text> 
                   }                   
                </View>                 

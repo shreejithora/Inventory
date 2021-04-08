@@ -14,11 +14,31 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Modal from "react-native-modal";
 
+import firestore from '@react-native-firebase/firestore';
+
 import SuppliersCard from "../../components/Vendors/Suppliers/SuppliersCard";
 import AddSupplier from '../../components/Vendors/Suppliers/AddSupplier';
-const SuppliersList = require('../../models/Suppliers.json');
+import { useEffect } from 'react';
+
+let SuppliersList = [];
 
 const SuppliersScreen = ({navigation}) => {
+
+   useEffect( () => {      
+      const ok = async() => {
+         SuppliersList = [];
+         await firestore()
+            .collection('Suppliers')
+            .get()
+            .then( querySnapshot => {
+               querySnapshot.forEach( documentSnapshot => {
+                  SuppliersList.push(documentSnapshot.data())
+               })
+            })
+      }
+      ok();
+   }, [])
+
 
    const [AddSupplierModal, setAddSupplierModal] = useState(false);   
 
@@ -135,7 +155,7 @@ const SuppliersScreen = ({navigation}) => {
                 style={{flex: 1,backgroundColor: '#fafafa', borderTopLeftRadius: 30, borderTopRightRadius: 30, marginTop: 20}}>
                <FlatList 
                   data = {suppliersData.filteredSuppliers}
-                  keyExtractor = {item => item.supplier_id}
+                  keyExtractor = {item => item.supplier_code}
                   renderItem = { ({item}) =>                  
                      <SuppliersCard items={item}/>                                           
                   }

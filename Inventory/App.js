@@ -105,8 +105,7 @@ const App = () => {
       let userToken;
       userToken = null;
       try{
-        userToken = await SecureStore.getItemAsync('token');
-        console.log(userToken)
+        userToken = await SecureStore.getItemAsync('token');    
       } catch (e) {
         console.log(e)
       }

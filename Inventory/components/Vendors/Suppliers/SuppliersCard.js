@@ -22,48 +22,42 @@ const SuppliersCard = ({items}) => {
          <Animatable.View animation="fadeInUp" duration={1000} style={styles.card}>
             <TouchableOpacity onPress={() => setSupplierDetailModal(!supplierDetailModal)}>
                <View style={styles.cardContent}>  
-               <View style={{flex: 1}}>
-                     <Icon
-                          name="account" 
-                          color="#078bab" 
-                          size={30}
+                  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', borderRightWidth: 2,borderRightColor: '#078bab'}}>
+                     <Icon                     
+                        name="badge-account-outline" 
+                        color="#078bab" 
+                        size={35}
                      />                     
                   </View>
-               <View style={{flexDirection: 'column', flex: 4, marginRight: 10}}> 
-                        <View>
-                        <Text style={[styles.cardTitle, {flex: 3, textAlign: 'left'}]}>
-                           { items.name}
-                  </Text>                  
+               <View style={{flexDirection: 'column', flex: 4, marginLeft: 10, padding: 5}}> 
+                        <View style={{marginBottom: 5}}>
+                           <Text style={[styles.cardTitle, {flex: 3, textAlign: 'left', fontWeight: '700'}]}>
+                              {items.supplier_name}
+                           </Text>                  
                         </View>
-                        <View style={{flexDirection: 'row', justifyContent:'space-between', alignItems: 'center'}}>
-                           <Text style={{fontStyle:'italic',fontSize:15,color:'#078bab'}} >
-                                 <Icon
-                                       name="email"
-                                       size={20}
-                                       color='#078bab'
-                                 />
-                                 {items.email}
-                           </Text>
+                        <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                           <Icon
+                              name="email-outline"
+                              size={18}
+                              color='#078bab'
+                           />
+                           <Text style={{fontStyle:'italic',fontSize:15,color:'#078bab', marginLeft: 5}} >{items.email}</Text>
                         </View>
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                        <Text style={{fontStyle:'italic',fontSize:15,color:'#078bab'}} >
-                                 <Icon
-                                       name="home"
-                                       size={20}
-                                       color='#078bab'
-                                 />
-                                 {items.address}
-                           </Text>
+                        <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                           <Icon
+                              name="home-outline"
+                              size={18}
+                              color='#078bab'
+                           />
+                           <Text style={{fontStyle:'italic',fontSize:15,color:'#078bab', marginLeft: 5}} >{items.address}</Text>
                         </View>
-                        <View style={{flexDirection: 'row', justifyContent:'space-between', alignItems: 'center'}}>
-                           <Text style={{fontStyle:'italic',fontSize:15,color:'#078bab',fontWeight:'700'}} >
-                                 <Icon
-                                       name="phone"
-                                       size={20}
-                                       color='#078bab'
-                                 />
-                                 {items.phone}
-                           </Text>
+                        <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                           <Icon
+                              name="phone-outline"
+                              size={18}
+                              color='#078bab'
+                           />
+                           <Text style={{fontStyle:'italic',fontSize:15,color:'#078bab', marginLeft: 5}} >{items.phone}</Text>
                         </View>
                      </View> 
                </View>         
@@ -148,18 +142,18 @@ const styles = StyleSheet.create({
       fontSize: 18,
    },
    card: {
-      padding: 15,
-      backgroundColor: '#fff',
+      paddingVertical: 10,
+      backgroundColor: '#fafafa',
       flex: 1, 
-      borderBottomColor: '#f4f4f4',
-      borderBottomWidth: 1,   
-      
+      borderRadius: 50,
+      marginHorizontal: 17
    },
    cardContent: {
+      padding: 5,
       flex: 1,
       flexDirection: 'row',
       justifyContent: 'space-between',
-      borderRadius: 15,
+      // borderRadius: 15,
    },
    cardInfo: {      
       marginLeft: 5,
@@ -169,10 +163,8 @@ const styles = StyleSheet.create({
    detailModal: {
       position: 'relative',
       flex: 1,
-      borderRadius: 30,
-      marginVertical: 100,
       backgroundColor: '#fff',
-      marginHorizontal: 20,
+      margin: 0
    },
    buttonIcon: {   
       alignSelf: 'flex-end',

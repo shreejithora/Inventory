@@ -3,10 +3,10 @@ import {
    Text,
    View, 
    TextInput,
-   TouchableOpacity, 
-   ScrollView, 
+   TouchableOpacity,    
    StyleSheet,
    FlatList,
+   RefreshControl,
 } from 'react-native';
 
 import Modal from 'react-native-modal';
@@ -24,7 +24,7 @@ import AddProduct from "../../components/Products/AddProduct";
 import { useEffect } from 'react';
 // const ProductsList = require('../../models/Products.json');
 
-const ProductsList = [];
+let ProductsList = [];
 
 const ProductsScreen = ({navigation}) => {
 
@@ -128,14 +128,23 @@ const ProductsScreen = ({navigation}) => {
 
    const [addProductModal, setAddProductModal] = useState(false);   
 
+   const [productAddedModal, setProductAddedModal] = useState(false)
+
    const [productCounter, setProductCounter] = useState(0);
+
+   const [stockCounter, setStockCounter] = useState(0);
+
+   const [refreshing, setRefreshing] = useState(false);
 
    const [state, setState] = useState({
       Catstatus: '',
       FilterStatus: ''
    })
 
-   const [stateChange, setStateChange] = useState(0)
+   const [stateChange, setStateChange] = useState({
+      product_name: '',
+      product_code: ''
+   })
 
    // const a =0;
 
@@ -146,27 +155,32 @@ const ProductsScreen = ({navigation}) => {
 
    useEffect( () => {    
       const ok = async() => {
+         ProductsList = [];
             try{
             await firestore()
                .collection('Products')
                .get()
                .then( querySnapshot => {
                   setProductCounter(querySnapshot.size)  
+                  let temp = 0;
                   querySnapshot.forEach( documentSnapshot => {
-                     ProductsList.push(documentSnapshot.data());                     
-                  })
+                     ProductsList.push(documentSnapshot.data());                        
+                     temp = Number(documentSnapshot.data().quantity) + Number(temp);     
+                  })                  
+                  setStockCounter(temp);
                });            
             setProductData({
                allProducts: ProductsList,
                filteredProducts: ProductsList
             })
+            setRefreshing(false)
          } catch (e) {
             console.log(e)
          }
       }      
       ok();
 
-   }, [stateChange]);   
+   }, []);   
 
    const handleStatusChange = (val) => {
       setState({
@@ -233,9 +247,36 @@ const ProductsScreen = ({navigation}) => {
       } 
    }
 
-   const handleStateChange = () => {
-      setStateChange(1)
+   const handleStateChange = (name, code) => {
+      console.log(name, code)
+      setStateChange({
+         product_name: name,
+         product_code: code
+      })
+      setProductAddedModal(true);
    }
+
+   const onRefresh = React.useCallback( async() => {
+      setRefreshing(true);
+      ProductsList = [];
+      try{         
+         await firestore()
+            .collection('Products')
+            .get()
+            .then( querySnapshot => {
+               setProductCounter(querySnapshot.size) 
+               let temp = 0;
+               querySnapshot.forEach( documentSnapshot => {                  
+                  ProductsList.push(documentSnapshot.data());   
+                  temp = Number(documentSnapshot.data().quantity) + Number(temp); 
+               });    
+               setStockCounter(temp)    
+               setRefreshing(false)           
+            });          
+      } catch(e) {
+         console.log(e)
+      }
+   }, [refreshing]);
 
    return(
       <View style={styles.container}>
@@ -246,7 +287,7 @@ const ProductsScreen = ({navigation}) => {
                   <TotalProducts totalproducts={productCounter} />
                </Animatable.View>
                <Animatable.View animation="bounce" duration={1000} style={styles.stocks}>
-                  <Stocks />
+                  <Stocks totalstocks={stockCounter}/>
                </Animatable.View>
             </View>  
             {/* <View style={{flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', marginVertical: 10}}> */}
@@ -312,6 +353,9 @@ const ProductsScreen = ({navigation}) => {
                      renderItem = { ({item}) =>          
                         <ProductCard items={item}/>                                    
                      }
+                     refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                     }
                   />
                </Animatable.View>
             }           
@@ -345,6 +389,39 @@ const ProductsScreen = ({navigation}) => {
                <AddProduct onAddProduct={setAddProductModal} stateChange={handleStateChange}/>                                   
             </View>                                           
          </Modal>         
+         <Modal 
+            style={styles.modal1}
+            isVisible={productAddedModal} 
+            transparent={true} 
+            animationIn='slideInUp' 
+            animationOut='slideOutDown'
+            onBackButtonPress = {() => setProductAddedModal(false)}
+            onBackdropPress = {() => setProductAddedModal(false)}
+            backdropTransitionInTiming={500}
+            backdropTransitionOutTiming={500}
+            animationInTiming={500}
+            animationOutTiming={500}> 
+               
+            <View style={styles.modalView}>                        
+               <View style={styles.confirmModal}>
+                  <Text style={styles.texts}>
+                     <Icon name="text-box-check" size={25} color="green"/>
+                     <Text style={{marginLeft: 5, fontWeight: '700'}}>Added Successfully !</Text>
+                  </Text>
+                  <View style={{marginTop: 10}}>
+                     <Text style={styles.texts}>Code: {stateChange.product_code}</Text>
+                     <Text style={styles.texts}>Name: {stateChange.product_name}</Text>
+                  </View>
+               </View>                                                                
+               <Icon 
+                  style={styles.buttonIcon}
+                  name="close"
+                  size={30}
+                  color="#078bab"                                   
+                  onPress={ () => setProductAddedModal(false)}
+               /> 
+            </View>                                           
+         </Modal>
       </View>    
    )
 }
@@ -409,6 +486,14 @@ const styles = StyleSheet.create({
       color: '#078bab',
       fontSize: 18,
    },
+   confirmModal: {
+      padding: 10,
+      alignItems: 'center'
+   },
+   texts: {
+      color: '#078bab',
+      fontSize: 20
+   },
    searchBar: {
       marginHorizontal: 40,
       // width: '95%',
@@ -449,12 +534,28 @@ const styles = StyleSheet.create({
       marginLeft: 0,
       marginRight: 0
   },
+  modal1: {
+      flex: 1,
+      justifyContent: 'flex-start',
+      borderRadius: 10,
+      marginVertical: 320,
+      backgroundColor: '#fff',   
+      marginLeft: 50,
+      marginRight: 50
+  },
+  modalView: {
+     flex: 1,
+     justifyContent: 'center',
+     alignItems: 'center'
+  },
    buttonIcon: {
     marginTop: 15, 
     padding: 3, 
-    alignSelf: 'center', 
+    alignSelf: 'flex-end', 
     backgroundColor: "#c7e6ff", 
-    borderRadius: 50
+    borderRadius: 50,
+    marginRight: 15,
+    marginBottom: 5
   },
 //   modalView: {
 //       marginTop: 0

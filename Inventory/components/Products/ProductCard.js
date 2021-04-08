@@ -18,7 +18,15 @@ import ProductInfo from "./ProductInfo";
 
 const ProductCard = ({items}) => {
 
-   const [productDetailModal, setProductDetailModal] = useState(false);
+   const [productDetailModal, setProductDetailModal] = useState(false);   
+
+   let x = items.market_price;
+   x=x.toString();
+   let lastThree = x.substring(x.length-3);
+   const otherNumbers = x.substring(0,x.length-3);
+   if(otherNumbers != '')
+      lastThree = ',' + lastThree;
+   const market_price = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;   
 
    return(
       <View>
@@ -57,7 +65,7 @@ const ProductCard = ({items}) => {
                               null
                            }
                            </Text>
-                        <Text style={[styles.texts, {fontWeight: '700'}]}>Rs. {items.market_price}</Text>
+                        <Text style={[styles.texts, {fontWeight: '700'}]}>Rs. {market_price}</Text>
                      </View>
                   </View>                 
                </View>         

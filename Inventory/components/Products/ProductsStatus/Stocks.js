@@ -6,11 +6,11 @@ import {
    StyleSheet
 } from 'react-native';
 
-const Stocks = () => {
+const Stocks = (props) => {
    return(
       <View style={styles.stocksContainer}>
          <Text style={styles.texts}>Stocks</Text>
-         <Text style={[styles.texts, {fontWeight: '700', fontSize: 25}]}>2,350</Text>
+         <Text style={[styles.texts, {fontWeight: '700', fontSize: 25}]}>{props.totalstocks}</Text>
          
       </View>
    )

@@ -90,7 +90,11 @@ const AddProduct = (props) => {
   const [productName, setProductName] = useState({
      product_name: '',
      exists: false
-  })
+  })  
+
+  const [description, setDescription] = useState('')
+
+  const [subCategory, setSubCategory] = useState('');
 
   const [productQuantity, setProductQuantity] = useState({
      product_quantity: 0,
@@ -122,22 +126,26 @@ const AddProduct = (props) => {
   })
 
    const handleProductNameChange = (val) => { 
-      const foundProduct = ProductsList.filter( item => {
-         return item.name == val
-      })
-      if( foundProduct.length == 0  ){
+      // const foundProduct = ProductsList.filter( item => {
+      //    return item.name == val
+      // })
+      // if( foundProduct.length == 0  ){
          setProductName({
             ...productName,
             product_name: val,
             exists: false
          })
-      } else {
-         setProductName({
-            ...productName,
-            product_name: val,
-            exists: true
-         })
-      }
+      // } else {
+      //    setProductName({
+      //       ...productName,
+      //       product_name: val,
+      //       exists: true
+      //    })
+      // }
+   }   
+
+   const handleSubCategory = (val) => {
+      setSubCategory(val)
    }
 
    const handleQuantityChange = (val) => {   
@@ -247,10 +255,9 @@ const AddProduct = (props) => {
          }
          if( val == "clothing" ){
             if( temp == null ){
-               temp = codes.clothing + 0.001
-               setProductCode*{product_code: codes.clothing.toFixed(3)}
+               setProductCode({product_code: codes.clothing.toFixed(3)})
             } else {
-               temp = temp + 0.001
+               temp = code[0] + 0.001
                setCodes({clothing: temp.toFixed(3)})
                setProductCode({product_code: temp.toFixed(3)})
             }   
@@ -260,47 +267,43 @@ const AddProduct = (props) => {
                temp = codes.electronics + 0.001
                setProductCode({product_code: codes.electronics.toFixed(3)})
             } else {
-               temp = temp + 0.001
+               temp = code[0] + 0.001
                setCodes({electronics: temp.toFixed(3)})
                setProductCode({product_code: temp.toFixed(3)})
             }            
          }
          if( val == "accessories"){
             if( temp == null ){
-               temp = codes.accessories + 0.001
                setProductCode({product_code: codes.accessories.toFixed(3)})
             } else {
-               temp = temp + 0.001
+               temp = code[0] + 0.001
                setCodes({accessories: temp.toFixed(3)})
                setProductCode({product_code: temp.toFixed(3)})
             }  
-         }
+         }                  
          if( val == "stationery"){
             if( temp == null ){
-               temp = codes.stationery + 0.001
                setProductCode({product_code: codes.stationery.toFixed(3)})
             } else {
-               temp = temp + 0.001
+               temp = code[0] + 0.001
                setCodes({stationery: temp.toFixed(3)})
                setProductCode({product_code: temp.toFixed(3)})
             }  
          }
-         if( val == "bag" && temp != null){
+         if( val == "bag"){
             if( temp == null ){
-               temp = codes.bag + 0.001
                setProductCode({product_code: codes.bag.toFixed(3)})
             } else {
-               temp = temp + 0.001
+               temp = code[0] + 0.001
                setCodes({bag: temp.toFixed(3)})
                setProductCode({product_code: temp.toFixed(3)})
             }              
          }
-         if( val == "cosmetics" && temp != null){
-            if( temp == null ){
-               temp = codes.cosmetics + 0.001
+         if( val == "cosmetics"){
+            if( temp == null ){              
                setProductCode({product_code: codes.cosmetics.toFixed(3)})
             } else {
-               temp = temp + 0.001
+               temp = code[0] + 0.001
                setCodes({cosmetics: temp.toFixed(3)})
                setProductCode({product_code: temp.toFixed(3)})
             }  
@@ -308,6 +311,10 @@ const AddProduct = (props) => {
       } catch (e) {
          console.log(e)
       }
+   }
+
+   const handleDescription = (val) => {
+      setDescription(val)
    }
 
    const handleAddProduct = () => {
@@ -324,16 +331,19 @@ const AddProduct = (props) => {
                                  .collection('Products')
                                  .add({
                                     category: state.Catstatus,
+                                    sub_category: subCategory,
                                     product_name: productName.product_name,
                                     product_code: Number(productCode.product_code),
                                     cost_price: Number(costPrice.cost_price),
                                     margin: Number(margin.margin),
                                     market_price: Number(marketPrice.market_price),
+                                    description: description,
                                     quantity: productQuantity.product_quantity,
                                     product_updated: [new Date()]
                                  }). then( () => {
-                                    Alert.alert('Product Added!','Product Code:'+productCode.product_code+'  with Product Name: '+productName.product_name, [{text: 'Ok'}]);
-                                    props.stateChange
+                                    // Alert.alert('Product Added!','Product Code:'+productCode.product_code+'  with Product Name: '+productName.product_name, [{text: 'Ok'}]);
+                                    // setProductAddedModal(true)
+                                    props.stateChange(productName.product_name, productCode.product_code)
                                  })
                            } catch(e) {
                               console.log(e)
@@ -400,17 +410,18 @@ const AddProduct = (props) => {
                      />
                   </View>
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Product code: {productCode.product_code}</Text>
-                  {/* <Text>{productCode.product_code}</Text> */}
-                  {/* <TextInput
-                     keyboardType='numeric'
-                     editable={false}
-                     style={styles.textInputs}                                        
-                     maxLength={10}
-                     onChangeText={ (val) => handleProductCodeChange(val)}
-                     onEndEditing = { (e) => handleProductCodeChange(e.nativeEvent.text)}
-                  />                   */}                                    
-               </View>
+                  <Text style={styles.texts}>Product code* : {productCode.product_code}</Text>
+               </View>  
+               <View style={styles.inputs}>
+                  <Text style={styles.texts}>Sub-Category(Optional)</Text>
+                  <TextInput
+                     style={styles.textInputs}
+                     keyboardType="ascii-capable"
+                     placeholder="Mobile/Woolen/gold/colors(red,yellow etc)..." 
+                     onChangeText={ (val) => handleSubCategory(val)}
+                     onEndEditing = { (e) => handleSubCategory(e.nativeEvent.text)}
+                  />                 
+               </View>             
                <View style={styles.inputs}>
                   <Text style={styles.texts}>Quantity</Text>
                   <TextInput
@@ -451,7 +462,7 @@ const AddProduct = (props) => {
                   <TextInput
                      style={styles.textInputs}
                      keyboardType="numeric"
-                     placeholder="Price...(eg. 200 or eg. 200.12)" 
+                     placeholder="Price...(eg. 3 or eg. 5.12)" 
                      onChangeText={ (val) => handleMargin(val)}
                      onEndEditing = { (e) => handleMargin(e.nativeEvent.text)}
                   />      
@@ -480,6 +491,17 @@ const AddProduct = (props) => {
                         style={styles.errMsg}>Invalid Price</Animatable.Text> 
                   }            
                </View>   
+               <View style={styles.inputs}>
+                  <Text style={styles.texts}>Description(Optional)</Text>
+                  <TextInput
+                     style={[styles.textInputs, {height: 100}]}
+                     multiline
+                     numberOfLines={5}
+                     keyboardType="ascii-capable"
+                     onChangeText={ (val) => handleDescription(val)}
+                     onEndEditing = { (e) => handleDescription(e.nativeEvent.text)}
+                  />                                  
+               </View>
                <TouchableOpacity 
                   style={styles.button}
                   onPress={ () => handleAddProduct()}
@@ -488,7 +510,7 @@ const AddProduct = (props) => {
                   <Text style={[styles.texts,{color: '#fff', fontWeight: 'bold', marginLeft: 5}]}>Add Product </Text>
                </TouchableOpacity>                                
             </View> 
-         </View>                                                
+         </View>                                                                  
       </ScrollView>
    )
 }
@@ -543,6 +565,17 @@ const styles = StyleSheet.create({
       paddingHorizontal: 8,
       paddingTop: 8
    },
+   modal: {
+      flex: 1,
+      justifyContent: 'flex-start',
+      borderTopLeftRadius: 30,
+      borderTopRightRadius: 30,
+      marginTop: 100,
+      backgroundColor: '#fff',
+      marginBottom: 0,
+      marginLeft: 0,
+      marginRight: 0
+  },
    errMsg: {
       color: 'red',
       fontSize: 12
