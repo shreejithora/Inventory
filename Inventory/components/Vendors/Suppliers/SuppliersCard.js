@@ -48,7 +48,7 @@ const SuppliersCard = ({items}) => {
                         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                         <Text style={{fontStyle:'italic',fontSize:15,color:'#078bab'}} >
                                  <Icon
-                                       name="home"
+                                       name="map-marker-radius"
                                        size={20}
                                        color='#078bab'
                                  />

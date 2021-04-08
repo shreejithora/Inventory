@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
    },
    texts: {
       fontSize: 20,
-      color: '#065ba1'
+      color: '#078bab'
    },
    textInputs: {
       height: 40,
