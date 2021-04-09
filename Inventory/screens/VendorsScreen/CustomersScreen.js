@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
    Text, 
    View, 
@@ -6,19 +6,50 @@ import {
    TouchableOpacity, 
    StyleSheet,
    FlatList,
-   Button,   
+   RefreshControl
 } from 'react-native';
 
+import firestore from '@react-native-firebase/firestore';
+
+import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomersCard from "../../components/Vendors/Customers/CustomersCard";
 import Modal from "react-native-modal";
 
 import AddCustomer from '../../components/Vendors/Customers/AddCustomer';
-const CustomersList = require('../../models/Customers.json');
+let CustomersList = [];
 
 const CustomersScreen = ({navigation}) => {
 
    const [addCustomerModal, setAddCustomerModal] = useState(false);   
+
+   const [customerAddedModal, setCustomerAddedModal] = useState(false)
+
+   const [refreshing, setRefreshing] = useState(false)
+
+   const [stateChange, setStateChange] = useState({
+      customer_name: '',
+      customer_code: ''
+   })
+
+   useEffect( () => {      
+      const ok = async() => {
+         CustomersList = [];
+         await firestore()
+            .collection('Customers')
+            .get()
+            .then( querySnapshot => {
+               querySnapshot.forEach( documentSnapshot => {
+                  CustomersList.push(documentSnapshot.data())
+               })
+            })
+         setCustomersData({
+            allCustomers: CustomersList,
+            filteredCustomers: CustomersList
+         })
+      }
+      ok();
+   }, [])
 
    const [customersData, setCustomersData] = useState({
       allCustomers: CustomersList,
@@ -41,6 +72,38 @@ const CustomersScreen = ({navigation}) => {
       })      
    }
 
+   const handleStateChange = (name, code) => {
+      setAddCustomerModal(false)
+      setCustomerAddedModal(true)
+      setStateChange({
+         customer_name: name,
+         customer_code: code
+      })
+   }
+
+    const onRefresh = React.useCallback( async() => {
+      setRefreshing(true);
+      CustomersList = [];
+      try{         
+         await firestore()
+            .collection('Customers')
+            .get()
+            .then( querySnapshot => {
+               querySnapshot.forEach( documentSnapshot => {                  
+                  CustomersList.push(documentSnapshot.data());   
+               });       
+               setRefreshing(false) 
+               setCustomersData({
+                  allCustomers: CustomersList,
+                  filteredCustomers: CustomersList
+               })          
+            });          
+      } catch(e) {
+         console.log(e)
+      }
+   }, [refreshing]);
+
+
    return(
       <View style={styles.container}>
          <View style={styles.mainActitivity}>          
@@ -51,11 +114,7 @@ const CustomersScreen = ({navigation}) => {
                   placeholder="Search" 
                   onChangeText={ (val) => handleSearchText(val)} 
                />            
-            </View>             
-            <View style={styles.cardContent}>  
-               <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left', fontWeight: '700', marginLeft: 10}]}>ID</Text> 
-               <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left', fontWeight: '700'}]}>Name</Text>  
-            </View> 
+            </View>                                    
             { 
                customersData.filteredCustomers == null ?
                <View opacity={0.5} style={[styles.errorDisplay, {fontSize: 16}]}>
@@ -63,13 +122,40 @@ const CustomersScreen = ({navigation}) => {
                   <Text style={styles.errorMsg}>No Match Found</Text>  
                                  
                </View> :
-               <FlatList 
-                  data = {customersData.filteredCustomers}
-                  keyExtractor = {item => item.customer_id}
-                  renderItem = { ({item}) =>                  
-                     <CustomersCard items={item}/>                                           
-                  }
-               />
+               <Animatable.View 
+                animation="fadeInUpBig"
+                duration={800}
+                style={{flex: 1,backgroundColor: '#fafafa', borderTopLeftRadius: 30, borderTopRightRadius: 30, marginTop: 20}}>
+                  <FlatList 
+                     data = {customersData.filteredCustomers}
+                     keyExtractor = {item => item.customer_code.toString()}
+                     renderItem = { ({item}) =>                  
+                        <CustomersCard items={item}/>                                           
+                     }
+                     refreshControl={
+                           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                     }
+                  />
+                  
+                   {/* <FlatList
+                     bounces={false}
+                     getItemLayout={(data, index) => (
+                           { length: width, offset: width * index, index }
+                     )}
+                     showsHorizontalScrollIndicator={false}
+                     pagingEnabled={true}
+                     horizontal={true}
+                     style={{ flex: 1 }}
+                     data={customersData.filteredCustomers}
+                     keyExtractor = {item => item.customer_code.toString()}
+                     renderItem = { ({item}) =>                  
+                        <CustomersCard items={item}/>                                           
+                     }
+                     refreshControl={
+                           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                     }
+                  /> */}
+               </Animatable.View>
             }           
          </View>      
          <TouchableOpacity          
@@ -89,21 +175,49 @@ const CustomersScreen = ({navigation}) => {
             backdropTransitionInTiming={500}
             backdropTransitionOutTiming={500}
             animationInTiming={500}
+            animationOutTiming={500}>       
+            <Icon 
+               style={styles.buttonIcon}
+               name="close"
+               size={30}
+               color="#078bab"                                   
+               onPress={ () => setAddCustomerModal(false)}
+            />   
+            <AddCustomer onAddCustomerModal={setAddCustomerModal} stateChange={handleStateChange}/>                                          
+         </Modal>                
+         <Modal 
+            style={styles.modal1}
+            isVisible={customerAddedModal} 
+            transparent={true} 
+            animationIn='slideInUp' 
+            animationOut='slideOutDown'
+            onBackButtonPress = {() => setCustomerAddedModal(false)}
+            onBackdropPress = {() => setCustomerAddedModal(false)}
+            backdropTransitionInTiming={500}
+            backdropTransitionOutTiming={500}
+            animationInTiming={500}
             animationOutTiming={500}> 
-            <View style={styles.modalView}>       
+               
+            <View style={styles.modalView}>                        
+               <View style={styles.confirmModal}>
+                  <Text style={styles.texts}>
+                     <Icon name="text-box-check" size={25} color="green"/>
+                     <Text style={{marginLeft: 5, fontWeight: '700'}}>Added Successfully !</Text>
+                  </Text>
+                  <View style={{marginTop: 10}}>
+                     <Text style={styles.texts}>Code: {stateChange.customer_code}</Text>
+                     <Text style={styles.texts}>Name: {stateChange.customer_name}</Text>
+                  </View>
+               </View>                                                                
                <Icon 
                   style={styles.buttonIcon}
                   name="close"
                   size={30}
                   color="#078bab"                                   
-                  onPress={ () => setAddCustomerModal(false)}
-               />   
-               <AddCustomer 
-                  onAddCustomerModal={setAddCustomerModal}
-                  // onAddCustomer = {handleAddCustomerToArray}   
-               />                                   
+                  onPress={ () => setCustomerAddedModal(false)}
+               /> 
             </View>                                           
-         </Modal>                      
+         </Modal>      
       </View>    
    )
 }
@@ -195,6 +309,28 @@ const styles = StyleSheet.create({
       marginLeft: 0,
       marginRight: 0
   },
+    modal1: {
+      flex: 1,
+      justifyContent: 'flex-start',
+      borderRadius: 10,
+      marginVertical: 320,
+      backgroundColor: '#fff',   
+      marginLeft: 50,
+      marginRight: 50
+  },
+  modalView: {
+     flex: 1,
+     justifyContent: 'center',
+     alignItems: 'center'
+  },
+   confirmModal: {
+      padding: 10,
+      alignItems: 'center'
+   },
+   texts: {
+      color: '#078bab',
+      fontSize: 20
+   },
    buttonIcon: {
     marginTop: 15, 
     padding: 3, 

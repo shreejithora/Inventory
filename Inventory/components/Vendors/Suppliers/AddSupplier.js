@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {
    View, 
    Text, 
@@ -10,16 +10,61 @@ import {
 
 import * as Animatable from 'react-native-animatable';
 
+import firestore from '@react-native-firebase/firestore';
+
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView } from "react-native-gesture-handler";
 
-const SuppliersList = require('../../../models/Suppliers.json');
+let SuppliersCodes = [];
+
+let SupplierNames = [];
 
 const AddSupplier = (props) => {
 
-   const [ supplierID, setSupplierID ] = useState({
-      supplier_id: '',
-      isValidId: true,
+   const [supplier_code, setSupplier_code] = useState(1000.1)   
+
+   useEffect(() =>{
+      SuppliersCodes = [];
+      SupplierNames = [];
+      const ok = async() => {         
+         let size = 0;
+         try{
+            await firestore()
+            .collection('Suppliers')
+            .get()
+            .then( querySnapshot => {
+               size = querySnapshot.size
+               querySnapshot.forEach( documentSnapshot => {
+                  SuppliersCodes.push(documentSnapshot.data().supplier_code)                  
+                  SupplierNames.push(documentSnapshot.data().supplier_name)
+               })
+            })
+         } catch (e) {
+            console.log(e)
+         }
+         
+         let temp = 0
+         for(let i = 0; i<size; i++){
+            for( let j = 0; j < size; j++){
+               if( SuppliersCodes[i] > SuppliersCodes[j])
+               temp = SuppliersCodes[i]
+               SuppliersCodes[i] = SuppliersCodes[j]
+               SuppliersCodes[j] = temp
+            }
+         }
+         if(size == 0){
+            setSupplierCode({supplier_code: supplier_code})
+         } else {
+            temp = SuppliersCodes[0] + 0.1
+            setSupplier_code(temp.toFixed(1))
+            setSupplierCode({supplier_code: temp.toFixed(1)})
+         }
+      }
+      ok();
+   }, []);
+
+   const [ supplierCode, setSupplierCode ] = useState({
+      supplier_code: '',
    })
    const [ supplierName, setSupplierName ] = useState({
       supplier_name: '',
@@ -31,31 +76,16 @@ const AddSupplier = (props) => {
    })
    const [ supplierAddress, setSupplierAddress ] = useState('')
 
-   const handleSupplierIDChange = (val) => {
-      const foundSupplier = SuppliersList.filter( item => {
-         return item.supplier_id == val;
+   const [ supplierEmail, setSupplierEmail ] = useState({
+      supplier_email: '',
+      isValidEmail: true
+   })
+
+   const handleSupplierNameChange = (val) => {     
+      const foundSupplier = SupplierNames.filter( item => {     
+         return item.toLowerCase() == val.toLowerCase()
       })
-
-      if( foundSupplier.length != 0 || /\D/.test(val) ){        
-         setSupplierID({
-            ...supplierID,
-            supplier_id: val,
-            isValidId: false,
-         })    
-      } else {
-         setSupplierID({
-            ...supplierID,
-            supplier_id: val,
-            isValidId: true      
-         })
-      }
-   }
-
-   const handleSupplierNameChange = (val) => {
-      const foundSupplier = SuppliersList.filter( item => {
-         return item.name.toLowerCase() == val.toLowerCase();
-      })
-
+            
       setSupplierName({
          ...supplierName,
          supplier_name: val,
@@ -84,22 +114,53 @@ const AddSupplier = (props) => {
       setSupplierAddress(val)
    }
 
-   const handleAddSupplier = () => {
-      if ( supplierID.supplier_id != '' && supplierName.supplier_name != '' &&  supplierAddress != '' && supplierPhone.supplier_phone != '' ) {
-         if( supplierID.isValidId ) {
-            if ( supplierName.isValidName ) {
-               if ( supplierPhone.isValidPhone ) {
-                  Alert.alert('Added Successfully!', 'Supplier '+supplierName.supplier_name+' with ID: '+supplierID.supplier_id, [{text: 'Ok'}])
-                  props.onAddSupplier(false)                  
+   const handleEmailChange = (email) => {
+      const regexEmail=/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      
+      if( regexEmail.test(String(email).toLowerCase())){
+         setSupplierEmail({
+            supplier_email: email,
+            isValidEmail: true
+         })
+      } else {
+         setSupplierEmail({
+            supplier_email: email,
+            isValidEmail: false
+         })
+      }
+   }
+
+   const handleAddSupplier = async() => {
+      if ( supplierCode.supplier_code != '' && supplierName.supplier_name != '' &&  supplierAddress != '' && supplierPhone.supplier_phone != '' && supplierEmail.supplier_email != '') {        
+         if ( supplierName.isValidName ) {
+            if ( supplierPhone.isValidPhone ) {
+               if ( supplierEmail.isValidEmail ) {
+                  try{
+                  await firestore()
+                     .collection('Suppliers')
+                     .add({
+                        supplier_name: supplierName.supplier_name,
+                        supplier_code: Number(supplierCode.supplier_code),
+                        address: supplierAddress,
+                        email: supplierEmail.supplier_email,
+                        phone: supplierPhone.supplier_phone,
+                        supply_status: true 
+                     })
+                     .then( () => {
+                        props.stateChange(supplierName.supplier_name, supplierCode.supplier_code)
+                     })
+                  } catch(e) {
+                     console.log(e)
+                  }
                } else {
-                  Alert.alert('Invalid Input!', 'The Suppliers Phone Number is not Valid', [{text: 'Ok'}])
-               }
+                  Alert.alert('Invalid Input!', 'The Suppliers Email ID is not Valid', [{text: 'Ok'}])
+               }                                                    
             } else {
-               Alert.alert('Invalid Input!', 'The Suppliers Name is not Valid', [{text: 'Ok'}])
+               Alert.alert('Invalid Input!', 'The Suppliers Phone Number is not Valid', [{text: 'Ok'}])
             }
          } else {
-            Alert.alert('Invalid Input!', 'The Suppliers ID is not Valid', [{text: 'Ok'}])
-         }
+            Alert.alert('Invalid Input!', 'The Suppliers Name is not Valid', [{text: 'Ok'}])
+         }         
       } else {
          Alert.alert('Invalid Input!', 'All Fields Should be filled Compulsorily.', [{text: 'Ok'}])
       }
@@ -108,26 +169,7 @@ const AddSupplier = (props) => {
    return (
       <ScrollView>
          <View style={styles.modalForm}>           
-            <View style={styles.fields}>                         
-               <View style={styles.inputs}>
-                  <Text style={styles.texts}>Supplier ID*</Text>
-                  <TextInput
-                     keyboardType='numeric'
-                     style={styles.textInputs}
-                     placeholder="Supplier ID...(eg: 1012)" 
-                     maxLength={10}
-                     onChangeText={ (val) => handleSupplierIDChange(val)}
-                     onEndEditing = { (e) => handleSupplierIDChange(e.nativeEvent.text)}
-                  />   
-                  {
-                     supplierID.isValidId ?
-                     null :
-                     <Animatable.Text 
-                        animation="fadeIn"
-                        style={styles.errMsg}>Invalid ID or Supplier ID already exists
-                     </Animatable.Text>
-                  }                                  
-               </View>  
+            <View style={styles.fields}>                                          
                <View style={styles.inputs}>
                   <Text style={styles.texts}>Supplier Name*</Text>
                   <TextInput
@@ -145,6 +187,9 @@ const AddSupplier = (props) => {
                         style={styles.errMsg}>Supplier name already exists
                      </Animatable.Text>
                   }                 
+               </View>
+               <View style={styles.inputs}>
+                  <Text style={styles.texts}>Supplier code* : {supplierCode.supplier_code}</Text>
                </View>
                <View style={styles.inputs}>
                   <Text style={styles.texts}>Phone*</Text>
@@ -174,6 +219,24 @@ const AddSupplier = (props) => {
                      onEndEditing = { (e) => handleAddressChange(e.nativeEvent.text)}
                   />             
                </View>   
+               <View style={styles.inputs}>
+                  <Text style={styles.texts}>Email*</Text>
+                  <TextInput
+                     style={styles.textInputs}
+                     keyboardType="ascii-capable"
+                     placeholder="Email...(eg. abc@gmail.com)" 
+                     onChangeText={ (val) => handleEmailChange(val)}
+                     onEndEditing = { (e) => handleEmailChange(e.nativeEvent.text)}
+                  />   
+                  {  
+                     supplierEmail.isValidEmail ?
+                     null :
+                     <Animatable.Text 
+                        animation="fadeIn"
+                        style={styles.errMsg}>Invalid Email 
+                     </Animatable.Text>
+                  }          
+               </View>
                <TouchableOpacity 
                   style={styles.button}
                   onPress={handleAddSupplier}

@@ -271,7 +271,11 @@ const ProductsScreen = ({navigation}) => {
                   temp = Number(documentSnapshot.data().quantity) + Number(temp); 
                });    
                setStockCounter(temp)    
-               setRefreshing(false)           
+               setRefreshing(false) 
+               setProductData({
+                  allProducts: ProductsList,
+                  filteredProducts: ProductsList
+               })          
             });          
       } catch(e) {
          console.log(e)

@@ -421,6 +421,16 @@ const AddProduct = (props) => {
                      onChangeText={ (val) => handleSubCategory(val)}
                      onEndEditing = { (e) => handleSubCategory(e.nativeEvent.text)}
                   />                 
+               </View>  
+                <View style={styles.inputs}>
+                  <Text style={styles.texts}>Supplier*</Text>
+                  <TextInput
+                     style={styles.textInputs}
+                     keyboardType="ascii-capable"
+                     placeholder="eg. Hari Products Pvt. Ltd." 
+                     onChangeText={ (val) => handleSubCategory(val)}
+                     onEndEditing = { (e) => handleSubCategory(e.nativeEvent.text)}
+                  />                 
                </View>             
                <View style={styles.inputs}>
                   <Text style={styles.texts}>Quantity</Text>

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {
    View, 
    Text, 
@@ -10,16 +10,65 @@ import {
 
 import * as Animatable from 'react-native-animatable';
 
+import firestore from '@react-native-firebase/firestore';
+
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView } from "react-native-gesture-handler";
 
-const CustomersList = require('../../../models/Customers.json');
+let CustomerCodes = [];
+
+let CustomerNames = [];
 
 const AddCustomer = (props) => {
 
-   const [ customerID, setCustomerID ] = useState({
-      customer_id: '',
-      isValidId: true,
+   const [customer_code, setCustomer_code] = useState(2000.1)   
+
+   useEffect(() =>{
+      CustomerCodes = [];
+      CustomerNames = [];
+      const ok = async() => {         
+         let size = 0;
+         try{
+            await firestore()
+            .collection('Customers')
+            .get()
+            .then( querySnapshot => {
+               size = querySnapshot.size
+               querySnapshot.forEach( documentSnapshot => {
+                  CustomerCodes.push(documentSnapshot.data().customer_code)  
+                  CustomerNames.push(documentSnapshot.data().customer_name)
+               })
+            })
+         } catch (e) {
+            console.log(e)
+         }                  
+         if(size == 0){
+            setCustomerCode({customer_code: customer_code})
+         } else if( size == 1){            
+            temp = customer_code + 0.1
+            setCustomer_code(temp.toFixed(1))
+            setCustomerCode({customer_code: temp.toFixed(1)})  
+         } else {
+            let temp = 0
+            for(let i = 0; i<size; i++){
+               for( let j = 0; j < size; j++){
+                  if( CustomerCodes[i] > CustomerCodes[j]){
+                     temp = CustomerCodes[i]
+                     CustomerCodes[i] = CustomerCodes[j]
+                     CustomerCodes[j] = temp
+                  }                  
+               }
+            }
+            temp = CustomerCodes[0] + 0.1
+            setCustomer_code(temp.toFixed(1))
+            setCustomerCode({customer_code: temp.toFixed(1)})  
+         }                  
+      }
+      ok();
+   }, []);
+
+   const [ customerCode, setCustomerCode ] = useState({
+      customer_code: ''
    })
    const [ customerName, setCustomerName ] = useState({
       customer_name: '',
@@ -31,32 +80,16 @@ const AddCustomer = (props) => {
    })
    const [ customerAddress, setCustomerAddress ] = useState('')
 
-
-   const handleCustomerIDChange = (val) => {
-      const foundCustomer = CustomersList.filter( item => {
-         return item.customer_id == val;
-      })
-
-      if( foundCustomer.length != 0 || /\D/.test(val) ){        
-         setCustomerID({
-            ...customerID,
-            customer_id: val,
-            isValidId: false,
-         })    
-      } else {
-         setCustomerID({
-            ...customerID,
-            customer_id: val,
-            isValidId: true      
-         })
-      }
-   }
+   const [ customerEmail, setCustomerEmail ] = useState({
+      customer_email: '',
+      isValidEmail: true
+   })   
 
    const handleCustomerNameChange = (val) => {
-      const foundCustomer = CustomersList.filter( item => {
-         return item.name.toLowerCase() == val.toLowerCase();
+      const foundCustomer = CustomerNames.filter( item => {     
+         return item.toLowerCase() == val.toLowerCase()
       })
-
+            
       setCustomerName({
          ...customerName,
          customer_name: val,
@@ -85,22 +118,53 @@ const AddCustomer = (props) => {
       setCustomerAddress(val)
    }
 
-   const handleAddCustomer = () => {
-      if ( customerID.customer_id != '' && customerName.customer_name != '' &&  customerAddress != '' && customerPhone.customer_phone != '' ) {
-         if( customerID.isValidId ) {
-            if ( customerName.isValidName ) {
-               if ( customerPhone.isValidPhone ) {
-                  Alert.alert('Added Successfully!', 'Customer '+customerName.customer_name+' with ID: '+customerID.customer_id, [{text: 'Ok'}])
-                  props.onAddCustomerModal(false)                  
+   const handleEmailChange = (email) => {
+      const regexEmail=/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      
+      if( regexEmail.test(String(email).toLowerCase())){
+         setCustomerEmail({
+            customer_email: email,
+            isValidEmail: true
+         })
+      } else {
+         setCustomerEmail({
+            customer_email: email,
+            isValidEmail: false
+         })
+      }
+   }
+
+   const handleAddCustomer = async() => {
+      if ( customerCode.customer_code != '' && customerName.customer_name != '' &&  customerAddress != '' && customerPhone.customer_phone != '' && customerEmail.customer_email != '' ) {      
+         if ( customerName.isValidName ) {
+            if ( customerPhone.isValidPhone ) {
+               if ( customerEmail.isValidEmail ) {
+                  try{
+                  await firestore()
+                     .collection('Customers')
+                     .add({
+                        customer_name: customerName.customer_name,
+                        customer_code: Number(customerCode.customer_code),
+                        address: customerAddress,
+                        email: customerEmail.customer_email,
+                        phone: customerPhone.customer_phone,
+                        supply_status: true 
+                     })
+                     .then( () => {
+                        props.stateChange(customerName.customer_name, customerCode.customer_code)
+                     })
+                  } catch(e) {
+                     console.log(e)
+                  }
                } else {
-                  Alert.alert('Invalid Input!', 'The Customers Phone Number is not Valid', [{text: 'Ok'}])
-               }
+                  Alert.alert('Invalid Input!', 'The Customers Email ID is not Valid', [{text: 'Ok'}])
+               }                  
             } else {
-               Alert.alert('Invalid Input!', 'The Customers Name is not Valid', [{text: 'Ok'}])
+               Alert.alert('Invalid Input!', 'The Customers Phone Number is not Valid', [{text: 'Ok'}])
             }
          } else {
-            Alert.alert('Invalid Input!', 'The Customers ID is not Valid', [{text: 'Ok'}])
-         }
+            Alert.alert('Invalid Input!', 'The Customers Name is not Valid', [{text: 'Ok'}])
+         }         
       } else {
          Alert.alert('Invalid Input!', 'All Fields Should be filled Compulsorily.', [{text: 'Ok'}])
       }
@@ -109,26 +173,7 @@ const AddCustomer = (props) => {
    return (
       <ScrollView>
          <View style={styles.modalForm}>           
-            <View style={styles.fields}>                         
-               <View style={styles.inputs}>
-                  <Text style={styles.texts}>Customer ID*</Text>
-                  <TextInput
-                     keyboardType='numeric'
-                     style={styles.textInputs}
-                     placeholder="Customer ID...(eg: 1012)" 
-                     maxLength={10}
-                     onChangeText={ (val) => handleCustomerIDChange(val)}
-                     onEndEditing = { (e) => handleCustomerIDChange(e.nativeEvent.text)}
-                  />        
-                  {
-                     customerID.isValidId ?
-                     null :
-                     <Animatable.Text 
-                        animation="fadeIn"
-                        style={styles.errMsg}>Invalid ID or Customer ID already exists
-                     </Animatable.Text>
-                  }                              
-               </View>  
+            <View style={styles.fields}>                                          
                <View style={styles.inputs}>
                   <Text style={styles.texts}>Customer Name*</Text>
                   <TextInput
@@ -146,6 +191,9 @@ const AddCustomer = (props) => {
                         style={styles.errMsg}>Customer name already exists
                      </Animatable.Text>
                   }
+               </View>
+               <View style={styles.inputs}>
+                  <Text style={styles.texts}>Customer Code* : {customerCode.customer_code}</Text>
                </View>
                <View style={styles.inputs}>
                   <Text style={styles.texts}>Phone*</Text>
@@ -174,7 +222,25 @@ const AddCustomer = (props) => {
                      onChangeText={ (val) => handleAddressChange(val)}
                      onEndEditing = { (e) => handleAddressChange(e.nativeEvent.text)}
                   />             
-               </View>   
+               </View> 
+                <View style={styles.inputs}>
+                  <Text style={styles.texts}>Email*</Text>
+                  <TextInput
+                     style={styles.textInputs}
+                     keyboardType="ascii-capable"
+                     placeholder="Email...(eg. abc@gmail.com)" 
+                     onChangeText={ (val) => handleEmailChange(val)}
+                     onEndEditing = { (e) => handleEmailChange(e.nativeEvent.text)}
+                  />   
+                  {  
+                     customerEmail.isValidEmail ?
+                     null :
+                     <Animatable.Text 
+                        animation="fadeIn"
+                        style={styles.errMsg}>Invalid Email 
+                     </Animatable.Text>
+                  }          
+               </View>  
                <TouchableOpacity 
                   style={styles.button}
                   onPress={ () => handleAddCustomer()}

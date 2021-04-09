@@ -6,7 +6,7 @@ import {
    TouchableOpacity, 
    StyleSheet,
    FlatList,  
-   Button, 
+   RefreshControl, 
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
@@ -24,6 +24,15 @@ let SuppliersList = [];
 
 const SuppliersScreen = ({navigation}) => {
 
+   const [supplierAddedModal, setSupplierAddedModal] = useState(false)
+
+   const [refreshing, setRefreshing] = useState(false)
+
+   const [stateChange, setStateChange] = useState({
+      supplier_name: '',
+      supplier_code: ''
+   })
+
    useEffect( () => {      
       const ok = async() => {
          SuppliersList = [];
@@ -35,6 +44,10 @@ const SuppliersScreen = ({navigation}) => {
                   SuppliersList.push(documentSnapshot.data())
                })
             })
+         setSuppliersData({
+            allSuppliers: SuppliersList,
+            filteredSuppliers: SuppliersList
+         })
       }
       ok();
    }, [])
@@ -118,6 +131,38 @@ const SuppliersScreen = ({navigation}) => {
       } 
    }
 
+   const handleStateChange = (name, code) => {
+      setAddSupplierModal(false)
+      setSupplierAddedModal(true)
+      setStateChange({
+         supplier_name: name,
+         supplier_code: code
+      })
+   }
+
+     const onRefresh = React.useCallback( async() => {
+      setRefreshing(true);
+      SuppliersList = [];
+      try{         
+         await firestore()
+            .collection('Suppliers')
+            .get()
+            .then( querySnapshot => {
+               querySnapshot.forEach( documentSnapshot => {                  
+                  SuppliersList.push(documentSnapshot.data());   
+               });       
+               setRefreshing(false) 
+               setSuppliersData({
+                  allSuppliers: SuppliersList,
+                  filteredSuppliers: SuppliersList
+               })          
+            });          
+      } catch(e) {
+         console.log(e)
+      }
+   }, [refreshing]);
+
+
    return(
       <View style={styles.container}>
          <View style={styles.mainActitivity}>             
@@ -153,13 +198,16 @@ const SuppliersScreen = ({navigation}) => {
                 animation="fadeInUpBig"
                 duration={800}
                 style={{flex: 1,backgroundColor: '#fafafa', borderTopLeftRadius: 30, borderTopRightRadius: 30, marginTop: 20}}>
-               <FlatList 
-                  data = {suppliersData.filteredSuppliers}
-                  keyExtractor = {item => item.supplier_code}
-                  renderItem = { ({item}) =>                  
-                     <SuppliersCard items={item}/>                                           
-                  }
-               />
+                  <FlatList 
+                     data = {suppliersData.filteredSuppliers}
+                     keyExtractor = {item => item.supplier_code.toString()}
+                     renderItem = { ({item}) =>                  
+                        <SuppliersCard items={item} />                                           
+                     }
+                     refreshControl={
+                           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                     }
+                  />
                </Animatable.View>
             }           
          </View>      
@@ -181,7 +229,6 @@ const SuppliersScreen = ({navigation}) => {
             backdropTransitionOutTiming={500}
             animationInTiming={500}
             animationOutTiming={500}> 
-            <View style={styles.modalView}>       
                <Icon 
                   style={styles.buttonIcon}
                   name="close"
@@ -189,9 +236,41 @@ const SuppliersScreen = ({navigation}) => {
                   color="#078bab"                                   
                   onPress={ () => setAddSupplierModal(false)}
                />   
-               <AddSupplier onAddSupplier={setAddSupplierModal}/>                                   
+               <AddSupplier onAddSupplier={setAddSupplierModal} stateChange={handleStateChange}/>
+         </Modal>            
+         <Modal 
+            style={styles.modal1}
+            isVisible={supplierAddedModal} 
+            transparent={true} 
+            animationIn='slideInUp' 
+            animationOut='slideOutDown'
+            onBackButtonPress = {() => setSupplierAddedModal(false)}
+            onBackdropPress = {() => setSupplierAddedModal(false)}
+            backdropTransitionInTiming={500}
+            backdropTransitionOutTiming={500}
+            animationInTiming={500}
+            animationOutTiming={500}> 
+               
+            <View style={styles.modalView}>                        
+               <View style={styles.confirmModal}>
+                  <Text style={styles.texts}>
+                     <Icon name="text-box-check" size={25} color="green"/>
+                     <Text style={{marginLeft: 5, fontWeight: '700'}}>Added Successfully !</Text>
+                  </Text>
+                  <View style={{marginTop: 10}}>
+                     <Text style={styles.texts}>Code: {stateChange.supplier_code}</Text>
+                     <Text style={styles.texts}>Name: {stateChange.supplier_name}</Text>
+                  </View>
+               </View>                                                                
+               <Icon 
+                  style={styles.buttonIcon}
+                  name="close"
+                  size={30}
+                  color="#078bab"                                   
+                  onPress={ () => setSupplierAddedModal(false)}
+               /> 
             </View>                                           
-         </Modal>                      
+         </Modal>          
       </View>    
    )
 }
@@ -287,6 +366,28 @@ const styles = StyleSheet.create({
       marginLeft: 0,
       marginRight: 0
   },
+  modal1: {
+      flex: 1,
+      justifyContent: 'flex-start',
+      borderRadius: 10,
+      marginVertical: 320,
+      backgroundColor: '#fff',   
+      marginLeft: 50,
+      marginRight: 50
+  },
+  modalView: {
+     flex: 1,
+     justifyContent: 'center',
+     alignItems: 'center'
+  },
+   confirmModal: {
+      padding: 10,
+      alignItems: 'center'
+   },
+   texts: {
+      color: '#078bab',
+      fontSize: 20
+   },
    buttonIcon: {
     marginTop: 15, 
     padding: 3, 

@@ -26,7 +26,7 @@ const ProductInfo = ({item}) => {
                </View>
 
                <View style={{marginRight:20}}>
-                     <Text style={styles.infoTexts}><Text style={{fontWeight:'700'}}>Supplier:</Text>{item.supplier}</Text>
+                     <Text style={styles.infoTexts}><Text style={{fontWeight:'700'}}>Supplier: </Text>{item.supplier}</Text>
                </View>
 
                <View style={{marginRight:20}}>
@@ -36,7 +36,7 @@ const ProductInfo = ({item}) => {
 
              <View style={styles.desc}>
                <ScrollView style={{marginRight:20}}>
-                     <Text style={[styles.infoTexts,{fontWeight:'700'}]}>Product Description:</Text>
+                     <Text style={[styles.infoTexts,{fontWeight:'700'}]}>Product Description</Text>
                      <Text style={styles.infoTexts}>{item.description}</Text>
                </ScrollView>
              </View>
@@ -54,10 +54,7 @@ const styles = StyleSheet.create({
    },
    productDesc:{
       backgroundColor:'#fafafa',
-      borderBottomRightRadius:15,
-      borderTopLeftRadius:15,
-      borderTopRightRadius:15,
-      borderBottomLeftRadius:15
+      borderRadius: 15
    },
    desc:{
       backgroundColor:'#fafafa',
@@ -67,7 +64,7 @@ const styles = StyleSheet.create({
    infoTexts: {
       padding: 5,
       textAlign: 'left',
-      fontSize: 15,
+      fontSize: 18,
       color: '#078bab'
    },
    infoPrice:{
