@@ -176,9 +176,8 @@ const styles = StyleSheet.create({
       position: 'relative',
       flex: 1,
       borderRadius: 30,
-      marginVertical: 100,
+      margin: 0,
       backgroundColor: '#fff',
-      marginHorizontal: 20,
    },
    buttonIcon: {   
       alignSelf: 'flex-end',

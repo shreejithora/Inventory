@@ -11,7 +11,7 @@ import * as Animatable from 'react-native-animatable';
 
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import CustomersInfo from './CustomerInfo';
+import CustomerInfo from "./CustomerInfo";
 
 const CustomersCard = ({items}) => {
 
@@ -22,8 +22,44 @@ const CustomersCard = ({items}) => {
          <Animatable.View animation="fadeInUp" duration={1000} style={styles.card}>
             <TouchableOpacity onPress={() => setCustomerDetailModal(!customerDetailModal)}>
                <View style={styles.cardContent}>  
-                  <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.customer_id}</Text> 
-                  <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left'}]}>{items.name}</Text>  
+                  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', borderRightWidth: 2,borderRightColor: '#078bab'}}>
+                     <Icon                     
+                        name="badge-account-outline" 
+                        color="#078bab" 
+                        size={35}
+                     />                     
+                  </View>
+               <View style={{flexDirection: 'column', flex: 4, marginLeft: 10, padding: 5}}> 
+                        <View style={{marginBottom: 5}}>
+                           <Text style={[styles.cardTitle, {flex: 3, textAlign: 'left', fontWeight: '700'}]}>
+                              {items.customer_name}
+                           </Text>                  
+                        </View>
+                        <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                           <Icon
+                              name="email-outline"
+                              size={18}
+                              color='#078bab'
+                           />
+                           <Text style={{fontStyle:'italic',fontSize:15,color:'#078bab', marginLeft: 5}} >{items.email}</Text>
+                        </View>
+                        <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                           <Icon
+                              name="home-outline"
+                              size={18}
+                              color='#078bab'
+                           />
+                           <Text style={{fontStyle:'italic',fontSize:15,color:'#078bab', marginLeft: 5}} >{items.address}</Text>
+                        </View>
+                        <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                           <Icon
+                              name="phone-outline"
+                              size={18}
+                              color='#078bab'
+                           />
+                           <Text style={{fontStyle:'italic',fontSize:15,color:'#078bab', marginLeft: 5}} >{items.phone}</Text>
+                        </View>
+                     </View> 
                </View>         
             </TouchableOpacity>
          </Animatable.View>  
@@ -39,7 +75,7 @@ const CustomersCard = ({items}) => {
             animationInTiming={500}
             animationOutTiming={300}> 
             <View style={styles.modalView}>                         
-               <CustomersInfo item={items}/> 
+               <CustomerInfo item={items}/> 
                <View style={{flexDirection: 'row',justifyContent: 'space-between', bottom: 0, right: 0}}>
                      <Animatable.View 
                         animation="fadeInLeft"
@@ -73,6 +109,7 @@ const CustomersCard = ({items}) => {
                            name="pencil-outline" 
                            color="#078bab" 
                            size={30}  
+                           onPress={()  => {}}
                         />
                      </Animatable.View>
                      <Animatable.View
@@ -87,8 +124,8 @@ const CustomersCard = ({items}) => {
                            onPress={ () => setCustomerDetailModal(false)}
                         />
                      </Animatable.View>                  
-                  </View>                                  
-               </View>
+                  </View>
+               </View>                                  
             </View>                                           
          </Modal>
       </View>             
@@ -104,20 +141,18 @@ const styles = StyleSheet.create({
       fontSize: 18,
    },
    card: {
-      padding: 15,
-      backgroundColor: '#fff',
-      flex: 1,
-      // marginVertical: 5,
-      marginLeft: 5,
-      marginRight: 5,   
-      borderBottomColor: '#f4f4f4',
-      borderBottomWidth: 1,   
-      
+      paddingVertical: 10,
+      backgroundColor: '#fafafa',
+      flex: 1, 
+      borderRadius: 50,
+      marginHorizontal: 17
    },
    cardContent: {
+      padding: 5,
+      flex: 1,
       flexDirection: 'row',
       justifyContent: 'space-between',
-      borderRadius: 15,
+      // borderRadius: 15,
    },
    cardInfo: {      
       marginLeft: 5,
@@ -127,10 +162,8 @@ const styles = StyleSheet.create({
    detailModal: {
       position: 'relative',
       flex: 1,
-      borderRadius: 30,
-      marginVertical: 100,
       backgroundColor: '#fff',
-      marginHorizontal: 20,
+      margin: 0
    },
    buttonIcon: {   
       alignSelf: 'flex-end',

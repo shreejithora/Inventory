@@ -55,13 +55,13 @@ const SalesScreen = ({navigation}) => {
                   onChangeText={ (val) => handleSearchText(val)} 
                />            
             </View>             
-            <View style={styles.cardContent}>  
+            {/* <View style={styles.cardContent}>  
                <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'center', fontWeight: '700'}]}>ID</Text> 
                <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left', fontWeight: '700'}]}>Name</Text>  
                <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left', fontWeight: '700'}]}>Sold Qty</Text>            
                <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left', fontWeight: '700'}]}>Price (In Rs.)</Text>
                <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left', fontWeight: '700'}]}>Total</Text>
-            </View> 
+            </View>  */}
             { 
                salesData.filteredSales == null ?
                <View opacity={0.5} style={styles.errorDisplay}>
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#e6f1fa',
       justifyContent: 'center',
    },
-   activityView: {
+   activityView:{
       borderRadius: 15,
       alignSelf: 'center',
       alignItems: 'center',
