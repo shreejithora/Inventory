@@ -23,10 +23,9 @@ const CustomersCard = ({items}) => {
             <TouchableOpacity onPress={() => setCustomerDetailModal(!customerDetailModal)}>
                <View style={styles.cardContent}>  
                   <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.customer_id}</Text> 
-                  <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left'}]}>{items.name}</Text> 
+                  <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left'}]}>{items.name}</Text>  
                </View>         
             </TouchableOpacity>
-            
          </Animatable.View>  
          <Modal 
             style={styles.detailModal}

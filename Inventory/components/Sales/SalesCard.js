@@ -23,16 +23,54 @@ const SalesCard = ({items}) => {
          <Animatable.View animation="fadeInUp" duration={1000} style={styles.card}>
             <TouchableOpacity onPress={() => setSoldProductDetailModal(!soldProductDetailModal)}>
                <View style={styles.cardContent}>  
-                  <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.product_id}</Text> 
+                  {/* <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.product_id}</Text> 
                   <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>
                      {items.name.length > 6 ? items.name.slice(0,6)+'...' : items.name}
                   </Text>  
                   <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{items.sold_quantity}</Text>            
                   <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{items.price}</Text>
-                  <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{items.price * items.sold_quantity}</Text>
+                  <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{items.price * items.sold_quantity}</Text> */}
+                  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', borderRightWidth: 2,borderRightColor: '#078bab'}}>
+                     {/* <Icon                     
+                        name="badge-account-outline" 
+                        color="#078bab" 
+                        size={35}
+                     />                      */}
+                   <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.product_id}</Text> 
+                  </View>
+                  <View style={{flexDirection: 'column', flex: 4, marginLeft: 10, padding: 5}}> 
+                        <View style={{marginBottom: 5}}>
+                           <Text style={[styles.cardTitle, {flex: 3, textAlign: 'left', fontWeight: '700'}]}>
+                              {items.supplier_name}
+                           </Text>                  
+                        </View>
+                        <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                           <Icon
+                              name="email-outline"
+                              size={18}
+                              color='#078bab'
+                           />
+                           <Text style={{fontStyle:'italic',fontSize:15,color:'#078bab', marginLeft: 5}} >{items.email}</Text>
+                        </View>
+                        <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                           <Icon
+                              name="home-outline"
+                              size={18}
+                              color='#078bab'
+                           />
+                           <Text style={{fontStyle:'italic',fontSize:15,color:'#078bab', marginLeft: 5}} >{items.address}</Text>
+                        </View>
+                        <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                           <Icon
+                              name="phone-outline"
+                              size={18}
+                              color='#078bab'
+                           />
+                           <Text style={{fontStyle:'italic',fontSize:15,color:'#078bab', marginLeft: 5}} >{items.phone}</Text>
+                        </View>
+                     </View> 
                </View>         
             </TouchableOpacity>
-            
          </Animatable.View>  
          <Modal 
             style={styles.detailModal}

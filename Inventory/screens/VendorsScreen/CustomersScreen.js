@@ -53,8 +53,8 @@ const CustomersScreen = ({navigation}) => {
                />            
             </View>             
             <View style={styles.cardContent}>  
-               <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left', fontWeight: '700', marginLeft: 10}]}>ID</Text> 
-               <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left', fontWeight: '700'}]}>Name</Text>  
+               {/* <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left', fontWeight: '700', marginLeft: 10}]}>ID</Text>  */}
+               {/* <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left', fontWeight: '700'}]}>Name</Text>   */}
             </View> 
             { 
                customersData.filteredCustomers == null ?
