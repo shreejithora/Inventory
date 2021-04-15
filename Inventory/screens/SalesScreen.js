@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
    Text, 
    View, 
@@ -6,34 +6,56 @@ import {
    TouchableOpacity, 
    StyleSheet,
    FlatList,   
+   RefreshControl
 } from 'react-native';
 
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import firestore from '@react-native-firebase/firestore';
+
 import AddSales from '../components/Sales/AddSales';
 import Heads from '../components/Heads';
 import SalesCard from '../components/Sales/SalesCard';
-const SalesList = require('../models/Sales.json');
+
+let SalesList = [];
 
 const SalesScreen = ({navigation}) => {
 
+   const [refreshing, setRefreshing] = useState(false)
+
+   useEffect( () => {
+      SalesList = [];
+      const ok = async() => {
+         await firestore()
+            .collection('Sales')
+            .get()
+            .then( querySnapshot => {
+               querySnapshot.forEach( documentSnapshot => {
+                  SalesList.push(documentSnapshot.data());
+               })
+               setsalesData({
+                  allSales: SalesList,
+                  filteredSales: SalesList
+               })
+            })                         
+      }
+      ok();
+   }, []);
+
    const [addSalesModal, setAddSalesModal] = useState(false);   
+
+   const [salesAddedModal, setSalesAddedModal] = useState(false);
 
    const [salesData, setsalesData] = useState({
       allSales: SalesList,
       filteredSales: SalesList
-   })
-
-
+   })   
 
    const handleSearchText = textToSearch => {
       const foundProduct = SalesList.filter( item => {
          return ( 
-            item.product_id.toLowerCase().includes(textToSearch.toLowerCase()) || 
-            item.name.toLowerCase().includes(textToSearch.toLowerCase()) ||
-            item.sold_quantity.toLowerCase().includes(textToSearch.toLowerCase())  ||
-            item.price.toLowerCase().includes(textToSearch.toLowerCase())
+            item.product.toLowerCase().includes(textToSearch.toLowerCase()) 
          )
       })
       
@@ -42,6 +64,32 @@ const SalesScreen = ({navigation}) => {
          filteredSales: foundProduct.length == 0 ? null : foundProduct         
       })      
    }
+
+   const handleSalesAdded = () => {
+      setSalesAddedModal(true);
+   }
+
+   const onRefresh = React.useCallback( async() => {
+      setRefreshing(true);
+      SalesList = [];
+      try{         
+         await firestore()
+            .collection('Sales')
+            .get()
+            .then( querySnapshot => {
+               querySnapshot.forEach( documentSnapshot => {                  
+                  SalesList.push(documentSnapshot.data());   
+               });       
+               setRefreshing(false) 
+               setsalesData({
+                  allSales: SalesList,
+                  filteredSales: SalesList
+               })          
+            });          
+      } catch(e) {
+         console.log(e)
+      }
+   }, [refreshing]);
 
    return(
       <View style={styles.container}>
@@ -54,14 +102,7 @@ const SalesScreen = ({navigation}) => {
                   placeholder="Search" 
                   onChangeText={ (val) => handleSearchText(val)} 
                />            
-            </View>             
-            {/* <View style={styles.cardContent}>  
-               <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'center', fontWeight: '700'}]}>ID</Text> 
-               <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left', fontWeight: '700'}]}>Name</Text>  
-               <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left', fontWeight: '700'}]}>Sold Qty</Text>            
-               <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left', fontWeight: '700'}]}>Price (In Rs.)</Text>
-               <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left', fontWeight: '700'}]}>Total</Text>
-            </View>  */}
+            </View>                        
             { 
                salesData.filteredSales == null ?
                <View opacity={0.5} style={styles.errorDisplay}>
@@ -71,13 +112,18 @@ const SalesScreen = ({navigation}) => {
                </View> :
                <FlatList 
                   data = {salesData.filteredSales}
-                  keyExtractor = {item => item.product_id}
-                  renderItem = { ({item}) =>                  
-                     <SalesCard items={item}/>                                 
+                  keyExtractor = {item => item.product}
+                  renderItem = { ({item}) =>  {
+                        return <SalesCard items={item}/>
+                     }                                                      
+                  }
+                  refreshControl={
+                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                   }
                />
-            }           
+            }            
          </View>      
+   
          <TouchableOpacity          
             style={{position: 'absolute', bottom: 25, right: 25,}}
             onPress={() => {setAddSalesModal(true)}}
@@ -104,7 +150,34 @@ const SalesScreen = ({navigation}) => {
                   color="#078bab"                                   
                   onPress={ () => setAddSalesModal(false)}
                />   
-               <AddSales onAddSales={setAddSalesModal}/>                                   
+               <AddSales onAddSales={setAddSalesModal} stateChange={handleSalesAdded} />                                   
+            </View>                                           
+         </Modal> 
+         <Modal 
+            style={styles.modal1}
+            isVisible={salesAddedModal} 
+            transparent={true} 
+            animationIn='slideInUp' 
+            animationOut='slideOutDown'
+            onBackButtonPress = {() => setSalesAddedModal(!salesAddedModal)}
+            backdropTransitionInTiming={500}
+            backdropTransitionOutTiming={500}
+            animationInTiming={500}
+            animationOutTiming={500}> 
+            <View style={styles.modalView}>       
+               <Icon 
+                  style={styles.buttonIcon}
+                  name="close"
+                  size={30}
+                  color="#078bab"                                   
+                  onPress={ () => setSalesAddedModal(false)}
+               />   
+               <View style={styles.confirmModal}>
+                  <Text style={styles.texts}>
+                     <Icon name="text-box-check" size={25} color="green"/>
+                     <Text style={{marginLeft: 5, fontWeight: '700'}}>Added Successfully !</Text>
+                  </Text>                  
+               </View>                                
             </View>                                           
          </Modal>                         
       </View>    
@@ -189,6 +262,23 @@ const styles = StyleSheet.create({
       marginLeft: 0,
       marginRight: 0
   },
+   modal1: {
+      flex: 1,
+      justifyContent: 'flex-start',
+      borderRadius: 10,
+      marginVertical: 320,
+      backgroundColor: '#fff',   
+      marginLeft: 50,
+      marginRight: 50
+   },
+   confirmModal: {
+      padding: 10,
+      alignItems: 'center'
+   },
+   texts: {
+      color: '#078bab',
+      fontSize: 20
+   },
    buttonIcon: {
     marginTop: 15, 
     padding: 3, 

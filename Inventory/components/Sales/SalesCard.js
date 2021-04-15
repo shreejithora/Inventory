@@ -16,7 +16,23 @@ import SalesInfo from './SalesInfo';
 
 const SalesCard = ({items}) => {
 
+   // console.log(items.last_updated[0].toDate())
+
+   const numbering = num => {
+      let x = num;
+      x=x.toString();
+      let lastThree = x.substring(x.length-3);
+      const otherNumbers = x.substring(0,x.length-3);
+      if(otherNumbers != '')
+         lastThree = ',' + lastThree;
+      const val = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree; 
+      return val;
+   }
+
    const [soldProductDetailModal, setSoldProductDetailModal] = useState(false);
+
+   const date = items.last_updated.toDate();
+   // console.log(date.toDateString())
 
    return(
       <View>
@@ -33,22 +49,22 @@ const SalesCard = ({items}) => {
                   <View style={{flexDirection: 'column', flex: 4, marginLeft: 10, padding: 5}}> 
                         <View style={{marginBottom: 5}}>
                            <Text style={[styles.cardTitle, {flex: 3, textAlign: 'left', fontWeight: '700'}]}>
-                              {items.name}
+                              {items.product}
                            </Text>                  
                         </View>
                         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                              <Text style={styles.texts}>Sold Quantity:{items.sold_quantity}</Text>
-                              <Text style={[styles.texts,{marginRight:10}]}>Rs. {items.price}</Text>
+                              <Text style={styles.texts}>Sold Qty: <Text style={{fontWeight: '700'}}>{items.sold_quantity}</Text></Text>
+                              <Text style={[styles.texts,{marginRight:10}]}>Rs. {numbering(items.price)}</Text>
                         </View>
                         <View style={{flexDirection: 'row',justifyContent:'space-between',alignItems:'center'}}>
-                            <Text style={styles.texts}>Date:{items.date}</Text>
+                            <Text style={[styles.texts, {fontStyle: 'italic'}]}>{date.toDateString()}</Text>
                               <Text style={[styles.texts,{fontWeight:'700',marginRight:10}]}>
                                        <Icon
                                           name='plus'
                                           color='#078bab'
                                           size={20}
                                        />
-                                 Rs. {items.price * items.sold_quantity}</Text> 
+                                 Rs. {numbering(items.total)}</Text> 
                         </View>
                      </View> 
                </View>         

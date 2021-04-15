@@ -1,10 +1,11 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {
    View, 
    Text, 
    StyleSheet, 
    TouchableOpacity, 
    TextInput,
+   FlatList,
    Alert,
    } from 'react-native';
 
@@ -16,9 +17,28 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView } from "react-native-gesture-handler";
 import DropDownPicker from 'react-native-dropdown-picker';
 
-const ProductsList = require('../../models/Products.json');
+let SuppliersList =[];
 
 const AddProduct = (props) => {
+
+   useEffect( () => {
+      const ok = async() => {
+         SuppliersList = [];
+         try{            
+            await firestore()
+               .collection('Suppliers')
+               .get()
+               .then( querySnapshot => {
+                  querySnapshot.forEach( documentSnapshot => {
+                     SuppliersList.push(documentSnapshot.data())
+                  })
+               })                         
+         } catch(e) {
+            console.log(e)
+         }         
+      }
+      ok();
+   })
 
    const categoryData = 
    [
@@ -115,6 +135,16 @@ const AddProduct = (props) => {
      cost_price: null,
      isValidCostPrice: true
   })
+
+  const [list, setList] = useState(false)
+
+   const [supplier, setSupplier] = useState({
+      supplierName: ''
+   });  
+
+   const [validSupplier, setValidSupplier] = useState(true)
+
+   const [SuppliersData, setSuppliersData] = useState(SuppliersList);
 
   const [ codes, setCodes] = useState({
      clothing: 100.001,
@@ -216,7 +246,41 @@ const AddProduct = (props) => {
       }
    }
 
-   let code = [];
+   const handleSupplierChange = (val) => {     
+
+      const foundSupplier = SuppliersList.filter( item => {
+         return (
+            item.supplier_name.toLowerCase().includes(val.toLowerCase()) ||
+            item.supplier_code.toString().includes(val.toString())
+         )
+      })
+
+      const isValidSupplier = SuppliersList.filter( item => {
+         return item.supplier_name == val
+      })
+
+      const len = foundSupplier.length;
+      const cuslen = isValidSupplier.length
+      if ( cuslen == 1) {
+         setSupplier({
+            ...supplier, 
+            supplierName: val,
+         })
+         setValidSupplier(true)         
+      }  else {
+         setValidSupplier(false)
+      }
+
+      if( len == 0 ){
+         setSuppliersData([])
+      } else {
+         setSuppliersData(foundSupplier)
+      }             
+
+      setSupplier({supplierName: val});
+   }
+
+   let code = [];   
 
    const handleStatusChange = async(val)=> {
       setState({
@@ -339,6 +403,7 @@ const AddProduct = (props) => {
                                     market_price: Number(marketPrice.market_price),
                                     description: description,
                                     quantity: productQuantity.product_quantity,
+                                    supplier: supplier.supplierName,
                                     product_updated: [new Date()]
                                  }). then( () => {
                                     // Alert.alert('Product Added!','Product Code:'+productCode.product_code+'  with Product Name: '+productName.product_name, [{text: 'Ok'}]);
@@ -425,12 +490,27 @@ const AddProduct = (props) => {
                 <View style={styles.inputs}>
                   <Text style={styles.texts}>Supplier*</Text>
                   <TextInput
+                     value={supplier.supplierName}
                      style={styles.textInputs}
                      keyboardType="ascii-capable"
-                     placeholder="eg. Hari Products Pvt. Ltd." 
-                     onChangeText={ (val) => handleSubCategory(val)}
-                     onEndEditing = { (e) => handleSubCategory(e.nativeEvent.text)}
-                  />                 
+                     onFocus = {() => setList(true)}
+                     placeholder="eg. Hari Products Pvt. Ltd. or Supplier Code " 
+                     onChangeText={ (val) => handleSupplierChange(val)}
+                     onEndEditing = { (e) => handleSupplierChange(e.nativeEvent.text)}
+                  />         
+                  <View style={{display: list ? 'flex' : 'none'}}>
+                     <FlatList 
+                        data={SuppliersData}
+                        keyExtractor = { item => item.supplier_code}
+                        renderItem = { ({item}) => {
+                           return (
+                              <TouchableOpacity style={styles.SuppliersList} onPress={() => handleSupplierChange(item.supplier_name)}>
+                                 <Text>{item.supplier_name}</Text>
+                              </TouchableOpacity>
+                           )                              
+                        }}
+                     />
+                  </View>        
                </View>             
                <View style={styles.inputs}>
                   <Text style={styles.texts}>Quantity</Text>
@@ -559,6 +639,15 @@ const styles = StyleSheet.create({
       borderBottomWidth: 1,
       marginTop: 5,
    },  
+   SuppliersList: {
+      flexDirection: 'row',
+      marginVertical: 5,
+      padding: 10,
+      borderWidth: 1,
+      borderRadius: 10,
+      borderColor: '#078bab',
+      backgroundColor: '#fafafa'
+   },
    button: {
       flexDirection: 'row',
       backgroundColor: '#078bab',

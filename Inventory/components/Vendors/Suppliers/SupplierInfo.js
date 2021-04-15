@@ -18,7 +18,30 @@ const SupplierInfo = ({item}) => {
    const [productInfo, setProductInfo] = useState({
       allProducts: ProductsList
    })
-   
+
+   const numbering = num => {
+      let x = num;
+      x=x.toString();
+      // x=x.split('.')[0];
+      let y = 0;
+      if(x.includes('.')){
+         y = '.'+x.split('.')[1]
+         x = x.split('.')[0]
+         let lastThree = x.substring(x.length-3);
+         const otherNumbers = x.substring(0,x.length-3);
+         if(otherNumbers != '')
+            lastThree = ',' + lastThree;
+         const val = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree; 
+         return (val+y);
+      } else {
+         let lastThree = x.substring(x.length-3);
+         const otherNumbers = x.substring(0,x.length-3);
+         if(otherNumbers != '')
+            lastThree = ',' + lastThree;
+         const val = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree; 
+         return (val);
+      }
+   }    
 
    let [size, setSize] = useState(0)
 
@@ -74,7 +97,7 @@ const SupplierInfo = ({item}) => {
                   <View style={styles.productsDetail}>
                      <Text style={[styles.infoTexts, {flex: 1, fontSize: 15}]}>{item.product_code}</Text>
                      <Text style={[styles.infoTexts, {flex: 2}]}>{item.product_name}</Text>
-                     <Text style={[styles.infoTexts, {flex: 1.5}]}>Rs. {item.cost_price}</Text>
+                     <Text style={[styles.infoTexts, {flex: 1.5}]}>Rs. {numbering(item.cost_price)}</Text>
                   </View>
                }
             />

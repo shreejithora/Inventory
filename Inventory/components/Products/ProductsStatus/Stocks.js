@@ -7,10 +7,20 @@ import {
 } from 'react-native';
 
 const Stocks = (props) => {
+   const numbering = num => {
+      let x = num;
+      x=x.toString();
+      let lastThree = x.substring(x.length-3);
+      const otherNumbers = x.substring(0,x.length-3);
+      if(otherNumbers != '')
+         lastThree = ',' + lastThree;
+      const val = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree; 
+      return val;
+   } 
    return(
       <View style={styles.stocksContainer}>
          <Text style={styles.texts}>Stocks</Text>
-         <Text style={[styles.texts, {fontWeight: '700', fontSize: 25}]}>{props.totalstocks}</Text>
+         <Text style={[styles.texts, {fontWeight: '700', fontSize: 25}]}>{numbering(props.totalstocks)}</Text>
          
       </View>
    )

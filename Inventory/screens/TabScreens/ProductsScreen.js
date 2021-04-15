@@ -7,6 +7,7 @@ import {
    StyleSheet,
    FlatList,
    RefreshControl,
+   ActivityIndicator
 } from 'react-native';
 
 import Modal from 'react-native-modal';
@@ -126,6 +127,8 @@ const ProductsScreen = ({navigation}) => {
       },
    ]
 
+   const [isLoading, setIsLoading] = useState(true)
+
    const [addProductModal, setAddProductModal] = useState(false);   
 
    const [productAddedModal, setProductAddedModal] = useState(false)
@@ -173,6 +176,7 @@ const ProductsScreen = ({navigation}) => {
                allProducts: ProductsList,
                filteredProducts: ProductsList
             })
+            setIsLoading(false)
             setRefreshing(false)
          } catch (e) {
             console.log(e)
@@ -340,6 +344,13 @@ const ProductsScreen = ({navigation}) => {
                <Text style={[styles.cardTitle, {flex: 1, textAlign: 'left', fontWeight: '700'}]}>Qty</Text>            
                <Text style={[styles.cardTitle, {flex: 2, textAlign: 'center', fontWeight: '700'}]}>Price (In Rs.)</Text>
             </View>  */}
+            {
+               isLoading ?
+               <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                  <ActivityIndicator size="large" color="#078bab" />
+               </View> :
+               null            
+            }
             { 
                productData.filteredProducts == null ?
                <View opacity={0.5} style={styles.errorDisplay}>

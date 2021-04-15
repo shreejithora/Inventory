@@ -9,15 +9,20 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const SalesInfo = ({item}) => {
+
+   const date = item.last_updated.toDate();
+
    return(
       <View  style={styles.SalesInfo}>
          <View style={styles.header}>
          <Image style={styles.barcode} source={require('../../assets/barcodes/1113.png')} />         
-         <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>ProductID:</Text> {item.product_id}</Text>
-         <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Product:</Text> {item.name}</Text>
+         <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Product:</Text> {item.product}</Text>
+         <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Customer:</Text> {item.customer}</Text>
          <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Sold Quantity:</Text> {item.sold_quantity}</Text>
-         <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Price:</Text> {item.price}</Text>
-         <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Total:</Text> {item.sold_quantity * item.price}</Text>
+         <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Price:</Text>Rs. {item.price}</Text>
+         <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Total:</Text>Rs. {item.sold_quantity * item.price}</Text>         
+         <Text style={[styles.infoTexts, {fontStyle: 'italic', fontSize: 15}]}>{date.toDateString()}</Text>
+         
       </View>
       </View>
    )
@@ -43,7 +48,7 @@ const styles = StyleSheet.create({
       alignSelf: 'center'
    },
    header:{
-      backgroundColor:'#c7e6ff',
+      backgroundColor:'#e6f1fa',
       borderRadius:30
    }
 })

@@ -20,13 +20,16 @@ const ProductCard = ({items}) => {
 
    const [productDetailModal, setProductDetailModal] = useState(false);   
 
-   let x = items.market_price;
-   x=x.toString();
-   let lastThree = x.substring(x.length-3);
-   const otherNumbers = x.substring(0,x.length-3);
-   if(otherNumbers != '')
-      lastThree = ',' + lastThree;
-   const market_price = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;   
+   const numbering = num => {
+      let x = num;
+      x=x.toString();
+      let lastThree = x.substring(x.length-3);
+      const otherNumbers = x.substring(0,x.length-3);
+      if(otherNumbers != '')
+         lastThree = ',' + lastThree;
+      const val = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree; 
+      return val;
+   }  
 
    return(
       <View>
@@ -51,7 +54,7 @@ const ProductCard = ({items}) => {
                                  fontSize: 16, 
                                  color: items.quantity <= 50 ? 'red' : 'green'
                               }]}>
-                              Stocks: {items.quantity}  
+                              Stocks: {numbering(items.quantity)}  
                            <Icon 
                               name={ items.quantity <= 50 ? "arrow-down" : "arrow-up"} 
                               color={items.quantity <= 50 ? "red" : "green"}
@@ -65,7 +68,7 @@ const ProductCard = ({items}) => {
                               null
                            }
                            </Text>
-                        <Text style={[styles.texts, {fontWeight: '700'}]}>Rs. {market_price}</Text>
+                        <Text style={[styles.texts, {fontWeight: '700'}]}>Rs. {numbering(items.market_price)}</Text>
                      </View>
                   </View>                 
                </View>         

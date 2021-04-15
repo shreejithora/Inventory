@@ -8,6 +8,32 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 
 const ProductInfo = ({item}) => {
+
+   const numbering = num => {
+      let x = num;
+      x=x.toString();
+      // x=x.split('.')[0];
+      let y = 0;
+      if(x.includes('.')){
+         y = '.'+x.split('.')[1]
+         x = x.split('.')[0]
+         let lastThree = x.substring(x.length-3);
+         const otherNumbers = x.substring(0,x.length-3);
+         if(otherNumbers != '')
+            lastThree = ',' + lastThree;
+         const val = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree; 
+         return (val+y);
+      } else {
+         let lastThree = x.substring(x.length-3);
+         const otherNumbers = x.substring(0,x.length-3);
+         if(otherNumbers != '')
+            lastThree = ',' + lastThree;
+         const val = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree; 
+         return (val);
+      }
+   }
+
+   const date = item.product_updated[0].toDate();
    return(
       <View  style={styles.productInfo}>
          <View style={styles.productDesc}>
@@ -16,13 +42,13 @@ const ProductInfo = ({item}) => {
                <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Product:</Text> {item.product_name}</Text>
 
                <View style={styles.infoPrice}>
-                     <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Quantity:</Text> {item.quantity}</Text>
-                     <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Cost Price:</Text> {item.cost_price}</Text>
+                     <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Quantity:</Text> {numbering(item.quantity)}</Text>
+                     <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Cost Price:</Text> {numbering(item.cost_price)}</Text>
                </View>
 
                <View style={styles.infoPrice}>
                      <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Margin:</Text> {item.margin}</Text>
-                     <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Market Price:</Text> {item.market_price}</Text>
+                     <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Market Price:</Text> {numbering(item.market_price)}</Text>
                </View>
 
                <View style={{marginRight:20}}>
@@ -30,7 +56,7 @@ const ProductInfo = ({item}) => {
                </View>
 
                <View style={{marginRight:20}}>
-                     <Text style={[styles.infoTexts, { fontSize: 15, fontStyle: 'italic'}]}><Text style={{fontWeight: '700'}}>Last Updated:</Text> {item.last_updated}</Text>
+                     <Text style={[styles.infoTexts, { fontSize: 15, fontStyle: 'italic'}]}><Text style={{fontWeight: '700'}}>Last Updated:</Text> {date.toDateString()}</Text>
                </View>
          </View>
 
@@ -53,11 +79,11 @@ const styles = StyleSheet.create({
       padding: 10,
    },
    productDesc:{
-      backgroundColor:'#fafafa',
+      backgroundColor:'#e6f1fa',
       borderRadius: 15
    },
    desc:{
-      backgroundColor:'#fafafa',
+      backgroundColor:'#e6f1fa',
       marginTop:10,
       borderRadius:10
    },

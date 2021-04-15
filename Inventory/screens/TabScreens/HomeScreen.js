@@ -6,17 +6,53 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
-  Button
+  ActivityIndicator
 } from 'react-native';
+
+import firestore from '@react-native-firebase/firestore';
 
 import HomeCard from '../../components/HomeCard';
 import ActivityCard from '../../components/ActivityCard';
 import Heads from '../../components/Heads';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
-const SalesList = require('../../models/Sales.json');
+let SalesList = [];
 
 const HomeScreen = ({navigation}) => {
+
+  const [isLoading, setIsLoading] = useState(true)
+
+  const [salesData, setSalesData] = useState({
+    allSales: SalesList,
+    filteredSales: SalesList
+  })
+
+  useEffect( () => {
+    const ok = async() => {
+      try{
+        SalesList = [];
+        await firestore()
+          .collection('Sales')
+          .get()
+          .then( querySnapshot => {
+            querySnapshot.forEach( documentSnapshot => {
+              SalesList.push(documentSnapshot.data())
+            })
+            setSalesData({
+              allSales: SalesList,
+              filteredSales: SalesList
+            })
+            setIsLoading(false)
+          })
+      } catch(e) {
+        console.log(e)
+      }
+    } 
+    ok();
+  })
+
   return(
     <View style={styles.container}>  
       <Heads nav={navigation} title="Inventory" tabBool={1} />
@@ -44,20 +80,23 @@ const HomeScreen = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <View style={{paddingBottom: 50}}>
-            <View style={styles.activityView}>     
-              <View style={styles.activityCard}>
-                <FlatList
-                  showsVerticalScrollIndicator={false}
-                  data={SalesList}
-                  keyExtractor={(item) => item.product_id}
-                  renderItem={({item}) => (                                             
-                    <ActivityCard items={item} />                                                                      
-                  )}                   
-                />
-              </View>
-              <TouchableOpacity onPress={() => console.log('hi')}>
-                <Icon name="arrow-down" size={25} color='#078bab' style={styles.icon} />
-              </TouchableOpacity>
+            <View style={styles.activityView}>                                  
+              <View style={styles.activityCard}>              
+                {
+                  isLoading ?
+                  <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <ActivityIndicator size="large" color="#078bab" />
+                  </View> :
+                  <FlatList
+                    showsVerticalScrollIndicator={false}
+                    data={salesData.filteredSales}
+                    keyExtractor={(item) => item.product}
+                    renderItem={({item}) => (                                             
+                      <ActivityCard items={item} />                                                                      
+                    )}                   
+                  />                                             
+                }
+              </View>                           
             </View> 
           </View>
         </View>
