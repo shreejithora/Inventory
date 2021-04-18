@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ActivityCard = ({items}) => {
 
-   const date = items.last_updated.toDate();
+   const date = items.uploaded_at.toDate();
 
    const numbering = num => {
       let x = num;
@@ -57,11 +57,10 @@ const ActivityCard = ({items}) => {
                   </View>
                   <View style={{flexDirection:'column', flex: 4}}>
                      <View style= {{flexDirection: 'row', flex:1, paddingVertical: 5, alignItems: 'center'}}>
-                        <Text style={[styles.cardTitle, {flex: 1.1, textAlign: 'left'}]}>{ items.product.length > 13 ? items.product.slice(0,12)+'...' : items.product}</Text>                            
-                        <Text style={[styles.cardTitle, {flex: 1, textAlign: 'right', color: '#07a63a'}]}>+ Rs. {numbering(items.selling_price)}</Text>
+                        <Text style={[styles.cardTitle, {flex: 1.1, textAlign: 'left'}]}>{ items.customer.length > 13 ? items.customer.slice(0,12)+'...' : items.customer}</Text>                            
+                        <Text style={[styles.cardTitle, {flex: 1, textAlign: 'right', color: '#07a63a'}]}>+ Rs. {numbering(items.grand_total)}</Text>
                      </View>  
                      <View style={{flexDirection: 'row', flex: 1, alignItems: 'center'}}>
-                        <Text style={[styles.cardTitle, {flex: 1, textAlign: 'left', fontWeight: 'normal', fontSize: 14, color: '#9da19f'}]}>Qty: {items.sold_quantity}</Text>                            
                         <Text style={[styles.cardTitle, {flex: 1, textAlign: 'right',  fontStyle: 'italic', fontWeight: '200', fontSize: 14}]}>{date.toDateString()}</Text>
                      </View>           
                   </View>

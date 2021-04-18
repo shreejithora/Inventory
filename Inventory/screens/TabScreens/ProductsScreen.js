@@ -167,7 +167,9 @@ const ProductsScreen = ({navigation}) => {
                   setProductCounter(querySnapshot.size)  
                   let temp = 0;
                   querySnapshot.forEach( documentSnapshot => {
-                     ProductsList.push(documentSnapshot.data());                        
+                     const data = documentSnapshot.data();
+                     data.id = documentSnapshot.id;;
+                     ProductsList.push(data);                        
                      temp = Number(documentSnapshot.data().quantity) + Number(temp);     
                   })                  
                   setStockCounter(temp);
@@ -366,7 +368,7 @@ const ProductsScreen = ({navigation}) => {
                      data = {productData.filteredProducts}
                      keyExtractor = {item => item.id}
                      renderItem = { ({item}) =>          
-                        <ProductCard items={item}/>                                    
+                        <ProductCard items={item}/>            
                      }
                      refreshControl={
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

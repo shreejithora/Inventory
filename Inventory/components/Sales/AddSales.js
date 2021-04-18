@@ -64,6 +64,10 @@ const AddSales = (props) => {
 
    const [selectedProduct, setSelectedProduct] = useState([]);  
 
+   const [productID, setProductID] = useState('');
+
+   const [customerID, setCustomerID] =useState('');
+
    const [stock, setStock] = useState(0);
 
    useEffect( () => {
@@ -94,36 +98,7 @@ const AddSales = (props) => {
          } catch(e) {
             console.log(e)
          }
-      }, 1000);
-      // const ok = async() => {
-      //    ProductsList = [];
-      //    CustomersList = [];
-      //    try{            
-      //       await firestore()
-      //          .collection('Products')
-      //          .get()
-      //          .then( querySnapshot => {
-      //             querySnapshot.forEach( documentSnapshot => {
-      //                const data = documentSnapshot.data();
-      //                data.product_id = documentSnapshot.id
-      //                ProductsList.push(data)
-      //             })
-      //          })
-      //       await firestore()            
-      //          .collection('Customers')
-      //          .get()
-      //          .then( querySnapshot => {
-      //             querySnapshot.forEach( documentSnapshot => {
-      //                const data = documentSnapshot.data();
-      //                data.customer_id = documentSnapshot.id;
-      //                CustomersList.push(data)
-      //             })
-      //          })              
-      //    } catch(e) {
-      //       console.log(e)
-      //    }
-      // }    
-      // ok();
+      }, 1000);   
    }, [])
    
    const handleCustomerChange = (val) => {     
@@ -146,6 +121,8 @@ const AddSales = (props) => {
             ...customer, 
             customerName: val,
          })
+         // console.log(isValidCustomer[0].customer_id)
+         setCustomerID(isValidCustomer[0].customer_id)
          setValidCustomer(true)         
       }  else {
          setValidCustomer(false)
@@ -196,7 +173,8 @@ const AddSales = (props) => {
          setProductName(isValidProduct[0].product_name)
          setPrice(isValidProduct[0].selling_price) 
          setStock(isValidProduct[0].quantity) 
-         setCostPrice(isValidProduct[0].cost_price)       
+         setCostPrice(isValidProduct[0].cost_price)   
+         setProductID(isValidProduct[0].id)    
          setValidProduct(true)
       }  else {
          setValidProduct(false)
@@ -241,6 +219,7 @@ const AddSales = (props) => {
                try {
                   await setSelectedProduct( (currItem) => {
                      return [{
+                        product_id: productID,
                         product_name: productName, 
                         sold_qty: productQuantity.sold_quantity,
                         cost_price: costPrice,
@@ -272,35 +251,40 @@ const AddSales = (props) => {
    }
    
    const handleAddSales = async() => {
-      if (customer.customerName != '' && selectedProduct.length != 0 ){    
-         if( validProduct ){
-            if ( validCustomer ){
-               try{
-                  selectedProduct.forEach( item => {
-                     return (
-                        firestore()
-                           .collection('Sales')
-                           .add({
-                              customer: customer.customerName,
-                              product: item.product_name,
-                              cost_price: item.cost_price,
-                              selling_price: item.price,
-                              sold_quantity: item.sold_qty,
-                              discount: discount.discount,
-                              total: item.total,
-                              last_updated: new Date()
-                           })
-                     )
-                  })                  
-               } catch(e) {
-                  console.log(e);
-               }
-               props.onAddSales(false);
-               props.stateChange();            
-            }           
-         } else {
-            Alert.alert('Invalid Input!','Please enter a Valid Product ID', [{text: 'Ok'}]);   
-         }       
+      if (customer.customerName != '' && selectedProduct.length != 0 ){             
+         if ( validCustomer ){
+            try{
+               selectedProduct.forEach( item => {                                      
+                  firestore()
+                  .collection('SalesProducts')
+                  .add({
+                     customer: customer.customerName,
+                     customer_id: customerID,
+                     product_id: item.product_id,
+                     product: item.product_name,
+                     cost_price: item.cost_price,
+                     selling_price: item.price,
+                     sold_quantity: item.sold_qty,
+                     discount: discount.discount,
+                     total: item.total,
+                     last_updated: new Date()
+                  })                                                  
+               })  
+               firestore()
+                  .collection('Sales')
+                  .add({
+                     customer: customer.customerName,
+                     customer_id: customerID,
+                     discount: discount.discount,
+                     grand_total: total,
+                     uploaded_at: new Date()
+                  })
+            } catch(e) {
+               console.log(e);
+            }
+            props.onAddSales(false);
+            props.stateChange();            
+         }                          
       } else {
          Alert.alert('Invalid Input!','All files should be filled.', [{text: 'Ok'}]);                                                      
       }                

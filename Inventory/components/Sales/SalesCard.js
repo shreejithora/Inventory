@@ -16,8 +16,6 @@ import SalesInfo from './SalesInfo';
 
 const SalesCard = ({items}) => {
 
-   // console.log(items.last_updated[0].toDate())
-
    const numbering = num => {
       let x = num;
       x=x.toString();
@@ -44,14 +42,14 @@ const SalesCard = ({items}) => {
 
    const [soldProductDetailModal, setSoldProductDetailModal] = useState(false);
 
-   const date = items.last_updated.toDate();
-   // console.log(date.toDateString())
-   let profit = null;
-   if(items.discount == null){
-      profit = (parseFloat(items.cost_price) - parseFloat(items.selling_price)) * parseInt(items.sold_quantity)
-   } else {
-      profit = (parseFloat(items.cost_price) - ((parseFloat(items.discount)/100) * parseInt(items.cost_price) )) * parseInt(items.sold_quantity)
-   }
+   const date = items.uploaded_at.toDate();
+
+   // let profit = null;
+   // if(items.discount == null){
+   //    profit = (parseFloat(items.cost_price) - parseFloat(items.selling_price)) * parseInt(items.sold_quantity)
+   // } else {
+   //    profit = (parseFloat(items.cost_price) - ((parseFloat(items.discount)/100) * parseInt(items.cost_price) )) * parseInt(items.sold_quantity)
+   // }
 
    return(
       <View>
@@ -68,22 +66,15 @@ const SalesCard = ({items}) => {
                   <View style={{flexDirection: 'column', flex: 4, marginLeft: 10, padding: 5}}> 
                         <View style={{marginBottom: 5}}>
                            <Text style={[styles.cardTitle, {flex: 3, textAlign: 'left', fontWeight: '700'}]}>
-                              {items.product}
+                              {items.customer}
                            </Text>                  
                         </View>
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                              <Text style={styles.texts}>Sold Qty: <Text style={{fontWeight: '700'}}>{items.sold_quantity}</Text></Text>
-                              <Text style={[styles.texts,{marginRight:10}]}>Rs. {numbering(items.selling_price)}</Text>
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>                             
+                              <Text style={[styles.texts,{marginRight:10}]}>Rs. {numbering(items.grand_total)}</Text>
                         </View>
                         <View style={{flexDirection: 'row',justifyContent:'space-between',alignItems:'center'}}>
                             <Text style={[styles.texts, {fontStyle: 'italic'}]}>{date.toDateString()}</Text>
-                              <Text style={[styles.texts,{fontWeight:'700',marginRight:10}]}>
-                                       <Icon
-                                          name='plus'
-                                          color='#078bab'
-                                          size={20}
-                                       />
-                                 Rs. {numbering(profit)}</Text> 
+                              
                         </View>
                      </View> 
                </View>         
