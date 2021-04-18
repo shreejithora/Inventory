@@ -19,8 +19,8 @@ const SalesInfo = ({item}) => {
          <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Product:</Text> {item.product}</Text>
          <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Customer:</Text> {item.customer}</Text>
          <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Sold Quantity:</Text> {item.sold_quantity}</Text>
-         <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Price:</Text>Rs. {item.price}</Text>
-         <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Total:</Text>Rs. {item.sold_quantity * item.price}</Text>         
+         <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Selling Price:</Text> Rs. {item.selling_price}</Text>
+         <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Total:</Text> Rs. {item.sold_quantity * item.selling_price}</Text>         
          <Text style={[styles.infoTexts, {fontStyle: 'italic', fontSize: 15}]}>{date.toDateString()}</Text>
          
       </View>

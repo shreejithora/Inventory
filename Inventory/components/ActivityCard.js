@@ -11,9 +11,12 @@ import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ActivityCard = ({items}) => {
+
+   const date = items.last_updated.toDate();
+
    const numbering = num => {
       let x = num;
-      x=x.toString();
+      x = x.toString();
       // x=x.split('.')[0];
       let y = 0;
       if(x.includes('.')){
@@ -38,14 +41,30 @@ const ActivityCard = ({items}) => {
       <Animatable.View animation="fadeInUp" duration={1000} style={styles.card}>
          <TouchableOpacity onPress={() => {}}>
             <View style={styles.cardContent}>  
-               <View style={{flexDirection: 'row', flex: 1}}>
-               <Icon
-                  name='cart-arrow-up'
-                  color="#078bab"
-                  size={30}
-               />               
-               <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left'}]}>{items.product}</Text>                            
-               <Text style={[styles.cardTitle, {flex: 2, textAlign: 'right'}]}>+ Rs. {numbering(items.price)}</Text>
+               <View style={{flexDirection: 'row', alignItems: 'center', flex:  1}}>
+                  <View style={{
+                           backgroundColor: '#e6f1fa',
+                           padding: 10,
+                           borderRadius: 50, 
+                           // flex: 1
+                        }}>
+                     <Icon
+                        name='cart-arrow-up'
+                        color="#078bab"
+                        size={20}
+                        
+                     />  
+                  </View>
+                  <View style={{flexDirection:'column', flex: 4}}>
+                     <View style= {{flexDirection: 'row', flex:1, paddingVertical: 5, alignItems: 'center'}}>
+                        <Text style={[styles.cardTitle, {flex: 1.1, textAlign: 'left'}]}>{ items.product.length > 13 ? items.product.slice(0,12)+'...' : items.product}</Text>                            
+                        <Text style={[styles.cardTitle, {flex: 1, textAlign: 'right', color: '#07a63a'}]}>+ Rs. {numbering(items.selling_price)}</Text>
+                     </View>  
+                     <View style={{flexDirection: 'row', flex: 1, alignItems: 'center'}}>
+                        <Text style={[styles.cardTitle, {flex: 1, textAlign: 'left', fontWeight: 'normal', fontSize: 14, color: '#9da19f'}]}>Qty: {items.sold_quantity}</Text>                            
+                        <Text style={[styles.cardTitle, {flex: 1, textAlign: 'right',  fontStyle: 'italic', fontWeight: '200', fontSize: 14}]}>{date.toDateString()}</Text>
+                     </View>           
+                  </View>
                </View>  
             </View>         
          </TouchableOpacity>
@@ -59,7 +78,7 @@ const styles = StyleSheet.create({
    cardTitle:{
       marginHorizontal: 10,
       color: '#078bab',
-      fontSize: 16,
+      fontSize: 17,
       fontWeight: '700'
    },
    card: {

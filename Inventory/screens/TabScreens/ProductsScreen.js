@@ -234,11 +234,9 @@ const ProductsScreen = ({navigation}) => {
          const foundProduct = await ProductsList.filter( item => {
             return ( 
                item.product_code.toString().includes(textToSearch) || 
-               item.product_name.toString().includes(textToSearch) ||
+               item.product_name.toString().toLowerCase().includes(textToSearch.toLowerCase()) ||
                item.quantity.toString().includes(textToSearch)  ||
-               item.market_price.toString().includes(textToSearch) ||
                item.category.toLowerCase().includes(textToSearch.toLowerCase()) 
-               // item.sub_category.toLowerCase().includes(textToSearch.toLowerCase()) 
             )
          })
       
@@ -270,8 +268,10 @@ const ProductsScreen = ({navigation}) => {
             .then( querySnapshot => {
                setProductCounter(querySnapshot.size) 
                let temp = 0;
-               querySnapshot.forEach( documentSnapshot => {                  
-                  ProductsList.push(documentSnapshot.data());   
+               querySnapshot.forEach( documentSnapshot => {    
+                  const data = documentSnapshot.data();
+                  data.id = documentSnapshot.id              
+                  ProductsList.push(data);   
                   temp = Number(documentSnapshot.data().quantity) + Number(temp); 
                });    
                setStockCounter(temp)    
@@ -364,7 +364,7 @@ const ProductsScreen = ({navigation}) => {
                   style={{flex: 1,backgroundColor: '#fafafa', borderTopLeftRadius: 30, borderTopRightRadius: 30, marginTop: 20}}>
                   <FlatList 
                      data = {productData.filteredProducts}
-                     keyExtractor = {item => String(item.product_code)}
+                     keyExtractor = {item => item.id}
                      renderItem = { ({item}) =>          
                         <ProductCard items={item}/>                                    
                      }

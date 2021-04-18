@@ -12,6 +12,7 @@ import * as Animatable from 'react-native-animatable';
 
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icons from 'react-native-vector-icons/SimpleLineIcons';
 import ProductInfo from "./ProductInfo";
 
 // const ProductsList = require('../../models/Products.json');
@@ -23,13 +24,26 @@ const ProductCard = ({items}) => {
    const numbering = num => {
       let x = num;
       x=x.toString();
-      let lastThree = x.substring(x.length-3);
-      const otherNumbers = x.substring(0,x.length-3);
-      if(otherNumbers != '')
-         lastThree = ',' + lastThree;
-      const val = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree; 
-      return val;
-   }  
+      // x=x.split('.')[0];
+      let y = 0;
+      if(x.includes('.')){
+         y = '.'+x.split('.')[1]
+         x = x.split('.')[0]
+         let lastThree = x.substring(x.length-3);
+         const otherNumbers = x.substring(0,x.length-3);
+         if(otherNumbers != '')
+            lastThree = ',' + lastThree;
+         const val = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree; 
+         return (val+y);
+      } else {
+         let lastThree = x.substring(x.length-3);
+         const otherNumbers = x.substring(0,x.length-3);
+         if(otherNumbers != '')
+            lastThree = ',' + lastThree;
+         const val = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree; 
+         return (val);
+      }
+   } 
 
    return(
       <View>
@@ -52,23 +66,23 @@ const ProductCard = ({items}) => {
                               {
                                  fontStyle: 'italic', 
                                  fontSize: 16, 
-                                 color: items.quantity <= 50 ? 'red' : 'green'
+                                 color: items.quantity <= 20 ? '#f04149' : '#06c452'
                               }]}>
                               Stocks: {numbering(items.quantity)}  
                            <Icon 
-                              name={ items.quantity <= 50 ? "arrow-down" : "arrow-up"} 
-                              color={items.quantity <= 50 ? "red" : "green"}
+                              name={ items.quantity <= 20 ? "arrow-down" : "arrow-up"} 
+                              color={items.quantity <= 20 ? "#f04149" : "#06c452"}
                               size={15}
                            />
                            {
-                              items.quantity <= 50 ?
-                              <View style={{paddingHorizontal: 5, borderRadius: 20, backgroundColor: 'red'}}>
+                              items.quantity <= 20 ?
+                              <View style={{paddingHorizontal: 5, borderRadius: 20, backgroundColor: '#f04149'}}>
                                  <Text style={[styles.texts, {fontStyle: 'italic', color: '#fff', fontSize: 12, fontWeight: '700'}]}>Low</Text>
                               </View> :
                               null
                            }
                            </Text>
-                        <Text style={[styles.texts, {fontWeight: '700'}]}>Rs. {numbering(items.market_price)}</Text>
+                        <Text style={[styles.texts, {fontWeight: '700'}]}>Rs. {numbering(items.cost_price)}</Text>
                      </View>
                   </View>                 
                </View>         

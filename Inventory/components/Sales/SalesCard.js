@@ -21,18 +21,37 @@ const SalesCard = ({items}) => {
    const numbering = num => {
       let x = num;
       x=x.toString();
-      let lastThree = x.substring(x.length-3);
-      const otherNumbers = x.substring(0,x.length-3);
-      if(otherNumbers != '')
-         lastThree = ',' + lastThree;
-      const val = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree; 
-      return val;
+      // x=x.split('.')[0];
+      let y = 0;
+      if(x.includes('.')){
+         y = '.'+x.split('.')[1]
+         x = x.split('.')[0]
+         let lastThree = x.substring(x.length-3);
+         const otherNumbers = x.substring(0,x.length-3);
+         if(otherNumbers != '')
+            lastThree = ',' + lastThree;
+         const val = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree; 
+         return (val+y);
+      } else {
+         let lastThree = x.substring(x.length-3);
+         const otherNumbers = x.substring(0,x.length-3);
+         if(otherNumbers != '')
+            lastThree = ',' + lastThree;
+         const val = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree; 
+         return (val);
+      }
    }
 
    const [soldProductDetailModal, setSoldProductDetailModal] = useState(false);
 
    const date = items.last_updated.toDate();
    // console.log(date.toDateString())
+   let profit = null;
+   if(items.discount == null){
+      profit = (parseFloat(items.cost_price) - parseFloat(items.selling_price)) * parseInt(items.sold_quantity)
+   } else {
+      profit = (parseFloat(items.cost_price) - ((parseFloat(items.discount)/100) * parseInt(items.cost_price) )) * parseInt(items.sold_quantity)
+   }
 
    return(
       <View>
@@ -41,7 +60,7 @@ const SalesCard = ({items}) => {
                <View style={styles.cardContent}>  
                   <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', borderRightWidth: 2,borderRightColor: '#078bab'}}>
                      <Icon                     
-                        name="badge-account-outline" 
+                        name="cart-arrow-up" 
                         color="#078bab" 
                         size={35}
                      />                     
@@ -54,7 +73,7 @@ const SalesCard = ({items}) => {
                         </View>
                         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                               <Text style={styles.texts}>Sold Qty: <Text style={{fontWeight: '700'}}>{items.sold_quantity}</Text></Text>
-                              <Text style={[styles.texts,{marginRight:10}]}>Rs. {numbering(items.price)}</Text>
+                              <Text style={[styles.texts,{marginRight:10}]}>Rs. {numbering(items.selling_price)}</Text>
                         </View>
                         <View style={{flexDirection: 'row',justifyContent:'space-between',alignItems:'center'}}>
                             <Text style={[styles.texts, {fontStyle: 'italic'}]}>{date.toDateString()}</Text>
@@ -64,7 +83,7 @@ const SalesCard = ({items}) => {
                                           color='#078bab'
                                           size={20}
                                        />
-                                 Rs. {numbering(items.total)}</Text> 
+                                 Rs. {numbering(profit)}</Text> 
                         </View>
                      </View> 
                </View>         

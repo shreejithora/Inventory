@@ -49,6 +49,13 @@ const AddSales = (props) => {
 
   const [validProduct, setValidProduct] = useState(true)
 
+  const [discount, setDiscount] = useState({
+     discount: '',
+     validDiscount: true
+  })
+
+  const [costPrice, setCostPrice] = useState('')
+
    const [list, setList] = useState(false)
 
    const [proList, setProList] = useState(false)
@@ -60,7 +67,7 @@ const AddSales = (props) => {
    const [stock, setStock] = useState(0);
 
    useEffect( () => {
-      const ok = async() => {
+      setTimeout( async() =>{
          ProductsList = [];
          CustomersList = [];
          try{            
@@ -69,7 +76,9 @@ const AddSales = (props) => {
                .get()
                .then( querySnapshot => {
                   querySnapshot.forEach( documentSnapshot => {
-                     ProductsList.push(documentSnapshot.data())
+                     const data = documentSnapshot.data();
+                     data.product_id = documentSnapshot.id
+                     ProductsList.push(data)
                   })
                })
             await firestore()            
@@ -77,14 +86,44 @@ const AddSales = (props) => {
                .get()
                .then( querySnapshot => {
                   querySnapshot.forEach( documentSnapshot => {
-                     CustomersList.push(documentSnapshot.data())
+                     const data = documentSnapshot.data();
+                     data.customer_id = documentSnapshot.id;
+                     CustomersList.push(data)
                   })
                })              
          } catch(e) {
             console.log(e)
          }
-      }    
-      ok();
+      }, 1000);
+      // const ok = async() => {
+      //    ProductsList = [];
+      //    CustomersList = [];
+      //    try{            
+      //       await firestore()
+      //          .collection('Products')
+      //          .get()
+      //          .then( querySnapshot => {
+      //             querySnapshot.forEach( documentSnapshot => {
+      //                const data = documentSnapshot.data();
+      //                data.product_id = documentSnapshot.id
+      //                ProductsList.push(data)
+      //             })
+      //          })
+      //       await firestore()            
+      //          .collection('Customers')
+      //          .get()
+      //          .then( querySnapshot => {
+      //             querySnapshot.forEach( documentSnapshot => {
+      //                const data = documentSnapshot.data();
+      //                data.customer_id = documentSnapshot.id;
+      //                CustomersList.push(data)
+      //             })
+      //          })              
+      //    } catch(e) {
+      //       console.log(e)
+      //    }
+      // }    
+      // ok();
    }, [])
    
    const handleCustomerChange = (val) => {     
@@ -121,6 +160,22 @@ const AddSales = (props) => {
       setCustomer({customerName: val});
    }
 
+   const handleDiscountChange = val => {
+      if( /\D/.test(val) || parseInt(val) < 0 ){
+         setDiscount({
+            ...discount,
+            discount: val,
+            validDiscount: false
+         })
+      } else {
+          setDiscount({
+            ...discount,
+            discount: val,
+            validDiscount: true
+         })
+      }
+   }
+
    const handleProductCodeChange = (val) => {
 
       const foundProduct = ProductsList.filter( item => {
@@ -139,8 +194,9 @@ const AddSales = (props) => {
       if ( cuslen == 1) {
          setProduct(val)
          setProductName(isValidProduct[0].product_name)
-         setPrice(isValidProduct[0].market_price) 
-         setStock(isValidProduct[0].quantity)        
+         setPrice(isValidProduct[0].selling_price) 
+         setStock(isValidProduct[0].quantity) 
+         setCostPrice(isValidProduct[0].cost_price)       
          setValidProduct(true)
       }  else {
          setValidProduct(false)
@@ -187,7 +243,9 @@ const AddSales = (props) => {
                      return [{
                         product_name: productName, 
                         sold_qty: productQuantity.sold_quantity,
+                        cost_price: costPrice,
                         price: price,
+                        discount: discount.discount,
                         total: price * productQuantity.sold_quantity,
                      }, ...currItem];
                   });    
@@ -225,8 +283,10 @@ const AddSales = (props) => {
                            .add({
                               customer: customer.customerName,
                               product: item.product_name,
-                              price: item.price,
+                              cost_price: item.cost_price,
+                              selling_price: item.price,
                               sold_quantity: item.sold_qty,
+                              discount: discount.discount,
                               total: item.total,
                               last_updated: new Date()
                            })
@@ -236,8 +296,7 @@ const AddSales = (props) => {
                   console.log(e);
                }
                props.onAddSales(false);
-               props.stateChange();
-               Alert.alert('Sales Info Added!','Product ID:'+productID.product_id+'                                      Product Name: '+productName+'                                                            Sold Quantity: '+productQuantity.sold_quantity+'                                            Total: Rs. '+productPrice*productQuantity.sold_quantity, [{text: 'Ok'}]);
+               props.stateChange();            
             }           
          } else {
             Alert.alert('Invalid Input!','Please enter a Valid Product ID', [{text: 'Ok'}]);   
@@ -283,7 +342,23 @@ const AddSales = (props) => {
                      />
                   </View>                              
                </View>
-                  
+               <View style={styles.inputs}>
+                  {
+                     discount.validDiscount ? 
+                     null :
+                     <Animatable.Text animation="fadeIn" style={styles.errMsg}>Invalid Number
+                     </Animatable.Text> 
+                  } 
+                  <Text style={styles.texts}>Discount(%) (Optional)</Text>                  
+                  <TextInput
+                     keyboardType='numeric'
+                     style={styles.textInputs}
+                     placeholder="eg. 2.1 or 2..." 
+                     onFocus = {() => setList(true)}
+                     onChangeText={ (val) => handleDiscountChange(val)}
+                     onEndEditing = { (e) => handleDiscountChange(e.nativeEvent.text)}
+                  />                                                                 
+               </View>
                <View style={[styles.inputs, {display: addedList ? 'flex' : "none", backgroundColor: '#e6f1fa'}]}>
                   <View style={{flexDirection: 'row', padding: 5}}>
                      <Text style={{flex: 2, color: '#078bab', fontWeight: '700'}}>Name</Text>
@@ -311,8 +386,17 @@ const AddSales = (props) => {
                   <View style={{flexDirection: 'row', padding: 5}}>
                      <Text style={{flex: 4, color: '#078bab', fontWeight: '700'}}>Total</Text>  
                      <Text style={{flex: 1, color: '#078bab'}}>{total}</Text>
-                  </View>                                           
-               </View>                 
+                  </View>  
+                  <View style={{flexDirection: 'row', padding: 5}}>
+                     <Text style={{flex: 4, color: '#078bab', fontWeight: '700'}}>Discount</Text>  
+                     <Text style={{flex: 1, color: '#078bab'}}>{discount.discount} %</Text>
+                  </View>   
+                  <View style={{borderWidth: 1, borderColor: '#078bab'}}></View> 
+                  <View style={{flexDirection: 'row', padding: 5}}>
+                     <Text style={{flex: 4, color: '#078bab', fontWeight: '700'}}>Grand Total</Text>  
+                     <Text style={{flex: 1, color: '#078bab'}}>{discount.discount != 0 ? (parseFloat(total) - (parseFloat(total) * (discount.discount /100)) ): total}</Text>
+                  </View>
+               </View>                            
                <View style={styles.inputs}>
                   {  
                      validProduct ?
@@ -334,18 +418,18 @@ const AddSales = (props) => {
                      onEndEditing = { (e) => handleProductCodeChange(e.nativeEvent.text)}
                   />     
                   <View style={{display: proList ? 'flex' : 'none'}}>
-                        <FlatList 
-                           data={ProductsData}
-                           keyExtractor = { item => item.supplier_code}
-                           renderItem = { ({item}) => {
-                              return (
-                                 <TouchableOpacity style={styles.customerList} onPress={() => handleProductCodeChange(item.product_name)}>
-                                    <Text>{item.product_name}</Text>                                 
-                                 </TouchableOpacity>
-                              )                              
-                           }}
-                        />
-                     </View>                                             
+                     <FlatList 
+                        data={ProductsData}
+                        keyExtractor = { item => item.supplier_code}
+                        renderItem = { ({item}) => {
+                           return (
+                              <TouchableOpacity style={styles.customerList} onPress={() => handleProductCodeChange(item.product_name)}>
+                                 <Text>{item.product_name}</Text>                                 
+                              </TouchableOpacity>
+                           )                              
+                        }}
+                     />
+                  </View>                                             
                </View>                 
                <View style={styles.inputs}>
                   <Text style={styles.texts}>Sold Quantity</Text>
@@ -374,7 +458,7 @@ const AddSales = (props) => {
                      <Text style={styles.texts}>Product Name: <Text style={{fontWeight: '700'}}>{productName}</Text></Text>
                   </View>
                   <View style={styles.inputs} >
-                     <Text style={styles.texts}>Price: Rs. {price}</Text>
+                     <Text style={styles.texts}>Selling Price: Rs. {price}</Text>
                   </View>
                   <View style={styles.inputs} >
                      <Text style={styles.texts}><Text style={{fontWeight: '700'}}>Total: Rs. {

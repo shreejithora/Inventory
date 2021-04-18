@@ -38,7 +38,9 @@ const HomeScreen = ({navigation}) => {
           .get()
           .then( querySnapshot => {
             querySnapshot.forEach( documentSnapshot => {
-              SalesList.push(documentSnapshot.data())
+              const data = documentSnapshot.data()
+              data.id = documentSnapshot.id;
+              SalesList.push(data);
             })
             setSalesData({
               allSales: SalesList,
@@ -90,7 +92,7 @@ const HomeScreen = ({navigation}) => {
                   <FlatList
                     showsVerticalScrollIndicator={false}
                     data={salesData.filteredSales}
-                    keyExtractor={(item) => item.product}
+                    keyExtractor={(item) => item.id}
                     renderItem={({item}) => (                                             
                       <ActivityCard items={item} />                                                                      
                     )}                   

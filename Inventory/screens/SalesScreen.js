@@ -19,7 +19,7 @@ import Heads from '../components/Heads';
 import SalesCard from '../components/Sales/SalesCard';
 
 let SalesList = [];
-
+let Sales = [];
 const SalesScreen = ({navigation}) => {
 
    const [refreshing, setRefreshing] = useState(false)
@@ -27,12 +27,17 @@ const SalesScreen = ({navigation}) => {
    useEffect( () => {
       SalesList = [];
       const ok = async() => {
+         // let 
          await firestore()
             .collection('Sales')
             .get()
             .then( querySnapshot => {
                querySnapshot.forEach( documentSnapshot => {
-                  SalesList.push(documentSnapshot.data());
+                  const data = documentSnapshot.data()
+                  data.id = documentSnapshot.id
+                  SalesList.push(data);
+                  // Sales.push(data)
+                  // console.log(Sales);
                })
                setsalesData({
                   allSales: SalesList,
@@ -112,9 +117,9 @@ const SalesScreen = ({navigation}) => {
                </View> :
                <FlatList 
                   data = {salesData.filteredSales}
-                  keyExtractor = {item => item.product}
+                  keyExtractor = {item => item.id}
                   renderItem = { ({item}) =>  {
-                        return <SalesCard items={item}/>
+                        return <SalesCard items={item}/>                       
                      }                                                      
                   }
                   refreshControl={

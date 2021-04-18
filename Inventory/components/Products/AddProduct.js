@@ -7,6 +7,7 @@ import {
    TextInput,
    FlatList,
    Alert,
+   ActivityIndicator,
    } from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
@@ -32,13 +33,17 @@ const AddProduct = (props) => {
                   querySnapshot.forEach( documentSnapshot => {
                      SuppliersList.push(documentSnapshot.data())
                   })
-               })                         
+                  setSuppliersData({
+                     allSuppliers: SuppliersList,
+                     filteredSuppliers: SuppliersList
+                  })
+               })                                        
          } catch(e) {
             console.log(e)
          }         
       }
       ok();
-   })
+   }, []);
 
    const categoryData = 
    [
@@ -144,7 +149,14 @@ const AddProduct = (props) => {
 
    const [validSupplier, setValidSupplier] = useState(true)
 
-   const [SuppliersData, setSuppliersData] = useState(SuppliersList);
+   const [SuppliersData, setSuppliersData] = useState({
+      allSuppliers: SuppliersList,
+      filteredSuppliers: SuppliersList
+   });
+
+   const [loading, setLoading] = useState(false)
+
+   const [listLoading, setListLoading] = useState(false)
 
   const [ codes, setCodes] = useState({
      clothing: 100.001,
@@ -180,7 +192,7 @@ const AddProduct = (props) => {
 
    const handleQuantityChange = (val) => {   
 
-      if( /\D/.test(val) ){
+      if( /\D/.test(val) || parseInt(val) <= 0){
          setProductQuantity({
             ...productQuantity,
             product_quantity: val,
@@ -247,7 +259,7 @@ const AddProduct = (props) => {
    }
 
    const handleSupplierChange = (val) => {     
-
+      setList(true)
       const foundSupplier = SuppliersList.filter( item => {
          return (
             item.supplier_name.toLowerCase().includes(val.toLowerCase()) ||
@@ -266,15 +278,28 @@ const AddProduct = (props) => {
             ...supplier, 
             supplierName: val,
          })
+         setSuppliersData({
+            ...SuppliersData,
+            allSuppliers: isValidSupplier,
+            filteredSuppliers: isValidSupplier,
+         })
          setValidSupplier(true)         
       }  else {
          setValidSupplier(false)
       }
 
+      console.log(len, cuslen)
+
       if( len == 0 ){
-         setSuppliersData([])
+         setSuppliersData({
+            allSuppliers: [],
+            filteredSuppliers: []
+         })
       } else {
-         setSuppliersData(foundSupplier)
+         setSuppliersData({
+            allSuppliers: foundSupplier,
+            filteredSuppliers: foundSupplier
+         })
       }             
 
       setSupplier({supplierName: val});
@@ -286,6 +311,8 @@ const AddProduct = (props) => {
       setState({
          Catstatus: val
       })
+
+      setLoading(true)
 
       let len = 0;
 
@@ -372,6 +399,7 @@ const AddProduct = (props) => {
                setProductCode({product_code: temp.toFixed(3)})
             }  
          }
+         setLoading(false);
       } catch (e) {
          console.log(e)
       }
@@ -382,7 +410,7 @@ const AddProduct = (props) => {
    }
 
    const handleAddProduct = () => {
-      if ( productName.product_name != '' && productCode.product_code != null && costPrice.cost_price != null && margin.margin != null && marketPrice.market_price != null && state.Catstatus != ''){
+      if ( productName.product_name != '' && productCode.product_code != null && costPrice.cost_price != null && margin.margin != null && state.Catstatus != '', productQuantity.product_quantity != ''){
          if( productCode.product_code != null){
             if ( !productName.exists ) {
                if ( productQuantity.isValidProductQuantity ) {
@@ -401,6 +429,7 @@ const AddProduct = (props) => {
                                     cost_price: Number(costPrice.cost_price),
                                     margin: Number(margin.margin),
                                     market_price: Number(marketPrice.market_price),
+                                    selling_price: Number(parseFloat(costPrice.cost_price) + ( parseFloat(costPrice.cost_price) * (parseFloat(margin.margin)/100))),
                                     description: description,
                                     quantity: productQuantity.product_quantity,
                                     supplier: supplier.supplierName,
@@ -474,8 +503,13 @@ const AddProduct = (props) => {
                         onChangeItem={item => handleStatusChange(item.value)}
                      />
                   </View>
-               <View style={styles.inputs}>
+               <View style={[styles.inputs, {flexDirection: 'row'}]}>
                   <Text style={styles.texts}>Product code* : {productCode.product_code}</Text>
+                  {
+                     loading ?
+                     <ActivityIndicator size="small" color="#078bab" /> : 
+                     null
+                  }
                </View>  
                <View style={styles.inputs}>
                   <Text style={styles.texts}>Sub-Category(Optional)</Text>
@@ -488,6 +522,13 @@ const AddProduct = (props) => {
                   />                 
                </View>  
                 <View style={styles.inputs}>
+                {  
+                     validSupplier ?
+                     null :
+                     <Animatable.Text 
+                        animation="fadeIn"
+                        style={styles.errMsg}>Invalid Supplier</Animatable.Text> 
+                  }
                   <Text style={styles.texts}>Supplier*</Text>
                   <TextInput
                      value={supplier.supplierName}
@@ -495,25 +536,30 @@ const AddProduct = (props) => {
                      keyboardType="ascii-capable"
                      onFocus = {() => setList(true)}
                      placeholder="eg. Hari Products Pvt. Ltd. or Supplier Code " 
+                     onSubmitEditing={ () => setListLoading(true)}
                      onChangeText={ (val) => handleSupplierChange(val)}
                      onEndEditing = { (e) => handleSupplierChange(e.nativeEvent.text)}
-                  />         
-                  <View style={{display: list ? 'flex' : 'none'}}>
-                     <FlatList 
-                        data={SuppliersData}
-                        keyExtractor = { item => item.supplier_code}
-                        renderItem = { ({item}) => {
-                           return (
-                              <TouchableOpacity style={styles.SuppliersList} onPress={() => handleSupplierChange(item.supplier_name)}>
-                                 <Text>{item.supplier_name}</Text>
-                              </TouchableOpacity>
-                           )                              
-                        }}
-                     />
-                  </View>        
+                  />        
+                  {
+                     listLoading ?
+                     <ActivityIndicator size="small" color="#078bab" /> :
+                     <View style={{display: list ? 'flex' : 'none'}}>
+                        <FlatList 
+                           data={SuppliersData.filteredSuppliers}
+                           keyExtractor = { item => item.supplier_code.toString()}
+                           renderItem = { ({item}) => {
+                              return (
+                                 <TouchableOpacity style={styles.SuppliersList} onPress={() => handleSupplierChange(item.supplier_name)}>
+                                    <Text>{item.supplier_name}</Text>
+                                 </TouchableOpacity>
+                              )                              
+                           }}
+                        />
+                     </View> 
+                  }                          
                </View>             
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Quantity</Text>
+                  <Text style={styles.texts}>Quantity*</Text>
                   <TextInput
                      defaultValue='0'
                      style={styles.textInputs}
@@ -565,7 +611,10 @@ const AddProduct = (props) => {
                   }            
                </View>
                <View style={styles.inputs}>
-                  <Text style={styles.texts}>Market Price* (In Rs.)</Text>
+                  <Text style={styles.texts}>Selling Price(In Rs.): { costPrice.cost_price != null && costPrice.cost_price != '' && margin.margin != '' && margin.margin != null ? parseFloat(costPrice.cost_price) + ( parseFloat(costPrice.cost_price) * (parseFloat(margin.margin)/100)) : null}</Text>
+               </View>
+               <View style={styles.inputs}>
+                  <Text style={styles.texts}>Market Price (In Rs.)(Optional)</Text>
                   <TextInput
                      style={styles.textInputs}
                      keyboardType="numeric"
