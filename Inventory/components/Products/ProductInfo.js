@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
    desc:{
       backgroundColor:'#e6f1fa',
       marginTop:10,
-      borderRadius:10
+      borderRadius:15
    },
    infoTexts: {
       padding: 5,

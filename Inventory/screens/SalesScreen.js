@@ -82,8 +82,10 @@ const SalesScreen = ({navigation}) => {
             .collection('Sales')
             .get()
             .then( querySnapshot => {
-               querySnapshot.forEach( documentSnapshot => {                  
-                  SalesList.push(documentSnapshot.data());   
+               querySnapshot.forEach( documentSnapshot => {    
+                  const data = documentSnapshot.data();
+                  data.id = documentSnapshot.id;              
+                  SalesList.push(data);   
                });       
                setRefreshing(false) 
                setsalesData({
@@ -115,17 +117,19 @@ const SalesScreen = ({navigation}) => {
                   <Text style={styles.errorMsg}>No Match Found</Text>  
                                  
                </View> :
-               <FlatList 
-                  data = {salesData.filteredSales}
-                  keyExtractor = {item => item.id}
-                  renderItem = { ({item}) =>  {
-                        return <SalesCard items={item}/>                       
-                     }                                                      
-                  }
-                  refreshControl={
-                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                  }
-               />
+               <View style={styles.salesFlatlist}>
+                  <FlatList 
+                     data = {salesData.filteredSales}
+                     keyExtractor = {item => item.id}
+                     renderItem = { ({item}) =>  {
+                           return <SalesCard items={item}/>                       
+                        }                                                      
+                     }
+                     refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                     }
+                  />
+               </View>
             }            
          </View>      
    
@@ -217,6 +221,11 @@ const styles = StyleSheet.create({
       shadowRadius: 10,
 
       elevation: 7,
+   },
+   salesFlatlist: {
+      flex: 1,
+      paddingVertical: 10,
+      marginBottom: 10
    },
    cardContent: {
       flexDirection: 'row',

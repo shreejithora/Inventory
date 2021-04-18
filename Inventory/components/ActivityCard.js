@@ -56,12 +56,12 @@ const ActivityCard = ({items}) => {
                      />  
                   </View>
                   <View style={{flexDirection:'column', flex: 4}}>
-                     <View style= {{flexDirection: 'row', flex:1, paddingVertical: 5, alignItems: 'center'}}>
-                        <Text style={[styles.cardTitle, {flex: 1.1, textAlign: 'left'}]}>{ items.customer.length > 13 ? items.customer.slice(0,12)+'...' : items.customer}</Text>                            
-                        <Text style={[styles.cardTitle, {flex: 1, textAlign: 'right', color: '#07a63a'}]}>+ Rs. {numbering(items.grand_total)}</Text>
+                     <View style= {{flexDirection: 'row', flex:1, paddingVertical: 5, alignItems: 'center', justifyContent: 'space-between'}}>
+                        <Text style={[styles.cardTitle, {textAlign: 'left'}]}>{ items.customer.length > 13 ? items.customer.slice(0,12)+'...' : items.customer}</Text>   
+                        <Text style={[styles.cardTitle, { textAlign: 'right', color: '#07a63a'}]}>+ Rs. {numbering(items.grand_total.toFixed(1))}</Text>                                                 
                      </View>  
-                     <View style={{flexDirection: 'row', flex: 1, alignItems: 'center'}}>
-                        <Text style={[styles.cardTitle, {flex: 1, textAlign: 'right',  fontStyle: 'italic', fontWeight: '200', fontSize: 14}]}>{date.toDateString()}</Text>
+                     <View style={{flexDirection: 'row', flex: 1, alignItems: 'center', justifyContent: 'space-between'}}>
+                        <Text style={[styles.cardTitle, { textAlign: 'right',  fontStyle: 'italic', fontWeight: '200', fontSize: 14}]}>{date.toDateString()}</Text>
                      </View>           
                   </View>
                </View>  

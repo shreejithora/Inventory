@@ -7,6 +7,7 @@ import {
    TextInput,
    Alert,
    FlatList,
+   ActivityIndicator,
    } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
@@ -66,7 +67,11 @@ const AddSales = (props) => {
 
    const [productID, setProductID] = useState('');
 
-   const [customerID, setCustomerID] =useState('');
+   const [customerID, setCustomerID] = useState('');
+
+   // const [salesID, setSalesID] = useState('');
+
+   const [addingSales, setAddingSales] = useState(false);
 
    const [stock, setStock] = useState(0);
 
@@ -174,7 +179,7 @@ const AddSales = (props) => {
          setPrice(isValidProduct[0].selling_price) 
          setStock(isValidProduct[0].quantity) 
          setCostPrice(isValidProduct[0].cost_price)   
-         setProductID(isValidProduct[0].id)    
+         setProductID(isValidProduct[0].product_id)    
          setValidProduct(true)
       }  else {
          setValidProduct(false)
@@ -251,34 +256,42 @@ const AddSales = (props) => {
    }
    
    const handleAddSales = async() => {
+      setAddingSales(true)
       if (customer.customerName != '' && selectedProduct.length != 0 ){             
          if ( validCustomer ){
             try{
-               selectedProduct.forEach( item => {                                      
-                  firestore()
-                  .collection('SalesProducts')
-                  .add({
-                     customer: customer.customerName,
-                     customer_id: customerID,
-                     product_id: item.product_id,
-                     product: item.product_name,
-                     cost_price: item.cost_price,
-                     selling_price: item.price,
-                     sold_quantity: item.sold_qty,
-                     discount: discount.discount,
-                     total: item.total,
-                     last_updated: new Date()
-                  })                                                  
-               })  
-               firestore()
+               let salesID = "";
+               await firestore()
                   .collection('Sales')
                   .add({
                      customer: customer.customerName,
                      customer_id: customerID,
                      discount: discount.discount,
-                     grand_total: total,
+                     total: total,
+                     grand_total: total - ((discount.discount/100) * total),
                      uploaded_at: new Date()
                   })
+                  .then( doc => {                     
+                     salesID = doc.id
+                  })
+               selectedProduct.forEach( item => {                                      
+                  firestore()
+                     .collection('SalesProducts')
+                     .add({
+                        sales_id: salesID,
+                        customer: customer.customerName,
+                        customer_id: customerID,
+                        product_id: item.product_id,
+                        product: item.product_name,
+                        cost_price: item.cost_price,
+                        selling_price: item.price,
+                        sold_quantity: item.sold_qty,
+                        discount: discount.discount,
+                        total: item.total,
+                        last_updated: new Date()
+                     })                                                  
+                  })    
+                  setAddingSales(false)                            
             } catch(e) {
                console.log(e);
             }
@@ -464,6 +477,11 @@ const AddSales = (props) => {
                >
                   <Icon name="cart-plus" size={30} color='#fff' />
                   <Text style={[styles.texts,{color: '#fff', fontWeight: 'bold', marginLeft: 5}]}>Add Sales </Text>
+                  {
+                     addingSales ?
+                     <ActivityIndicator size="small" color="#fff" /> :
+                     null
+                  }                  
                </TouchableOpacity>   
             </View>                           
          </View>                                                                  

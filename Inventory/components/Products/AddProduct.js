@@ -19,11 +19,12 @@ import { ScrollView } from "react-native-gesture-handler";
 import DropDownPicker from 'react-native-dropdown-picker';
 
 let SuppliersList =[];
+let ProductsList = [];
 
 const AddProduct = (props) => {
 
    useEffect( () => {
-      const ok = async() => {
+      setTimeout( async() => {
          SuppliersList = [];
          try{            
             await firestore()
@@ -37,12 +38,19 @@ const AddProduct = (props) => {
                      allSuppliers: SuppliersList,
                      filteredSuppliers: SuppliersList
                   })
-               })                                        
+               }) 
+            await firestore()
+               .collection('Products')
+               .get()
+               .then( querySnapshot => {
+                  querySnapshot.forEach( documentSnapshot => {
+                     ProductsList.push(documentSnapshot.data())
+                  })                  
+               })                                         
          } catch(e) {
             console.log(e)
-         }         
-      }
-      ok();
+         }
+      }, 1000)      
    }, []);
 
    const categoryData = 
@@ -158,6 +166,8 @@ const AddProduct = (props) => {
 
    const [listLoading, setListLoading] = useState(false)
 
+   const [addingProducts, setAddingProducts] = useState(false)
+
   const [ codes, setCodes] = useState({
      clothing: 100.001,
      electronics: 200.001,
@@ -168,22 +178,22 @@ const AddProduct = (props) => {
   })
 
    const handleProductNameChange = (val) => { 
-      // const foundProduct = ProductsList.filter( item => {
-      //    return item.name == val
-      // })
-      // if( foundProduct.length == 0  ){
+      const foundProduct = ProductsList.filter( item => {
+         return item.product_name.toLowerCase() == val.toLowerCase()
+      })
+      if( foundProduct.length == 0  ){
          setProductName({
             ...productName,
             product_name: val,
             exists: false
          })
-      // } else {
-      //    setProductName({
-      //       ...productName,
-      //       product_name: val,
-      //       exists: true
-      //    })
-      // }
+      } else {
+         setProductName({
+            ...productName,
+            product_name: val,
+            exists: true
+         })
+      }
    }   
 
    const handleSubCategory = (val) => {
@@ -417,7 +427,7 @@ const AddProduct = (props) => {
                   if(  costPrice.isValidCostPrice ) {
                      if( margin.isValidMargin ) {
                         if( marketPrice.isValidMarketPrice ) {
-                           props.onAddProduct(false);
+                           setAddingProducts(true)
                            try{                        
                               firestore()
                                  .collection('Products')
@@ -434,15 +444,14 @@ const AddProduct = (props) => {
                                     quantity: productQuantity.product_quantity,
                                     supplier: supplier.supplierName,
                                     product_updated: [new Date()]
-                                 }). then( () => {
-                                    // Alert.alert('Product Added!','Product Code:'+productCode.product_code+'  with Product Name: '+productName.product_name, [{text: 'Ok'}]);
-                                    // setProductAddedModal(true)
+                                 }). then( () => {                                 
                                     props.stateChange(productName.product_name, productCode.product_code)
+                                    setAddingProducts(false)
+                                    props.onAddProduct(false);
                                  })
                            } catch(e) {
                               console.log(e)
-                           }
-                           
+                           }                                                      
                         } else {
                            Alert.alert('Invalid Input!','Please enter a Valid Market Price for the product', [{text: 'Ok'}]);
                         }
@@ -459,7 +468,7 @@ const AddProduct = (props) => {
                Alert.alert('Invalid input', 'Please enter a Valid Product Name. Such name already exists', [{text: 'Ok'}]);
             }
          } else {
-            Alert.alert('Invalid input', 'Please enter a Valid Product ID', [{text: 'Ok'}]);
+            Alert.alert('Invalid input', 'Please enter a Valid Product Code', [{text: 'Ok'}]);
          }
       } else {
          Alert.alert('Invalid input', 'All fields should filled.', [{text: 'Ok'}]);
@@ -647,6 +656,11 @@ const AddProduct = (props) => {
                >
                   <Icon name="cart-plus" size={30} color='#fff' />
                   <Text style={[styles.texts,{color: '#fff', fontWeight: 'bold', marginLeft: 5}]}>Add Product </Text>
+                  {
+                     addingProducts ?
+                     <ActivityIndicator size="small" color="#fff" /> :
+                     null
+                  }  
                </TouchableOpacity>                                
             </View> 
          </View>                                                                  

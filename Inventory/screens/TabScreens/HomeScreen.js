@@ -66,15 +66,38 @@ const HomeScreen = ({navigation}) => {
           <HomeCard iconName={'cash-minus'} income={0} expense={1} tabName={'Entries'} cardName={'Expense'} nav={navigation}/> 
           <HomeCard iconName={'truck-fast-outline'} cus={0} sup={1} tabName={'Vendors'} cardName={'Suppliers'} nav={navigation}/> 
           <HomeCard iconName={'account-multiple-outline'} cus={1} sup={0} tabName={'Vendors'} cardName={'Customers'} nav={navigation}/>                                         
-        </ScrollView>   
-        {/* <TouchableOpacity onPress={() => console.log('hi')}>
-          <Icon name="arrow-right" size={25} color='#078bab' style={{alignSelf: 'flex-end', marginRight: 20}} />
-        </TouchableOpacity>        */}
+        </ScrollView>       
       </View>   
 
       {/* Table of Cards */}
-      {/* <ScrollView> */}
+      <ScrollView>
        <View style={styles.mainActitivity}>
+        <View style={styles.activityTopic}>
+            <Text style={styles.activityTopicText}>Low stocks</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Sales')}>
+            <Text style={[styles.activityTopicText, {fontSize: 12}]}>View All</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{paddingBottom: 50}}>
+            <View style={styles.activityView}>                                  
+              <View style={styles.activityCard}>              
+                {/* {
+                  isLoading ? */}
+                  {/* <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <ActivityIndicator size="large" color="#078bab" />
+                  </View>  */}
+                  {/* <FlatList
+                    showsVerticalScrollIndicator={false}
+                    data={salesData.filteredSales}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({item}) => (                                             
+                      <ActivityCard items={item} />                                                                      
+                    )}                   
+                  />                                             
+                } */}
+              </View>                           
+            </View> 
+          </View>
           <View style={styles.activityTopic}>
             <Text style={styles.activityTopicText}>Activity</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Sales')}>
@@ -94,7 +117,7 @@ const HomeScreen = ({navigation}) => {
                     data={salesData.filteredSales}
                     keyExtractor={(item) => item.id}
                     renderItem={({item}) => (                                             
-                      <ActivityCard items={item} />                                                                      
+                      <ActivityCard items={item} />  
                     )}                   
                   />                                             
                 }
@@ -102,7 +125,7 @@ const HomeScreen = ({navigation}) => {
             </View> 
           </View>
         </View>
-      {/* </ScrollView>   */}
+      </ScrollView>  
     </View>
   )
 }
@@ -132,7 +155,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     width: '90%',
-    height: '80%',
+    height: '70%',
     shadowColor: "#000",
     shadowOffset: {
         width:  2,

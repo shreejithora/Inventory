@@ -44,13 +44,6 @@ const SalesCard = ({items}) => {
 
    const date = items.uploaded_at.toDate();
 
-   // let profit = null;
-   // if(items.discount == null){
-   //    profit = (parseFloat(items.cost_price) - parseFloat(items.selling_price)) * parseInt(items.sold_quantity)
-   // } else {
-   //    profit = (parseFloat(items.cost_price) - ((parseFloat(items.discount)/100) * parseInt(items.cost_price) )) * parseInt(items.sold_quantity)
-   // }
-
    return(
       <View>
          <Animatable.View animation="fadeInUp" duration={1000} style={styles.card}>
@@ -64,18 +57,15 @@ const SalesCard = ({items}) => {
                      />                     
                   </View>
                   <View style={{flexDirection: 'column', flex: 4, marginLeft: 10, padding: 5}}> 
-                        <View style={{marginBottom: 5}}>
-                           <Text style={[styles.cardTitle, {flex: 3, textAlign: 'left', fontWeight: '700'}]}>
-                              {items.customer}
-                           </Text>                  
+                        <View style={{marginBottom: 5, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center'}}>
+                           <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left', fontWeight: '700'}]}>
+                              {items.customer.length > 15 ? items.customer.slice(0,15)+'...' : items.customer}
+                           </Text>                                          
                         </View>
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>                             
-                              <Text style={[styles.texts,{marginRight:10}]}>Rs. {numbering(items.grand_total)}</Text>
-                        </View>
-                        <View style={{flexDirection: 'row',justifyContent:'space-between',alignItems:'center'}}>
-                            <Text style={[styles.texts, {fontStyle: 'italic'}]}>{date.toDateString()}</Text>
-                              
-                        </View>
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between', marginRight: 5, alignItems: 'center'}}>                             
+                              <Text style={[styles.texts, {fontStyle: 'italic', color: '#8c8f8d', fontSize: 14}]}>{date.toDateString()}</Text>
+                              <Text style={[styles.texts,{fontSize: 16, fontWeight: '700'}]}>Rs. {numbering(items.grand_total.toFixed(1))}</Text>                                                               
+                        </View>                        
                      </View> 
                </View>         
             </TouchableOpacity>
@@ -92,20 +82,20 @@ const SalesCard = ({items}) => {
             animationInTiming={500}
             animationOutTiming={300}> 
             <View style={styles.modalView}>                         
-               <SalesInfo item={items}/>  
-               <View style={{flexDirection: 'row',justifyContent: 'space-between', bottom: 0, right: 0}}>
-                  <Animatable.View 
-                     animation="fadeInLeft"
-                     duration={1000}
-                     style={styles.history}>    
-                     <Icon                         
-                        name="progress-clock" 
-                        color="#078bab" 
-                        size={20} 
-                     />              
-                     <Text style={[styles.cardTitle, {marginLeft: 5, fontWeight: '700', fontSize: 18}]}>View History</Text>
-                  </Animatable.View>
+               <SalesInfo items={items}/>  
+               <View style={{flexDirection: 'row',justifyContent: 'space-between', bottom: 0, right: 0}}>                  
                   <View style={{alignSelf: 'flex-end', position:'absolute', bottom: 20, right: 20 }}>
+                     <Animatable.View 
+                        animation = "fadeInUpBig"
+                        duration = {1000}
+                     >
+                        <Icon 
+                           style={[styles.buttonIcon, {marginBottom: 10}]} 
+                           name="share" 
+                           color="#078bab" 
+                           size={30}  
+                        />
+                     </Animatable.View>
                      <Animatable.View 
                         animation = "fadeInUpBig"
                         duration = {1000}
@@ -156,11 +146,20 @@ const styles = StyleSheet.create({
       fontSize: 18,
    },
    card: {
-      paddingVertical: 10,
+      padding: 10,
       backgroundColor: '#fafafa',
       flex: 1,
-      marginHorizontal: 17,
-      marginTop:5
+      marginHorizontal: 10,
+      marginVertical: 10,
+
+      shadowColor: "#000",
+      shadowOffset: {
+         width:  10,
+         height: 10,
+      },
+      shadowOpacity: 0.8,
+      shadowRadius: 16,
+      elevation: 7
    },
    cardContent: {
       flex: 1,
