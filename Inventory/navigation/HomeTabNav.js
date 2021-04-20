@@ -84,7 +84,7 @@ const EntriesStackScreen=({navigation, route})=>{
 const ProductsStackScreen=({route, navigation})=>{
    return(
    <ProductsStack.Navigator headerMode="none">
-      <ProductsStack.Screen name="ProductsScreen" children = {() => <ProductsScreen filter={route.params}/>}/>
+      <ProductsStack.Screen name="ProductsScreen" children = {() => <ProductsScreen filter={route.params} navigation={navigation}/>}/>
    </ProductsStack.Navigator>
    )
 }

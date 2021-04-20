@@ -21,11 +21,27 @@ import UpdateProductInfo from './UpdateProductInfo';
 
 const ProductCard = ({items}) => {
 
+   const [state, setState] = useState({
+      product_name: '',
+      quantity: '',
+      cost_price: '',
+      margin: '',
+      selling_price: '',
+      market_price: '',
+      supplier: '',
+      description: '',
+      date: new Date()
+   })
+
    const [productDetailModal, setProductDetailModal] = useState(false);  
 
    const [deleteProductModal, setDeleteProductModal] = useState(false) 
 
    const [updateProduct, setUpdateProduct] = useState(false)
+
+   const [updateProductModal, setUpdateProductModal] = useState(false)
+
+   const [update, setUpdate] = useState(false)
 
    const numbering = num => {
       let x = num;
@@ -69,6 +85,58 @@ const ProductCard = ({items}) => {
 
    const handleBackButton = () => {
       setProductDetailModal(false)
+      setUpdateProduct(false)
+   }
+
+   const handleUpdateProduct = (product_name, quantity, cost_price, margin, selling_price, market_price, supplier, description) => {
+      setUpdateProductModal(true)
+      setState({
+         ...state,
+         product_name: product_name,
+         quantity: quantity,
+         cost_price: cost_price,
+         margin: margin,
+         selling_price: selling_price,
+         market_price: market_price,
+         supplier: supplier,
+         description: description
+      })      
+   }
+
+   const handleUpdate = async() => {
+      setUpdateProductModal(false)
+      try{
+         await firestore()
+            .collection('Products')
+            .doc(items.id)
+            .update({
+               product_name: state.product_name,
+               cost_price: Number(state.cost_price),
+               margin: Number(state.margin),
+               market_price: Number(state.market_price),
+               selling_price: Number(parseFloat(state.cost_price) + ( parseFloat(state.cost_price) * (parseFloat(state.margin)/100))),
+               description: state.description,
+               quantity: state.quantity,
+               supplier: state.supplier,
+               product_updated: firestore.FieldValue.arrayUnion(state.date)
+            })
+            .then( () => {                                 
+               // setUpdatingProducts(false)
+               setUpdateProduct(false);
+               setProductDetailModal(false)
+               Alert.alert('Product Updated');
+            })
+      } catch(e) {
+         console.log(e)
+      }
+   }
+
+   const handleCancel = () => {
+      setUpdateProductModal(false)
+      setUpdate(false)
+   }
+
+   const onUpdateProduct = () => {
       setUpdateProduct(false)
    }
 
@@ -130,25 +198,13 @@ const ProductCard = ({items}) => {
             <View style={styles.modalView}>  
                {
                   updateProduct ?
-                  <UpdateProductInfo item={items}/> :
+                  <UpdateProductInfo item={items} handleUpdateProducts={handleUpdateProduct} update={update} onUpdateProduct={onUpdateProduct} /> :
                   <ProductInfo item={items}/> 
                }                                      
                <View style={{flexDirection: 'row',justifyContent: 'space-between', bottom: 0, right: 0}}>        
                   {
                      updateProduct ?
-                     <View style={{alignSelf: 'flex-end', position:'absolute', bottom: 20, right: 20 }}>                  
-                        <Animatable.View 
-                           animation = "fadeInUpBig"
-                           duration = {1000}
-                        >
-                           <Icon 
-                              style={[styles.buttonIcon, {marginBottom: 10}]} 
-                              name="check" 
-                              color="#078bab" 
-                              size={30}  
-                              onPress={() => {}}
-                           />
-                        </Animatable.View>                     
+                     <View style={{alignSelf: 'flex-end', position:'absolute', bottom: 20, right: 20 }}>                                                             
                         <Animatable.View
                            animation = "fadeInUpBig"
                            duration = {600}
@@ -234,6 +290,36 @@ const ProductCard = ({items}) => {
                </View>               
             </View>                                           
          </Modal>
+         <Modal 
+            style={styles.modal3}
+            isVisible={updateProductModal} 
+            transparent={true} 
+            animationIn='slideInUp' 
+            animationOut='slideOutDown'
+            onBackButtonPress = {() => setUpdateProductModal(false)}
+            backdropTransitionInTiming={500}
+            backdropTransitionOutTiming={500}
+            animationInTiming={500}
+            animationOutTiming={500}> 
+            <View style={[styles.modalView, {alignItems: 'center'  }]}>       
+               <Icon 
+                  style={styles.buttonIcon1}
+                  name="close"
+                  size={30}
+                  color="#078bab"                                   
+                  onPress={ () => setUpdateProductModal(false)}
+               />     
+               <Text style={[styles.texts, {fontWeight: '700', marginVertical: 10}]}>Update ?</Text>
+               <View style={{flexDirection: 'row', marginTop: 15}}>
+                  <TouchableOpacity style={styles.button} onPress={() => handleCancel()}>
+                     <Text style={[styles.texts, {fontWeight: '700', color: '#078bab'}]}>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={[styles.button, {backgroundColor: '#078bab'}]} onPress={ () => handleUpdate()}>
+                     <Text style={[styles.texts, {fontWeight: '700', color: '#fff'}]}>Update</Text>
+                  </TouchableOpacity>
+               </View>               
+            </View>                                           
+         </Modal>   
       </View>             
    )
 }
@@ -273,7 +359,7 @@ const styles = StyleSheet.create({
    detailModal: {
       position: 'relative',
       flex: 1,
-      borderRadius: 30,
+      // borderRadius: 30,
       margin: 0,
       backgroundColor: '#fff',
    },
