@@ -5,21 +5,27 @@ import {
   Text, 
   TouchableOpacity, 
   StyleSheet,
-  Image
+  Image,
+  Alert
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
 
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icons from 'react-native-vector-icons/SimpleLineIcons';
+import firestore from '@react-native-firebase/firestore';
 import ProductInfo from "./ProductInfo";
+import UpdateProductInfo from './UpdateProductInfo';
 
 // const ProductsList = require('../../models/Products.json');
 
 const ProductCard = ({items}) => {
 
-   const [productDetailModal, setProductDetailModal] = useState(false);   
+   const [productDetailModal, setProductDetailModal] = useState(false);  
+
+   const [deleteProductModal, setDeleteProductModal] = useState(false) 
+
+   const [updateProduct, setUpdateProduct] = useState(false)
 
    const numbering = num => {
       let x = num;
@@ -44,6 +50,27 @@ const ProductCard = ({items}) => {
          return (val);
       }
    } 
+
+   const handleDelete = async(id) => {
+      setDeleteProductModal(false)
+      try{
+         await firestore()
+            .collection('Products')
+            .doc(id)
+            .delete()
+            .then( () =>{
+                  setProductDetailModal(false) 
+                  Alert.alert('Deleted Successfully!', 'Product: '+items.product_name, [{text: 'Ok'}]);
+            })
+      } catch(e) {
+         console.log(e)
+      }           
+   }
+
+   const handleBackButton = () => {
+      setProductDetailModal(false)
+      setUpdateProduct(false)
+   }
 
    return(
       <View>
@@ -92,7 +119,7 @@ const ProductCard = ({items}) => {
          <Modal 
             style={styles.detailModal}
             isVisible={productDetailModal} 
-            onBackButtonPress = {() => setProductDetailModal(!productDetailModal)}
+            onBackButtonPress = {handleBackButton}
             transparent={true} 
             animationIn='slideInUp' 
             animationOut='slideOutUp'
@@ -100,57 +127,111 @@ const ProductCard = ({items}) => {
             backdropTransitionOutTiming={300}
             animationInTiming={500}
             animationOutTiming={300}> 
-            <View style={styles.modalView}>                         
-               <ProductInfo item={items}/> 
-               <View style={{flexDirection: 'row',justifyContent: 'space-between', bottom: 0, right: 0}}>
-                     <Animatable.View 
-                        animation="fadeInLeft"
-                        duration={1000}
-                        style={styles.history}>    
-                        <Icon                         
-                           name="progress-clock" 
-                           color="#078bab" 
-                           size={20} 
-                        />              
-                        <Text style={[styles.cardTitle, {marginLeft: 5, fontWeight: '700', fontSize: 18}]}>View History</Text>
-                     </Animatable.View>
-                  <View style={{alignSelf: 'flex-end', position:'absolute', bottom: 20, right: 20 }}>
-                     <Animatable.View 
-                        animation = "fadeInUpBig"
-                        duration = {1000}
-                     >
-                        <Icon 
-                           style={[styles.buttonIcon, {marginBottom: 10}]} 
-                           name="delete-outline" 
-                           color="#078bab" 
-                           size={30}  
-                        />
-                     </Animatable.View>
-                     <Animatable.View 
-                        animation = "fadeInUpBig"
-                        duration = {800}
-                     >
-                        <Icon 
-                           style={[styles.buttonIcon, {marginBottom: 10}]} 
-                           name="pencil-outline" 
-                           color="#078bab" 
-                           size={30}  
-                        />
-                     </Animatable.View>
-                     <Animatable.View
-                        animation = "fadeInUpBig"
-                        duration = {600}
-                     >
-                        <Icon 
-                           style={styles.buttonIcon}
-                           name="close"
-                           size={30}
-                           color="#078bab"                                   
-                           onPress={ () => setProductDetailModal(false)}
-                        />
-                     </Animatable.View>                  
-                  </View>  
+            <View style={styles.modalView}>  
+               {
+                  updateProduct ?
+                  <UpdateProductInfo item={items}/> :
+                  <ProductInfo item={items}/> 
+               }                                      
+               <View style={{flexDirection: 'row',justifyContent: 'space-between', bottom: 0, right: 0}}>        
+                  {
+                     updateProduct ?
+                     <View style={{alignSelf: 'flex-end', position:'absolute', bottom: 20, right: 20 }}>                  
+                        <Animatable.View 
+                           animation = "fadeInUpBig"
+                           duration = {1000}
+                        >
+                           <Icon 
+                              style={[styles.buttonIcon, {marginBottom: 10}]} 
+                              name="check" 
+                              color="#078bab" 
+                              size={30}  
+                              onPress={() => {}}
+                           />
+                        </Animatable.View>                     
+                        <Animatable.View
+                           animation = "fadeInUpBig"
+                           duration = {600}
+                        >
+                           <Icon 
+                              style={styles.buttonIcon}
+                              name="close"
+                              size={30}
+                              color="#078bab"                                   
+                              onPress={ () => setUpdateProduct(false)}
+                           />
+                        </Animatable.View>                  
+                     </View> :
+                     <View style={{alignSelf: 'flex-end', position:'absolute', bottom: 20, right: 20 }}>                  
+                        <Animatable.View 
+                           animation = "fadeInUpBig"
+                           duration = {1000}
+                        >
+                           <Icon 
+                              style={[styles.buttonIcon, {marginBottom: 10}]} 
+                              name="delete-outline" 
+                              color="#078bab" 
+                              size={30}  
+                              onPress={() => setDeleteProductModal(true)}
+                           />
+                        </Animatable.View>
+                        <Animatable.View 
+                           animation = "fadeInUpBig"
+                           duration = {800}
+                        >
+                           <Icon 
+                              style={[styles.buttonIcon, {marginBottom: 10}]} 
+                              name="pencil-outline" 
+                              color="#078bab" 
+                              size={30}  
+                              onPress={ () => setUpdateProduct(true)}
+                           />
+                        </Animatable.View>
+                        <Animatable.View
+                           animation = "fadeInUpBig"
+                           duration = {600}
+                        >
+                           <Icon 
+                              style={styles.buttonIcon}
+                              name="close"
+                              size={30}
+                              color="#078bab"                                   
+                              onPress={ () => setProductDetailModal(false)}
+                           />
+                        </Animatable.View>                  
+                     </View>                   
+                  }                                
                </View>                                
+            </View>                                           
+         </Modal>
+         <Modal 
+            style={styles.modal3}
+            isVisible={deleteProductModal} 
+            transparent={true} 
+            animationIn='slideInUp' 
+            animationOut='slideOutDown'
+            onBackButtonPress = {() => setDeleteProductModal(!deleteProductModal)}
+            backdropTransitionInTiming={500}
+            backdropTransitionOutTiming={500}
+            animationInTiming={500}
+            animationOutTiming={500}> 
+            <View style={[styles.modalView, {alignItems: 'center'  }]}>       
+               <Icon 
+                  style={styles.buttonIcon1}
+                  name="close"
+                  size={30}
+                  color="#078bab"                                   
+                  onPress={ () => setDeleteProductModal(false)}
+               />     
+               <Text style={[styles.texts, {fontWeight: '700', marginVertical: 10}]}>Delete ?</Text>
+               <View style={{flexDirection: 'row', marginTop: 15}}>
+                  <TouchableOpacity style={styles.button} onPress={() => setDeleteProductModal(false)}>
+                     <Text style={[styles.texts, {fontWeight: '700', color: '#078bab'}]}>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={[styles.button, {backgroundColor: '#078bab'}]} onPress={ () => handleDelete(items.id)}>
+                     <Text style={[styles.texts, {fontWeight: '700', color: '#fff'}]}>Delete</Text>
+                  </TouchableOpacity>
+               </View>               
             </View>                                           
          </Modal>
       </View>             
@@ -197,15 +278,46 @@ const styles = StyleSheet.create({
       backgroundColor: '#fff',
    },
    buttonIcon: {   
-      alignSelf: 'flex-end',
+      alignSelf: 'center',
       padding: 3, 
       backgroundColor: "#c7e6ff", 
       borderRadius: 50
    },
+   buttonIcon1: {
+      marginTop: 15, 
+      padding: 3, 
+      alignSelf: 'center', 
+      backgroundColor: "#c7e6ff", 
+      borderRadius: 50,
+      marginBottom: 5
+   },
    modalView: {
       flex: 1,
-      position: 'relative',      
+      position: 'relative',    
    },
+   texts: {
+      color: '#078bab',
+      fontSize: 20
+   },
+   modal3: {
+      // flex: 1,
+      justifyContent: 'flex-start',
+      borderTopLeftRadius: 30,
+      borderTopRightRadius: 30,
+      marginTop: 600,
+      backgroundColor: '#fff',
+      marginBottom: 0,
+      marginLeft: 0,
+      marginRight: 0
+  },
+  button: {
+     marginHorizontal: 5,
+     borderRadius: 20,
+     backgroundColor: '#e6f1fa',
+     padding: 15,
+     width: '40%',
+     alignItems: 'center'
+  },
     history: {
       padding: 5,
       alignItems: 'center',

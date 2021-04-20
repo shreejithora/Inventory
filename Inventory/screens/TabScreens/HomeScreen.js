@@ -6,19 +6,22 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
-  ActivityIndicator
+  ActivityIndicator,
+  RefreshControl
 } from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
 
 import HomeCard from '../../components/HomeCard';
 import ActivityCard from '../../components/ActivityCard';
+import LowStockCard from '../../components/LowStockCard';
 import Heads from '../../components/Heads';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useEffect } from 'react';
 import { useState } from 'react';
 
 let SalesList = [];
+let ProductsList = [];
 
 const HomeScreen = ({navigation}) => {
 
@@ -29,12 +32,22 @@ const HomeScreen = ({navigation}) => {
     filteredSales: SalesList
   })
 
+  const [productsData, setProductsData] = useState({
+    allProducts: ProductsList,
+    filteredProducts: ProductsList
+  })
+
+  const [size, setSize] = useState('');
+
+  const [refreshing, setRefreshing] = useState(false);
+
   useEffect( () => {
-    const ok = async() => {
+    setTimeout(  async() => {
       try{
         SalesList = [];
+        ProductsList = [];
         await firestore()
-          .collection('Sales')
+          .collection('Sales')          
           .get()
           .then( querySnapshot => {
             querySnapshot.forEach( documentSnapshot => {
@@ -46,14 +59,59 @@ const HomeScreen = ({navigation}) => {
               allSales: SalesList,
               filteredSales: SalesList
             })
-            setIsLoading(false)
+            
           })
+
+        await firestore()
+          .collection('Products')
+          .get()
+          .then( querySnapshot => {            
+            querySnapshot.forEach( documentSnapshot => {
+              const data = documentSnapshot.data()
+              data.id = documentSnapshot.id;              
+              if( data.quantity <= 20 ){
+                ProductsList.push(data)
+              }         
+              setSize(ProductsList.length)     
+            })
+            setProductsData({
+              allProducts: ProductsList,
+              filteredProducts: ProductsList
+            })
+          })
+          setIsLoading(false)
       } catch(e) {
         console.log(e)
       }
-    } 
-    ok();
-  })
+    }, 1000);
+  }, []);
+
+  const onRefresh = React.useCallback( async() => {
+      setRefreshing(true);
+      ProductsList = [];
+      try{         
+         await firestore()
+            .collection('Products')
+            .get()
+            .then( querySnapshot => {
+               querySnapshot.forEach( documentSnapshot => {    
+                  const data = documentSnapshot.data();
+                  data.id = documentSnapshot.id              
+                  if( data.quantity <= 20 ){
+                    ProductsList.push(data)
+                  }     
+                  setSize(ProductsList.length)
+               });      
+               setRefreshing(false) 
+               setProductsData({
+                  allProducts: ProductsList,
+                  filteredProducts: ProductsList
+               })          
+            });          
+      } catch(e) {
+         console.log(e)
+      }
+   }, [refreshing]);
 
   return(
     <View style={styles.container}>  
@@ -70,59 +128,66 @@ const HomeScreen = ({navigation}) => {
       </View>   
 
       {/* Table of Cards */}
-      <ScrollView>
-       <View style={styles.mainActitivity}>
-        <View style={styles.activityTopic}>
-            <Text style={styles.activityTopicText}>Low stocks</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Sales')}>
-            <Text style={[styles.activityTopicText, {fontSize: 12}]}>View All</Text>
-            </TouchableOpacity>
+      <ScrollView showsVerticalScrollIndicator={false}
+        refreshControl = {
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        >
+        {
+          ProductsList.length == 0 ?
+          null :
+          <View style={styles.mainActitivity}>          
+            <View style={styles.activityTopic}>
+              <Text style={[styles.activityTopicText]}>Low Stocks <Text style={{fontSize: 14}}>({size})</Text></Text>
+              <TouchableOpacity onPress={() => {navigation.navigate('Products', {filter: 'low'});}}>
+              <Text style={[styles.activityTopicText, {fontSize: 12}]}>View All</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.list}>
+              {
+                isLoading ?
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                  <ActivityIndicator size="large" color="#078bab" />
+                </View> :                  
+                <FlatList   
+                  nestedScrollEnabled            
+                  showsVerticalScrollIndicator={false}
+                  data={productsData.filteredProducts}
+                  keyExtractor={(item) => item.id}
+                  renderItem={({item}) => (                                             
+                    <LowStockCard items={item}/>  
+                  )}                   
+                />                                            
+              }              
+            </View>
           </View>
-          <View style={{paddingBottom: 50}}>
-            <View style={styles.activityView}>                                  
-              <View style={styles.activityCard}>              
-                {/* {
-                  isLoading ? */}
-                  {/* <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <ActivityIndicator size="large" color="#078bab" />
-                  </View>  */}
-                  {/* <FlatList
-                    showsVerticalScrollIndicator={false}
-                    data={salesData.filteredSales}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({item}) => (                                             
-                      <ActivityCard items={item} />                                                                      
-                    )}                   
-                  />                                             
-                } */}
-              </View>                           
-            </View> 
-          </View>
+        }       
+      
+       <View style={styles.mainActitivity}>          
           <View style={styles.activityTopic}>
             <Text style={styles.activityTopicText}>Activity</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Sales')}>
             <Text style={[styles.activityTopicText, {fontSize: 12}]}>View All</Text>
             </TouchableOpacity>
           </View>
-          <View style={{paddingBottom: 50}}>
-            <View style={styles.activityView}>                                  
-              <View style={styles.activityCard}>              
-                {
-                  isLoading ?
-                  <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <ActivityIndicator size="large" color="#078bab" />
-                  </View> :
-                  <FlatList
-                    showsVerticalScrollIndicator={false}
-                    data={salesData.filteredSales}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({item}) => (                                             
-                      <ActivityCard items={item} />  
-                    )}                   
-                  />                                             
-                }
-              </View>                           
-            </View> 
+          <View style={styles.list}>
+            {
+              isLoading ?
+              <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <ActivityIndicator size="large" color="#078bab" />
+              </View> :
+              <View>
+              <FlatList         
+                nestedScrollEnabled      
+                showsVerticalScrollIndicator={false}
+                data={salesData.filteredSales}
+                keyExtractor={(item) => item.id}
+                renderItem={({item}) => (                                             
+                  <ActivityCard items={item} />  
+                )}                   
+              />    
+              </View>                                         
+            }             
           </View>
         </View>
       </ScrollView>  
@@ -155,7 +220,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     width: '90%',
-    height: '70%',
+    height: '75%',
     shadowColor: "#000",
     shadowOffset: {
         width:  2,
@@ -179,7 +244,11 @@ const styles = StyleSheet.create({
     fontWeight: '700'
   },
   activityCard: {
-    width: '100%'
+    // width: '100%',    
+  },
+  list: {
+    height: 300,
+    paddingBottom: 15
   },
   icon: {
     padding: 5,

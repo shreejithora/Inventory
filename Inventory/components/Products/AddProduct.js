@@ -298,8 +298,6 @@ const AddProduct = (props) => {
          setValidSupplier(false)
       }
 
-      console.log(len, cuslen)
-
       if( len == 0 ){
          setSuppliersData({
             allSuppliers: [],

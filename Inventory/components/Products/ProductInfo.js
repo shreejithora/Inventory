@@ -43,12 +43,16 @@ const ProductInfo = ({item}) => {
 
                <View style={styles.infoPrice}>
                      <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Quantity:</Text> {numbering(item.quantity)}</Text>
-                     <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Cost Price:</Text> {numbering(item.cost_price)}</Text>
+                     <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Cost Price:</Text> Rs. {numbering(item.cost_price)}</Text>
                </View>
 
                <View style={styles.infoPrice}>
-                     <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Margin:</Text> {item.margin}</Text>
-                     <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Market Price:</Text> {numbering(item.market_price)}</Text>
+                     <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Margin:</Text> {item.margin}%</Text>
+                     <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Selling Price:</Text> Rs. {numbering(item.selling_price)}</Text>                     
+               </View>
+
+               <View style={styles.infoPrice}>                  
+                  <Text style={styles.infoTexts}><Text style={{fontWeight: '700'}}>Market Price:</Text> Rs. {numbering(item.market_price)}</Text>
                </View>
 
                <View style={{marginRight:20}}>

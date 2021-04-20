@@ -7,7 +7,8 @@ import {
    StyleSheet,
    FlatList,
    RefreshControl,
-   ActivityIndicator
+   ActivityIndicator,
+   Alert
 } from 'react-native';
 
 import Modal from 'react-native-modal';
@@ -27,7 +28,7 @@ import { useEffect } from 'react';
 
 let ProductsList = [];
 
-const ProductsScreen = ({navigation}) => {
+const ProductsScreen = ({filter, navigation}) => {  
 
    const FilterData = 
    [
@@ -135,7 +136,7 @@ const ProductsScreen = ({navigation}) => {
 
    const [productCounter, setProductCounter] = useState(0);
 
-   const [stockCounter, setStockCounter] = useState(0);
+   const [stockCounter, setStockCounter] = useState(0);   
 
    const [refreshing, setRefreshing] = useState(false);
 
@@ -147,17 +148,15 @@ const ProductsScreen = ({navigation}) => {
    const [stateChange, setStateChange] = useState({
       product_name: '',
       product_code: ''
-   })
-
-   // const a =0;
+   })  
 
    const [productData, setProductData] = useState({
       allProducts: null,
       filteredProducts: null
    })
 
-   useEffect( () => {    
-      const ok = async() => {
+   useEffect( () => {   
+      setTimeout( async() => {
          ProductsList = [];
             try{
             await firestore()
@@ -179,14 +178,12 @@ const ProductsScreen = ({navigation}) => {
                filteredProducts: ProductsList
             })
             setIsLoading(false)
-            setRefreshing(false)
+            setRefreshing(false)  
          } catch (e) {
             console.log(e)
          }
-      }      
-      ok();
-
-   }, []);   
+      }, 1000)      
+   }, []);      
 
    const handleStatusChange = (val) => {
       setState({
@@ -213,9 +210,9 @@ const ProductsScreen = ({navigation}) => {
       })
       const foundProduct = ProductsList.filter( item => {         
                if( val == "low"){
-                  return parseInt(item.quantity) <= 50
+                  return parseInt(item.quantity) <= 20
                } else {
-                  return parseInt(item.quantity) > 50
+                  return parseInt(item.quantity) > 20
                }
       })
 
@@ -228,10 +225,9 @@ const ProductsScreen = ({navigation}) => {
             filteredProducts: foundProduct
          })
       }     
-   }
+   }  
 
    const handleSearchText = async(textToSearch) => {
-
       try{
          const foundProduct = await ProductsList.filter( item => {
             return ( 
@@ -258,7 +254,7 @@ const ProductsScreen = ({navigation}) => {
          product_code: code
       })
       setProductAddedModal(true);
-   }
+   }  
 
    const onRefresh = React.useCallback( async() => {
       setRefreshing(true);
@@ -368,7 +364,7 @@ const ProductsScreen = ({navigation}) => {
                      data = {productData.filteredProducts}
                      keyExtractor = {item => item.id}
                      renderItem = { ({item}) =>          
-                        <ProductCard items={item}/>            
+                        <ProductCard items={item} />            
                      }
                      refreshControl={
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -438,7 +434,7 @@ const ProductsScreen = ({navigation}) => {
                   onPress={ () => setProductAddedModal(false)}
                /> 
             </View>                                           
-         </Modal>
+         </Modal>         
       </View>    
    )
 }
@@ -560,18 +556,36 @@ const styles = StyleSheet.create({
       marginLeft: 50,
       marginRight: 50
   },
+   modal3: {
+      // flex: 1,
+      justifyContent: 'flex-start',
+      borderTopLeftRadius: 30,
+      borderTopRightRadius: 30,
+      marginTop: 600,
+      backgroundColor: '#fff',
+      marginBottom: 0,
+      marginLeft: 0,
+      marginRight: 0
+  },
+  button: {
+     marginHorizontal: 5,
+     borderRadius: 20,
+     backgroundColor: '#e6f1fa',
+     padding: 15,
+     width: '40%',
+     alignItems: 'center'
+  },
   modalView: {
      flex: 1,
-     justifyContent: 'center',
+   //   justifyContent: 'center',
      alignItems: 'center'
   },
    buttonIcon: {
     marginTop: 15, 
     padding: 3, 
-    alignSelf: 'flex-end', 
+    alignSelf: 'center', 
     backgroundColor: "#c7e6ff", 
     borderRadius: 50,
-    marginRight: 15,
     marginBottom: 5
   },
 //   modalView: {

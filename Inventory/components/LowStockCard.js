@@ -12,8 +12,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ActivityCard = ({items}) => {
 
-   const date = items.uploaded_at.toDate();
-
    const numbering = num => {
       let x = num;
       x = x.toString();
@@ -37,6 +35,24 @@ const ActivityCard = ({items}) => {
          return (val);
       }
    }
+
+   const handleQuantityChange = (val) => {   
+
+      if( /\D/.test(val) || parseInt(val) <= 0){
+         setProductQuantity({
+            ...productQuantity,
+            product_quantity: val,
+            isValidProductQuantity: false
+         })
+      } else {
+          setProductQuantity({
+            ...productQuantity,
+            product_quantity: val,
+            isValidProductQuantity: true
+         })
+      }
+   }
+   
    return(
       <Animatable.View animation="fadeInUp" duration={1000} style={styles.card}>
          <TouchableOpacity onPress={() => {}}>
@@ -49,7 +65,7 @@ const ActivityCard = ({items}) => {
                            // flex: 1
                         }}>
                      <Icon
-                        name='cart-arrow-up'
+                        name='stack-overflow'
                         color="#078bab"
                         size={20}
                         
@@ -57,12 +73,11 @@ const ActivityCard = ({items}) => {
                   </View>
                   <View style={{flexDirection:'column', flex: 4}}>
                      <View style= {{flexDirection: 'row', flex:1, paddingVertical: 5, alignItems: 'center', justifyContent: 'space-between'}}>
-                        <Text style={[styles.cardTitle, {textAlign: 'left'}]}>{ items.customer.length > 13 ? items.customer.slice(0,12)+'...' : items.customer}</Text>   
-                        <Text style={[styles.cardTitle, { textAlign: 'right', color: '#07a63a'}]}>+ Rs. {numbering(items.grand_total.toFixed(1))}</Text>                                                 
-                     </View>  
-                     <View style={{flexDirection: 'row', flex: 1, alignItems: 'center', justifyContent: 'space-between'}}>
-                        <Text style={[styles.cardTitle, { textAlign: 'right',  fontStyle: 'italic', fontWeight: '200', fontSize: 14}]}>{date.toDateString()}</Text>
-                     </View>           
+                        <Text style={[styles.cardTitle, {textAlign: 'left'}]}>{ items.product_name.length > 20 ? items.product_name.slice(0,20)+'...' : items.product_name}</Text>   
+                        <Text style={[styles.cardTitle, { textAlign: 'right', color: 'red'}]}>
+                        <Icon name="arrow-down" size={15} color="red" />
+                        {numbering(items.quantity)}</Text>
+                     </View>                      
                   </View>
                </View>  
             </View>         
@@ -80,14 +95,9 @@ const styles = StyleSheet.create({
       fontSize: 17,
       fontWeight: '700'
    },
-   card: {
-      // borderRadius: 20,
+   card: {   
       padding: 15,
       backgroundColor: '#fff',
       flex: 1,  
-   },
-   cardContent: {
-      // flexDirection: 'row',
-      // justifyContent: 'space-between'
    },
 })

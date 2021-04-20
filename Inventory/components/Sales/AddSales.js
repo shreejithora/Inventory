@@ -126,7 +126,6 @@ const AddSales = (props) => {
             ...customer, 
             customerName: val,
          })
-         // console.log(isValidCustomer[0].customer_id)
          setCustomerID(isValidCustomer[0].customer_id)
          setValidCustomer(true)         
       }  else {
