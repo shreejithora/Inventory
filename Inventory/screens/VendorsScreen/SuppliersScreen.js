@@ -41,7 +41,9 @@ const SuppliersScreen = ({navigation}) => {
             .get()
             .then( querySnapshot => {
                querySnapshot.forEach( documentSnapshot => {
-                  SuppliersList.push(documentSnapshot.data())
+                  const data = documentSnapshot.data()
+                  data.id = documentSnapshot.id
+                  SuppliersList.push(data)
                })
             })
          setSuppliersData({
@@ -148,8 +150,10 @@ const SuppliersScreen = ({navigation}) => {
             .collection('Suppliers')
             .get()
             .then( querySnapshot => {
-               querySnapshot.forEach( documentSnapshot => {                  
-                  SuppliersList.push(documentSnapshot.data());   
+               querySnapshot.forEach( documentSnapshot => {  
+                  const data = documentSnapshot.data()                
+                  data.id = documentSnapshot.id
+                  SuppliersList.push(data);   
                });       
                setRefreshing(false) 
                setSuppliersData({
@@ -174,7 +178,7 @@ const SuppliersScreen = ({navigation}) => {
                   onChangeText={ (val) => handleSearchText(val)} 
                />            
             </View>             
-            <View style={styles.picker}>
+            {/* <View style={styles.picker}>
                <DropDownPicker 
                   items={StatusData}
                   defaultValue={state.status}
@@ -186,7 +190,7 @@ const SuppliersScreen = ({navigation}) => {
                   dropDownStyle={{backgroundColor: '#fafafa'}}
                   onChangeItem={item => handleStatusChange(item.value)}
                />
-            </View>
+            </View> */}
             { 
                suppliersData.filteredSuppliers == null ?
                <View opacity={0.5} style={styles.errorDisplay}>
@@ -200,7 +204,7 @@ const SuppliersScreen = ({navigation}) => {
                 style={{flex: 1,backgroundColor: '#fafafa', borderTopLeftRadius: 30, borderTopRightRadius: 30, marginTop: 20}}>
                   <FlatList 
                      data = {suppliersData.filteredSuppliers}
-                     keyExtractor = {item => item.supplier_code.toString()}
+                     keyExtractor = {item => item.id}
                      renderItem = { ({item}) =>                  
                         <SuppliersCard items={item} />                                           
                      }

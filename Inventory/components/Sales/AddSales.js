@@ -32,7 +32,7 @@ const AddSales = (props) => {
    const [total, setTotal] = useState(0)
 
    const [productQuantity, setProductQuantity] = useState({
-      sold_quantity: 1,
+      sold_quantity: 0,
       isValidProductQuantity: true
    })    
 
@@ -225,6 +225,7 @@ const AddSales = (props) => {
                      return [{
                         product_id: productID,
                         product_name: productName, 
+                        total_qty: stock,
                         sold_qty: productQuantity.sold_quantity,
                         cost_price: costPrice,
                         price: price,
@@ -239,10 +240,10 @@ const AddSales = (props) => {
                }                                    
                setAddedList(true);
                // myTextInput.current.clear();
-               // mySoldQuantity.current.clear();
+               // mySoldQuantity.clear();
                setProductName('');
                setProduct('');
-               setProductQuantity({sold_quantity: 1, isValidProductQuantity: true})
+               setProductQuantity({sold_quantity: '', isValidProductQuantity: true})
                setStock(null);
                setPrice(0);
             }               
@@ -288,9 +289,26 @@ const AddSales = (props) => {
                         discount: discount.discount,
                         total: item.total,
                         last_updated: new Date()
-                     })                                                  
-                  })    
-                  setAddingSales(false)                            
+                     })  
+                  // let q = '';
+                  // let s = '';
+                  // firestore()
+                  //    .collection('Products')
+                  //    .doc(item.product_id)
+                  //    .onSnapshot( documentSnapshot => {
+                  //       q = Number(documentSnapshot.data().quantity);
+                  //       s = Number(item.sold_qty)
+
+                  //       console.log(q, s)
+                  //    })
+                  firestore()
+                     .collection('Products')
+                     .doc(item.product_id)                     
+                     .update({
+                        quantity: String(Number(item.total_qty) - Number(item.sold_qty))
+                     })     
+               })                                                                         
+               setAddingSales(false)                            
             } catch(e) {
                console.log(e);
             }
@@ -327,7 +345,7 @@ const AddSales = (props) => {
                   <View style={{display: list ? 'flex' : 'none'}}>
                      <FlatList 
                         data={CustomersData}
-                        keyExtractor = { item => item.customer_code}
+                        keyExtractor = { item => item.id}
                         renderItem = { ({item}) => {
                            return (
                               <TouchableOpacity style={styles.customerList} onPress={() => handleCustomerChange(item.customer_name)}>
@@ -364,7 +382,7 @@ const AddSales = (props) => {
                   </View>
                   <FlatList 
                      data={selectedProduct}
-                     keyExtractor = { item => item.product_code}
+                     keyExtractor = { item => item.id}
                      renderItem = { ({item}) => {
                         return (
                            <View>
@@ -402,21 +420,21 @@ const AddSales = (props) => {
                         style={styles.errMsg}>Invalid Code
                      </Animatable.Text> 
                   }     
-                  <Text style={styles.texts}>Product code*</Text>                  
+                  <Text style={styles.texts}>Product name*</Text>                  
                   <TextInput
                      ref={myTextInput}
                      value={product}
                      keyboardType='ascii-capable'
                      style={styles.textInputs}
                      onFocus= { () => setProList(true)}
-                     placeholder="Product code...(eg. 111.001)"                    
+                     placeholder="Product name or code...(eg. 111.001)"                    
                      onChangeText={ (val) => handleProductCodeChange(val)}
                      onEndEditing = { (e) => handleProductCodeChange(e.nativeEvent.text)}
                   />     
                   <View style={{display: proList ? 'flex' : 'none'}}>
                      <FlatList 
                         data={ProductsData}
-                        keyExtractor = { item => item.supplier_code}
+                        keyExtractor = { item => item.id}
                         renderItem = { ({item}) => {
                            return (
                               <TouchableOpacity style={styles.customerList} onPress={() => handleProductCodeChange(item.product_name)}>

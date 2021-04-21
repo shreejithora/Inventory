@@ -5,17 +5,85 @@ import {
   Text, 
   TouchableOpacity, 
   StyleSheet,
+  Alert
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
 
+import firestore from '@react-native-firebase/firestore';
+
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SupplierInfo from "./SupplierInfo";
+import UpdateSupplierInfo from './UpdateSupplierInfo';
 
 const SuppliersCard = ({items}) => {
 
+   const [state, setState] = useState({
+      supplier_name: '',
+      phone: '',
+      email: '',
+      address: '',      
+   })
+
    const [supplierDetailModal, setSupplierDetailModal] = useState(false);
+
+   const [updateSupplier, setUpdateSupplier] = useState(false)
+
+   const [updateSupplierModal, setUpdateSupplierModal] = useState(false)
+
+   const [updatingSupplier, setUpdatingSupplier] = useState(false)
+
+   const [ deleteSupplierModal, setDeleteSupplierModal] = useState(false) 
+
+   const handleDelete = async(id) => {
+      setDeleteSupplierModal(false)
+      try{
+         await firestore()
+            .collection('Suppliers')
+            .doc(id)
+            .delete()
+            .then( () =>{
+                  setSupplierDetailModal(false) 
+                  Alert.alert('Deleted Successfully!', 'Supplier: '+items.supplier_name, [{text: 'Ok'}]);
+            })
+      } catch(e) {
+         console.log(e)
+      } 
+   }
+
+   const handleUpdateSupplier = (supplier_name, phone, email, address) => {
+      setUpdateSupplierModal(true)
+      setState({
+         supplier_name: supplier_name,
+         phone: phone,
+         email: email,
+         address: address
+      })
+   }
+
+   const handleUpdate = async() => {
+      setUpdateSupplierModal(false)
+      setUpdateSupplier(true)
+      try{
+         await firestore()
+            .collection('Suppliers')
+            .doc(items.id)
+            .update({
+               supplier_name: state.supplier_name,
+               phone: state.phone,
+               email: state.email,
+               address: state.address,
+            })
+            .then( () => {                                 
+               setUpdateSupplier(false)    
+               setSupplierDetailModal(false)
+               Alert.alert('Supplier Updated', 'Supplier: '+state.supplier_name, [{text: 'Ok'}]);
+            })
+      } catch(e) {
+         console.log(e)
+      }
+   }
 
    return(
       <View>
@@ -76,9 +144,13 @@ const SuppliersCard = ({items}) => {
             animationInTiming={500}
             animationOutTiming={300}> 
             <View style={styles.modalView}>                         
-               <SupplierInfo item={items}/> 
+               {
+                  updateSupplier ?
+                  <UpdateSupplierInfo item={items} handleUpdateSuppliers={handleUpdateSupplier} updatingSupplier={updatingSupplier} /> :
+                  <SupplierInfo item={items}/> 
+               } 
                <View style={{flexDirection: 'row',justifyContent: 'space-between', bottom: 0, right: 0}}>
-                     <Animatable.View 
+                     {/* <Animatable.View 
                         animation="fadeInLeft"
                         duration={1000}
                         style={styles.history}>    
@@ -88,45 +160,124 @@ const SuppliersCard = ({items}) => {
                            size={20} 
                         />              
                         <Text style={[styles.cardTitle, {marginLeft: 5, fontWeight: '700', fontSize: 18}]}>View History</Text>
-                     </Animatable.View>
-                  <View style={{alignSelf: 'flex-end', position:'absolute', bottom: 20, right: 20 }}>
-                     <Animatable.View 
-                        animation = "fadeInUpBig"
-                        duration = {1000}
-                     >
-                        <Icon 
-                           style={[styles.buttonIcon, {marginBottom: 10}]} 
-                           name="delete-outline" 
-                           color="#078bab" 
-                           size={30}  
-                        />
-                     </Animatable.View>
-                     <Animatable.View 
-                        animation = "fadeInUpBig"
-                        duration = {800}
-                     >
-                        <Icon 
-                           style={[styles.buttonIcon, {marginBottom: 10}]} 
-                           name="pencil-outline" 
-                           color="#078bab" 
-                           size={30}  
-                           onPress={()  => {}}
-                        />
-                     </Animatable.View>
-                     <Animatable.View
-                        animation = "fadeInUpBig"
-                        duration = {600}
-                     >
-                        <Icon 
-                           style={styles.buttonIcon}
-                           name="close"
-                           size={30}
-                           color="#078bab"                                   
-                           onPress={ () => setSupplierDetailModal(false)}
-                        />
-                     </Animatable.View>                  
-                  </View>
+                     </Animatable.View> */}
+                     {
+                        updateSupplier ?
+                        <View style={{alignSelf: 'flex-end', position:'absolute', bottom: 20, right: 20 }}>
+                           
+                           <Animatable.View
+                              animation = "fadeInUpBig"
+                              duration = {600}
+                           >
+                              <Icon 
+                                 style={styles.buttonIcon}
+                                 name="close"
+                                 size={30}
+                                 color="#078bab"                                   
+                                 onPress={ () => setUpdateSupplier(false)}
+                              />
+                           </Animatable.View>                  
+                        </View> :
+                        <View style={{alignSelf: 'flex-end', position:'absolute', bottom: 20, right: 20 }}>
+                           <Animatable.View 
+                              animation = "fadeInUpBig"
+                              duration = {1000}
+                           >
+                              <Icon 
+                                 style={[styles.buttonIcon, {marginBottom: 10}]} 
+                                 name="delete-outline" 
+                                 color="#078bab" 
+                                 size={30}  
+                                 onPress = {() => setDeleteSupplierModal(true)}
+                              />
+                           </Animatable.View>
+                           <Animatable.View 
+                              animation = "fadeInUpBig"
+                              duration = {800}
+                           >
+                              <Icon 
+                                 style={[styles.buttonIcon, {marginBottom: 10}]} 
+                                 name="pencil-outline" 
+                                 color="#078bab" 
+                                 size={30}  
+                                 onPress={()  => {setUpdateSupplier(true)}}
+                              />
+                           </Animatable.View>
+                           <Animatable.View
+                              animation = "fadeInUpBig"
+                              duration = {600}
+                           >
+                              <Icon 
+                                 style={styles.buttonIcon}
+                                 name="close"
+                                 size={30}
+                                 color="#078bab"                                   
+                                 onPress={ () => setSupplierDetailModal(false)}
+                              />
+                           </Animatable.View>                  
+                        </View>
+                     }                  
                </View>                                  
+            </View>                                           
+         </Modal>
+         <Modal 
+            style={styles.modal3}
+            isVisible={deleteSupplierModal} 
+            transparent={true} 
+            animationIn='slideInUp' 
+            animationOut='slideOutDown'
+            onBackButtonPress = {() => setDeleteSupplierModal(!deleteProductModal)}
+            backdropTransitionInTiming={500}
+            backdropTransitionOutTiming={500}
+            animationInTiming={500}
+            animationOutTiming={500}> 
+            <View style={[styles.modalView, {alignItems: 'center'  }]}>       
+               <Icon 
+                  style={styles.buttonIcon1}
+                  name="close"
+                  size={30}
+                  color="#078bab"                                   
+                  onPress={ () => setDeleteSupplierModal(false)}
+               />     
+               <Text style={[styles.texts, {fontWeight: '700', marginVertical: 10}]}>Delete ?</Text>
+               <View style={{flexDirection: 'row', marginTop: 15}}>
+                  <TouchableOpacity style={styles.button} onPress={() => setDeleteSupplierModal(false)}>
+                     <Text style={[styles.texts, {fontWeight: '700', color: '#078bab'}]}>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={[styles.button, {backgroundColor: '#078bab'}]} onPress={ () => handleDelete(items.id)}>
+                     <Text style={[styles.texts, {fontWeight: '700', color: '#fff'}]}>Delete</Text>
+                  </TouchableOpacity>
+               </View>               
+            </View>                                           
+         </Modal>
+         <Modal 
+            style={styles.modal3}
+            isVisible={updateSupplierModal} 
+            transparent={true} 
+            animationIn='slideInUp' 
+            animationOut='slideOutDown'
+            onBackButtonPress = {() => setUpdateSupplierModal(false)}
+            backdropTransitionInTiming={500}
+            backdropTransitionOutTiming={500}
+            animationInTiming={500}
+            animationOutTiming={500}> 
+            <View style={[styles.modalView, {alignItems: 'center'  }]}>       
+               <Icon 
+                  style={styles.buttonIcon1}
+                  name="close"
+                  size={30}
+                  color="#078bab"                                   
+                  onPress={ () => setUpdateSupplierModal(false)}
+               />     
+               <Text style={[styles.texts, {fontWeight: '700', marginVertical: 10}]}>Update ?</Text>
+               <View style={{flexDirection: 'row', marginTop: 15}}>
+                  <TouchableOpacity style={styles.button} onPress={() => setUpdateSupplierModal(false)}>
+                     <Text style={[styles.texts, {fontWeight: '700', color: '#078bab'}]}>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={[styles.button, {backgroundColor: '#078bab'}]} onPress={ () => handleUpdate()}>
+                     <Text style={[styles.texts, {fontWeight: '700', color: '#fff'}]}>Update</Text>
+                  </TouchableOpacity>
+               </View>               
             </View>                                           
          </Modal>
       </View>             
@@ -165,6 +316,38 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#fff',
       margin: 0
+   },
+    button: {
+     marginHorizontal: 5,
+     borderRadius: 20,
+     backgroundColor: '#e6f1fa',
+     padding: 15,
+     width: '40%',
+     alignItems: 'center'
+  },
+   modal3: {
+      // flex: 1,
+      justifyContent: 'flex-start',
+      borderTopLeftRadius: 30,
+      borderTopRightRadius: 30,
+      marginTop: 600,
+      backgroundColor: '#fff',
+      marginBottom: 0,
+      marginLeft: 0,
+      marginRight: 0
+   },
+   buttonIcon1: {
+      marginTop: 15, 
+      padding: 3, 
+      alignSelf: 'center', 
+      backgroundColor: "#c7e6ff", 
+      borderRadius: 50,
+      marginBottom: 5
+   },
+   texts: {
+      color: '#078bab',
+      fontWeight: 'normal',
+      fontSize: 18
    },
    buttonIcon: {   
       alignSelf: 'flex-end',

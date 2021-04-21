@@ -40,7 +40,9 @@ const CustomersScreen = ({navigation}) => {
             .get()
             .then( querySnapshot => {
                querySnapshot.forEach( documentSnapshot => {
-                  CustomersList.push(documentSnapshot.data())
+                  const data = documentSnapshot.data();
+                  data.id = documentSnapshot.id;
+                  CustomersList.push(data)
                })
             })
          setCustomersData({
@@ -89,8 +91,10 @@ const CustomersScreen = ({navigation}) => {
             .collection('Customers')
             .get()
             .then( querySnapshot => {
-               querySnapshot.forEach( documentSnapshot => {                  
-                  CustomersList.push(documentSnapshot.data());   
+               querySnapshot.forEach( documentSnapshot => {    
+                  const data = documentSnapshot.data();
+                  data.id = documentSnapshot.id;              
+                  CustomersList.push(data);   
                });       
                setRefreshing(false) 
                setCustomersData({

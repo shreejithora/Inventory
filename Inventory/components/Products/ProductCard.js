@@ -41,6 +41,8 @@ const ProductCard = ({items}) => {
 
    const [updateProductModal, setUpdateProductModal] = useState(false)
 
+   const [updatingProducts, setUpdatingProducts] = useState(false)
+
    const [update, setUpdate] = useState(false)
 
    const numbering = num => {
@@ -105,6 +107,7 @@ const ProductCard = ({items}) => {
 
    const handleUpdate = async() => {
       setUpdateProductModal(false)
+      setUpdatingProducts(false)
       try{
          await firestore()
             .collection('Products')
@@ -121,10 +124,10 @@ const ProductCard = ({items}) => {
                product_updated: firestore.FieldValue.arrayUnion(state.date)
             })
             .then( () => {                                 
-               // setUpdatingProducts(false)
+               setUpdatingProducts(false)               
                setUpdateProduct(false);
                setProductDetailModal(false)
-               Alert.alert('Product Updated');
+               Alert.alert('Product Updated', 'Product: '+state.product_name, [{text: 'Ok'}]);
             })
       } catch(e) {
          console.log(e)
@@ -198,7 +201,7 @@ const ProductCard = ({items}) => {
             <View style={styles.modalView}>  
                {
                   updateProduct ?
-                  <UpdateProductInfo item={items} handleUpdateProducts={handleUpdateProduct} update={update} onUpdateProduct={onUpdateProduct} /> :
+                  <UpdateProductInfo item={items} handleUpdateProducts={handleUpdateProduct} updatingProducts={updatingProducts} /> :
                   <ProductInfo item={items}/> 
                }                                      
                <View style={{flexDirection: 'row',justifyContent: 'space-between', bottom: 0, right: 0}}>        

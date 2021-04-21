@@ -22,7 +22,7 @@ import { cos } from "react-native-reanimated";
 let ProductsList = [];
 let SuppliersList = [];
 
-const UpdateProductInfo = ({item, handleUpdateProducts, update, onUpdateProduct}) => {  
+const UpdateProductInfo = ({item, handleUpdateProducts, updatingProducts}) => {  
 
    const [product_name, setProductName] = useState({
       product_name: '',
@@ -58,10 +58,6 @@ const UpdateProductInfo = ({item, handleUpdateProducts, update, onUpdateProduct}
    const [list, setList] = useState(false)
 
    const [validSupplier, setValidSupplier] = useState(true)
-
-   const [updatingProducts, setUpdatingProducts] = useState(false)
-
-   const [updateProductModal, setUpdateProductModal] = useState(false)
 
     useEffect( () => {
       setProductName({
@@ -123,10 +119,7 @@ const UpdateProductInfo = ({item, handleUpdateProducts, update, onUpdateProduct}
    const handleProductNameChange = (val) => {    
       const foundProduct = ProductsList.filter( items => {
          return items.toLowerCase() == val.toLowerCase()
-         // return val.toLowerCase() == items.product_name
-         // return console.log(items)
       })
-      console.log(foundProduct.length)
       if( foundProduct.length == 0  || val.toLowerCase() == item.product_name.toLowerCase()){
          setProductName({
             ...product_name,

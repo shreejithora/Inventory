@@ -5,9 +5,12 @@ import {
   Text, 
   TouchableOpacity, 
   StyleSheet, 
+  Alert
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
+
+import firestore from '@react-native-firebase/firestore';
 
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -42,7 +45,26 @@ const SalesCard = ({items}) => {
 
    const [soldProductDetailModal, setSoldProductDetailModal] = useState(false);
 
+   const [deleteSalesModal, setDeleteSalesModal] = useState(false);
+
    const date = items.uploaded_at.toDate();
+
+   const handleDelete = async() => {
+      setDeleteSalesModal(false)
+      try{
+         await firestore()
+            .collection('Sales')
+            .doc(items.id)
+            .delete()
+            .then( () =>{
+                  setDeleteSalesModal(false) 
+                  setSoldProductDetailModal(false)
+                  Alert.alert('Deleted Successfully!', 'Sales to: '+items.customer, [{text: 'Ok'}]);
+            })
+      } catch(e) {
+         console.log(e)
+      } 
+   }
 
    return(
       <View>
@@ -105,6 +127,7 @@ const SalesCard = ({items}) => {
                            name="delete-outline" 
                            color="#078bab" 
                            size={30}  
+                           onPress={() => setDeleteSalesModal(true)}
                         />
                      </Animatable.View>
                      <Animatable.View 
@@ -132,6 +155,36 @@ const SalesCard = ({items}) => {
                      </Animatable.View>
                   </View> 
                </View>                                               
+            </View>                                           
+         </Modal>
+         <Modal 
+            style={styles.modal3}
+            isVisible={deleteSalesModal} 
+            transparent={true} 
+            animationIn='slideInUp' 
+            animationOut='slideOutDown'
+            onBackButtonPress = {() => setDeleteSalesModal(false)}
+            backdropTransitionInTiming={500}
+            backdropTransitionOutTiming={500}
+            animationInTiming={500}
+            animationOutTiming={500}> 
+            <View style={[styles.modalView, {alignItems: 'center'  }]}>       
+               <Icon 
+                  style={styles.buttonIcon1}
+                  name="close"
+                  size={30}
+                  color="#078bab"                                   
+                  onPress={ () => setDeleteSalesModal(false)}
+               />     
+               <Text style={[styles.texts1, {fontWeight: '700', marginVertical: 10}]}>Delete ?</Text>
+               <View style={{flexDirection: 'row', marginTop: 15}}>
+                  <TouchableOpacity style={styles.button} onPress={() => setDeleteSalesModal(false)}>
+                     <Text style={[styles.texts1, {fontWeight: '700', color: '#078bab'}]}>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={[styles.button, {backgroundColor: '#078bab'}]} onPress={ () => handleDelete(items.id)}>
+                     <Text style={[styles.texts1, {fontWeight: '700', color: '#fff'}]}>Delete</Text>
+                  </TouchableOpacity>
+               </View>               
             </View>                                           
          </Modal>
       </View>             
@@ -190,6 +243,38 @@ const styles = StyleSheet.create({
       left: 20, 
       backgroundColor: '#c7e6ff',
       borderRadius: 30
+   },
+   modal3: {
+      // flex: 1,
+      justifyContent: 'flex-start',
+      borderTopLeftRadius: 30,
+      borderTopRightRadius: 30,
+      marginTop: 600,
+      backgroundColor: '#fff',
+      marginBottom: 0,
+      marginLeft: 0,
+      marginRight: 0
+   },
+   button: {
+      marginHorizontal: 5,
+      borderRadius: 20,
+      backgroundColor: '#e6f1fa',
+      padding: 15,
+      width: '40%',
+      alignItems: 'center'
+   },
+   texts1: {
+      color: '#078bab',
+      fontWeight: 'normal',
+      fontSize: 18
+   },
+   buttonIcon1: {
+      marginTop: 15, 
+      padding: 3, 
+      alignSelf: 'center', 
+      backgroundColor: "#c7e6ff", 
+      borderRadius: 50,
+      marginBottom: 5
    },
    texts:{
       fontSize:15,
