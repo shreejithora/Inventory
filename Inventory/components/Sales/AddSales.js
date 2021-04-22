@@ -32,7 +32,7 @@ const AddSales = (props) => {
    const [total, setTotal] = useState(0)
 
    const [productQuantity, setProductQuantity] = useState({
-      sold_quantity: 0,
+      sold_quantity: '1',
       isValidProductQuantity: true
    })    
 
@@ -69,8 +69,6 @@ const AddSales = (props) => {
 
    const [customerID, setCustomerID] = useState('');
 
-   // const [salesID, setSalesID] = useState('');
-
    const [addingSales, setAddingSales] = useState(false);
 
    const [stock, setStock] = useState(0);
@@ -86,7 +84,7 @@ const AddSales = (props) => {
                .then( querySnapshot => {
                   querySnapshot.forEach( documentSnapshot => {
                      const data = documentSnapshot.data();
-                     data.product_id = documentSnapshot.id
+                     data.id = documentSnapshot.id
                      ProductsList.push(data)
                   })
                })
@@ -178,7 +176,7 @@ const AddSales = (props) => {
          setPrice(isValidProduct[0].selling_price) 
          setStock(isValidProduct[0].quantity) 
          setCostPrice(isValidProduct[0].cost_price)   
-         setProductID(isValidProduct[0].product_id)    
+         setProductID(isValidProduct[0].id)    
          setValidProduct(true)
       }  else {
          setValidProduct(false)
@@ -234,7 +232,12 @@ const AddSales = (props) => {
                      }, ...currItem];
                   });    
                   const eachTotal = price * productQuantity.sold_quantity
-                  setTotal(total + eachTotal)                       
+                  setTotal(total + eachTotal)
+                  ProductsList.forEach( (item, index) => {
+                     if(item.id == productID){
+                        ProductsList[index].quantity = Number(stock) - Number(productQuantity.sold_quantity)
+                     }
+                  })                      
                } catch(e) {
                   console.log(e);
                }                                    

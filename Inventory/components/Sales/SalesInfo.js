@@ -55,7 +55,7 @@ const SalesInfo = ({items}) => {
          <View style={styles.salesTable}>
             <View style={styles.tableHeader}>
                <Text style={[styles.infoTexts, {fontWeight: '700', fontSize: 18, flex: 2}]}>Product</Text>
-               <Text style={[styles.infoTexts, {fontWeight: '700', fontSize: 18, flex: 1}]}>SP</Text>
+               <Text style={[styles.infoTexts, {fontWeight: '700', fontSize: 18, flex: 1}]}>Price</Text>
                <Text style={[styles.infoTexts, {fontWeight: '700', fontSize: 18, flex: 1}]}>Qty</Text>
                <Text style={[styles.infoTexts, {fontWeight: '700', fontSize: 18, flex: 1}]}>Total</Text>
             </View>            

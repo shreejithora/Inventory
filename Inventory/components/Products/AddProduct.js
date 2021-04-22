@@ -168,7 +168,7 @@ const AddProduct = (props) => {
 
    const [addingProducts, setAddingProducts] = useState(false)
 
-  const [ codes, setCodes] = useState({
+  const [codes, setCodes] = useState({
      clothing: 100.001,
      electronics: 200.001,
      accessories: 300.001,
@@ -313,16 +313,16 @@ const AddProduct = (props) => {
       setSupplier({supplierName: val});
    }
 
-   let code = [];   
+   let code = [];  
 
-   const handleStatusChange = async(val)=> {
+   const handleStatusChange = async(val)=> {      
       setState({
          Catstatus: val
       })
 
       setLoading(true)
 
-      let len = 0;
+      let len = 0;      
 
       try{
          await firestore()
@@ -330,11 +330,15 @@ const AddProduct = (props) => {
             .where('category', '==', val)
             .get()
             .then( querySnapshot => {
-               querySnapshot.forEach( documentSnapshot => {
-                  code.push(documentSnapshot.data().product_code)                  
-                  len++;               
+               querySnapshot.forEach( documentSnapshot => {                  
+                  if( querySnapshot.size != 0){
+                     code.push(documentSnapshot.data().product_code)  
+                     len++;      
+                  }                           
                })
             })
+         console.log(len)            
+
          let temp = 0;
          if( len == 0){
             temp = null;
@@ -352,9 +356,10 @@ const AddProduct = (props) => {
                }
             }
          }
+         
          if( val == "clothing" ){
             if( temp == null ){
-               setProductCode({product_code: codes.clothing.toFixed(3)})
+               setProductCode({product_code: codes.clothing})
             } else {
                temp = code[0] + 0.001
                setCodes({clothing: temp.toFixed(3)})
@@ -364,7 +369,7 @@ const AddProduct = (props) => {
          if( val == "electronics"){
             if( temp == null ){
                temp = codes.electronics + 0.001
-               setProductCode({product_code: codes.electronics.toFixed(3)})
+               setProductCode({product_code: codes.electronics})
             } else {
                temp = code[0] + 0.001
                setCodes({electronics: temp.toFixed(3)})
@@ -373,7 +378,7 @@ const AddProduct = (props) => {
          }
          if( val == "accessories"){
             if( temp == null ){
-               setProductCode({product_code: codes.accessories.toFixed(3)})
+               setProductCode({product_code: codes.accessories})
             } else {
                temp = code[0] + 0.001
                setCodes({accessories: temp.toFixed(3)})
@@ -382,7 +387,8 @@ const AddProduct = (props) => {
          }                  
          if( val == "stationery"){
             if( temp == null ){
-               setProductCode({product_code: codes.stationery.toFixed(3)})
+               setProductCode({product_code: 400.001})
+               // console.log(codes.stationery)
             } else {
                temp = code[0] + 0.001
                setCodes({stationery: temp.toFixed(3)})
@@ -391,7 +397,7 @@ const AddProduct = (props) => {
          }
          if( val == "bag"){
             if( temp == null ){
-               setProductCode({product_code: codes.bag.toFixed(3)})
+               setProductCode({product_code: 500.001})
             } else {
                temp = code[0] + 0.001
                setCodes({bag: temp.toFixed(3)})
@@ -400,11 +406,11 @@ const AddProduct = (props) => {
          }
          if( val == "cosmetics"){
             if( temp == null ){              
-               setProductCode({product_code: codes.cosmetics.toFixed(3)})
+               setProductCode({product_code: codes.cosmetics})
             } else {
                temp = code[0] + 0.001
                setCodes({cosmetics: temp.toFixed(3)})
-               setProductCode({product_code: temp.toFixed(3)})
+               setProductCode({product_code: temp.toFixed(3)})               
             }  
          }
          setLoading(false);

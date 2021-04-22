@@ -30,6 +30,7 @@ const SalesScreen = ({navigation}) => {
          // let 
          await firestore()
             .collection('Sales')
+            .orderBy('uploaded_at', 'desc')
             .get()
             .then( querySnapshot => {
                querySnapshot.forEach( documentSnapshot => {
@@ -80,6 +81,7 @@ const SalesScreen = ({navigation}) => {
       try{         
          await firestore()
             .collection('Sales')
+            .orderBy('uploaded_at', 'desc')
             .get()
             .then( querySnapshot => {
                querySnapshot.forEach( documentSnapshot => {    

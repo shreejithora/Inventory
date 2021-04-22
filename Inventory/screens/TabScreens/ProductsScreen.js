@@ -161,6 +161,7 @@ const ProductsScreen = ({filter, navigation}) => {
             try{
             await firestore()
                .collection('Products')
+               .orderBy('product_updated', 'desc')
                .get()
                .then( querySnapshot => {
                   setProductCounter(querySnapshot.size)  
@@ -262,6 +263,7 @@ const ProductsScreen = ({filter, navigation}) => {
       try{         
          await firestore()
             .collection('Products')
+            .orderBy('product_updated', 'desc')
             .get()
             .then( querySnapshot => {
                setProductCounter(querySnapshot.size) 

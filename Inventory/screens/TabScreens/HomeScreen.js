@@ -39,6 +39,8 @@ const HomeScreen = ({navigation}) => {
 
   const [size, setSize] = useState('');
 
+  const [salesSize, setSalesSize] = useState('');
+
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect( () => {
@@ -53,8 +55,13 @@ const HomeScreen = ({navigation}) => {
             querySnapshot.forEach( documentSnapshot => {
               const data = documentSnapshot.data()
               data.id = documentSnapshot.id;
-              SalesList.push(data);
-            })
+              const uploaded = data.uploaded_at.toDate().toDateString();
+                const today = new Date()
+                if( uploaded == today.toDateString()){
+                  SalesList.push(data)
+                }
+              });      
+              setSalesSize(SalesList.length)
             setSalesData({
               allSales: SalesList,
               filteredSales: SalesList
@@ -89,6 +96,7 @@ const HomeScreen = ({navigation}) => {
   const onRefresh = React.useCallback( async() => {
       setRefreshing(true);
       ProductsList = [];
+      SalesList = [];
       try{         
          await firestore()
             .collection('Products')
@@ -107,6 +115,27 @@ const HomeScreen = ({navigation}) => {
                   allProducts: ProductsList,
                   filteredProducts: ProductsList
                })          
+            });
+        await firestore()
+            .collection('Sales')
+            .get()
+            .then( querySnapshot => {
+              querySnapshot.forEach( documentSnapshot => {    
+                const data = documentSnapshot.data();
+                data.id = documentSnapshot.id  
+                const uploaded = data.uploaded_at.toDate().toDateString();
+                const today = new Date()
+                if( uploaded == today.toDateString()){
+                  SalesList.push(data)
+                } 
+                // console.log(data.uploaded_at.toDate().toDateString(), today.toDateString())
+              });      
+              setSalesSize(SalesList.length)
+              setRefreshing(false) 
+              setSalesData({
+                allSales: SalesList,
+                filteredSales: SalesList
+              })          
             });          
       } catch(e) {
          console.log(e)
@@ -165,7 +194,7 @@ const HomeScreen = ({navigation}) => {
       
        <View style={styles.mainActitivity}>          
           <View style={styles.activityTopic}>
-            <Text style={styles.activityTopicText}>Activity</Text>
+            <Text style={styles.activityTopicText}>Today's Activity <Text style={{fontSize: 14}}>({salesSize})</Text></Text>
             <TouchableOpacity onPress={() => navigation.navigate('Sales')}>
             <Text style={[styles.activityTopicText, {fontSize: 12}]}>View All</Text>
             </TouchableOpacity>

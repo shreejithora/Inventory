@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { 
    Text, 
    View, 
@@ -8,13 +9,83 @@ import {
    FlatList
 } from 'react-native';
 
+import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IncomeCard from '../../../components/Entries/Income/IncomeCard';
 import IncomeChart from '../../../components/Entries/Income/IncomeChart';
 
+const ProductsList = [];
+const SalesList = [];
+const SalesProductsList = [];
 const IncomeList = require('../../../models/Entries.json');
 
 const IncomeScreen = () => { 
+
+   const [salesData, setSalesData] = useState({
+      allSales: SalesList,
+      filteredSales: SalesList
+   })
+
+   const [salesProductsData, setSalesProductsData] = useState({
+      allSalesProducts: SalesProductsList,
+      filteredSalesProducts: SalesProductsList
+   })
+
+   const [productsData, setProductsData] = useState({
+      allProducts: ProductsList,
+      filteredProducts: ProductsList
+   })
+
+   useEffect( () => {
+      setTimeout( async() => {
+         try{
+            await firestore()
+               .collection('Sales')
+               .get()
+               .then( querySnapshot => {
+                  querySnapshot.forEach( documentSnapshot => {
+                     const data = documentSnapshot.data()
+                     data.id = documentSnapshot.id;
+                     SalesList.push(data);
+                  })
+                  setSalesData({
+                     allSales: SalesList,
+                     filteredSales: SalesList
+                  })
+               })
+               await firestore()
+                  .collection('SalesProducts')
+                  .get()
+                  .then( querySnapshot => {
+                     querySnapshot.forEach( documentSnapshot => {
+                        const data = documentSnapshot.data()
+                        data.id = documentSnapshot.id;
+                        SalesProductsList.push(data);
+                     })
+                     setSalesProductsData({
+                        allSalesProducts: SalesProductsList,
+                        filteredSalesProducts: SalesProductsList
+                     })
+                  })
+               await firestore()
+                  .collection('Products')
+                  .get()
+                  .then( querySnapshot => {
+                     querySnapshot.forEach( documentSnapshot => {
+                        const data = documentSnapshot.data()
+                        data.id = documentSnapshot.id;
+                        ProductsList.push(data);
+                     })
+                     setProductsData({
+                        allProducts: ProductsList,
+                        filteredProducts: ProductsList
+                     })
+                  })
+         } catch(e) {
+            console.log(e)
+         }
+      }, 1000);
+   }, [])
 
    const [state, setState] = useState({
       status: ''
@@ -177,9 +248,9 @@ const IncomeScreen = () => {
                <Text style={styles.IncomeDisplay}>                  
                   Income: NRs. {value}                 
                </Text>              
-               <View style={{display: graph ? 'flex' : 'none' }}>
+               {/* <View style={{display: graph ? 'flex' : 'none' }}>
                   <IncomeChart data={graphData} /> 
-               </View>
+               </View> */}
                <TouchableOpacity style={{alignItems: 'center', flexDirection: 'row'}} onPress={() => setGraph(!graph)}>   
                      <Text style={{color: '#078bab'}}>{graph ? "Close Graph" : "See Graph"}</Text>                                         
                   <Icon  
@@ -226,10 +297,27 @@ const IncomeScreen = () => {
                                  
                </View> :
                <FlatList 
-                  data = {IncomeData.filteredIncomes}
-                  keyExtractor = {item => item.product_id}
-                  renderItem = { ({item}) =>                  
-                     <IncomeCard items={item}/>                                    
+                  data = {productsData.filteredProducts}
+                  keyExtractor = {item => item.id}
+                  renderItem = { ({item}) => {
+                        let costData = 0;
+                        let sellData = 0;
+                        const foundSoldProduct = SalesProductsList.filter( product => {
+                           return item.id == product.product_id
+                        }) 
+                        // console.log(foundSoldProduct.length)
+                        foundSoldProduct.forEach( element => {
+                           console.log(element.selling_price, element.sold_quantity)
+                           // costData = costData + (element.cost_price * element.sold_quantity);
+                           // selldata = sellData + (element.selling_price * element.sold_quantity);
+                        })
+                        // console.log( sellData)
+                        // return(
+                        //    <View>                                                               
+                        //       <IncomeCard items={item} soldProduct={foundSoldProduct} costData={costData} sellData={sellData} />
+                        //    </View>
+                        // )                        
+                     }                       
                   }
                />
             }            

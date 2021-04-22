@@ -15,7 +15,7 @@ import IncomeInfo from "./IncomeInfo";
 
 // const IncomeList = require('../../../models/Sales.json');
 
-const IncomeCard = ({items}) => {
+const IncomeCard = ({items, costData, sellData}) => {   
 
    const [incomeDetailModal, setIncomeDetailModal] = useState(false);
 
@@ -24,11 +24,11 @@ const IncomeCard = ({items}) => {
          <Animatable.View animation="fadeInUp" duration={1000} style={styles.card}>
             <TouchableOpacity onPress={() => setIncomeDetailModal(!incomeDetailModal)}>
                <View style={styles.cardContent}>  
-                  <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.product_id}</Text> 
+                  <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.product_code}</Text> 
                   <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left'}]}>
-                     {items.name.length > 12 ? items.name.slice(0,11)+'...' : items.name}
+                     {items.product_name.length > 12 ? items.product_name.slice(0,11)+'...' : items.product_name}
                   </Text>  
-                  <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{items.sold_quantity * items.price}</Text> 
+                  <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{Number(sellData) - Number(costData)}</Text> 
                </View>         
             </TouchableOpacity>
             
