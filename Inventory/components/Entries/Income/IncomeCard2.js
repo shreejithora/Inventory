@@ -15,8 +15,8 @@ import IncomeInfo from "./IncomeInfo";
 
 // const IncomeList = require('../../../models/Sales.json');
 
-const IncomeCard = ({items, costData, sellData}) => { 
-
+const IncomeCard2 = ({items, costData, sellData}) => { 
+   console.log(items)
    const numbering = num => {
       let x = num;
       x=x.toString();
@@ -41,21 +41,29 @@ const IncomeCard = ({items, costData, sellData}) => {
       }
    }  
 
-   const profit = (Number(sellData) - Number(costData)).toFixed(2)
-
    const [incomeDetailModal, setIncomeDetailModal] = useState(false);
+
+   const date1 = items.last_updated.toDate();
+   const hour = new Date(date1).toString().substr(16, 2)
+   let hrin12 = hour%12;
+   if( hrin12 == "0"){
+      hrin12 = 12
+   }
+   const min = new Date(date1).toString().substr(18, 3)
+   const date = hrin12+min
 
    return(
       <View>
          <Animatable.View animation="fadeInUp" duration={800} style={styles.card}>
             <TouchableOpacity onPress={() => setIncomeDetailModal(!incomeDetailModal)}>
-               <View style={styles.cardContent}>  
-                  <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'left'}]}>{items.product_code}</Text> 
+               <View style={[styles.cardContent, {flexDirection: 'row'}]}> 
                   <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left'}]}>
-                     {items.product_name.length > 12 ? items.product_name.slice(0,11)+'...' : items.product_name}
+                     {items.product_name.length > 20 ? items.product_name.slice(0,20)+'...' : items.product_name}
                   </Text>  
-                  <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{numbering(profit)}</Text> 
-               </View>         
+                  {/* <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{numbering(Number(sellData) - Number(costData))}</Text>  */}
+                  <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'center', fontWeight: '700'}]}>{numbering(Number(sellData) - Number(costData))}</Text> 
+               </View>   
+               <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left', fontSize: 13}]}>{date}</Text>      
             </TouchableOpacity>
             
          </Animatable.View>  
@@ -127,7 +135,7 @@ const IncomeCard = ({items, costData, sellData}) => {
    )
 }
 
-export default IncomeCard;
+export default IncomeCard2;
 
 const styles = StyleSheet.create({
    cardTitle:{

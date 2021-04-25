@@ -10,7 +10,7 @@ import {
 
 import * as Animatable from 'react-native-animatable';
 
-import firestore from '@react-native-firebase/firestore';
+import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -47,9 +47,17 @@ const SalesCard = ({items}) => {
 
    const [deleteSalesModal, setDeleteSalesModal] = useState(false);
 
-   const date = items.uploaded_at.toDate();
+   const date1 = items.uploaded_at.toDate();
+   const hour = new Date(date1).toString().substr(16, 2)
+   let hrin12 = hour%12;
+   if( hrin12 == "0"){
+      hrin12 = 12
+   }
+   const min = new Date(date1).toString().substr(18, 3)
+   const date = hrin12+min
 
    const handleDelete = async() => {
+      let DeleteList = [];
       setDeleteSalesModal(false)
       try{
          await firestore()
@@ -57,10 +65,27 @@ const SalesCard = ({items}) => {
             .doc(items.id)
             .delete()
             .then( () =>{
-                  setDeleteSalesModal(false) 
-                  setSoldProductDetailModal(false)
-                  Alert.alert('Deleted Successfully!', 'Sales to: '+items.customer, [{text: 'Ok'}]);
+               setDeleteSalesModal(false) 
+               setSoldProductDetailModal(false)
+               Alert.alert('Deleted Successfully!', 'Sales to: '+items.customer, [{text: 'Ok'}]);
             })
+         await firestore()
+            .collection('SalesProducts')
+            .where('sales_id', '==', items.id)
+            .get()
+            .then( query => {
+               query.forEach( doc => {
+                  const data = doc.data()
+                  data.id = doc.id;
+                  DeleteList.push(data)
+               })
+            })
+            DeleteList.forEach( data => {
+               firestore()
+                  .collection('SalesProducts')
+                  .doc(data.id)
+                  .delete()
+            })         
       } catch(e) {
          console.log(e)
       } 
@@ -85,7 +110,7 @@ const SalesCard = ({items}) => {
                            </Text>                                          
                         </View>
                         <View style={{flexDirection: 'row', justifyContent: 'space-between', marginRight: 5, alignItems: 'center'}}>                             
-                              <Text style={[styles.texts, {fontStyle: 'italic', color: '#8c8f8d', fontSize: 14}]}>{date.toDateString()}</Text>
+                              <Text style={[styles.texts, {fontStyle: 'italic', color: '#8c8f8d', fontSize: 14}]}>{date1.toDateString()} | {date}</Text>
                               <Text style={[styles.texts,{fontSize: 16, fontWeight: '700'}]}>Rs. {numbering(items.grand_total.toFixed(1))}</Text>                                                               
                         </View>                        
                      </View> 

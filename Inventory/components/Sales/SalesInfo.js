@@ -66,7 +66,7 @@ const SalesInfo = ({items}) => {
                   return (
                      <View style={{flexDirection: 'column'}}>
                         <View style={styles.SalesDetail}>                  
-                           <Text style={[styles.salesInfoTexts, {flex: 2}]}>{item.product}</Text>
+                           <Text style={[styles.salesInfoTexts, {flex: 2}]}>{item.product_name}</Text>
                            <Text style={[styles.salesInfoTexts, {flex: 1}]}>{item.selling_price}</Text>
                            <Text style={[styles.salesInfoTexts, {flex: 1}]}>{item.sold_quantity}</Text>
                            <Text style={[styles.salesInfoTexts, {flex: 1}]}>{item.total}</Text>

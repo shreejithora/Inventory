@@ -6,20 +6,47 @@ import {
    View, 
    TouchableOpacity, 
    StyleSheet,
-   FlatList
+   FlatList,
+   RefreshControl,
+   ActivityIndicator
 } from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IncomeCard from '../../../components/Entries/Income/IncomeCard';
+import IncomeCard2 from '../../../components/Entries/Income/IncomeCard2';
 import IncomeChart from '../../../components/Entries/Income/IncomeChart';
 
-const ProductsList = [];
-const SalesList = [];
-const SalesProductsList = [];
-const IncomeList = require('../../../models/Entries.json');
+let ProductsList = [];
+let SalesList = [];
+let SalesProductsList = [];
+let IncomeList = require('../../../models/Entries.json');
 
 const IncomeScreen = () => { 
+
+   const numbering = num => {
+      let x = num;
+      x=x.toString();
+      // x=x.split('.')[0];
+      let y = 0;
+      if(x.includes('.')){
+         y = '.'+x.split('.')[1]
+         x = x.split('.')[0]
+         let lastThree = x.substring(x.length-3);
+         const otherNumbers = x.substring(0,x.length-3);
+         if(otherNumbers != '')
+            lastThree = ',' + lastThree;
+         const val = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree; 
+         return (val+y);
+      } else {
+         let lastThree = x.substring(x.length-3);
+         const otherNumbers = x.substring(0,x.length-3);
+         if(otherNumbers != '')
+            lastThree = ',' + lastThree;
+         const val = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree; 
+         return (val);
+      }
+   }
 
    const [salesData, setSalesData] = useState({
       allSales: SalesList,
@@ -36,9 +63,21 @@ const IncomeScreen = () => {
       filteredProducts: ProductsList
    })
 
-   useEffect( () => {
+   const [refreshing, setRefreshing] = useState(false)
+
+   const [refreshing1, setRefreshing1] = useState(false)
+
+   const [otherFlats, setOtherFlats] = useState(false)
+
+   const [loading, setLoading] = useState(false)
+
+   useEffect( () => {      
       setTimeout( async() => {
+         ProductsList = [];
+         SalesProductsList = [];
+         SalesList = [];
          try{
+            setLoading(true)
             await firestore()
                .collection('Sales')
                .get()
@@ -55,6 +94,7 @@ const IncomeScreen = () => {
                })
                await firestore()
                   .collection('SalesProducts')
+                  .orderBy('last_updated', 'desc')
                   .get()
                   .then( querySnapshot => {
                      querySnapshot.forEach( documentSnapshot => {
@@ -81,6 +121,7 @@ const IncomeScreen = () => {
                         filteredProducts: ProductsList
                      })
                   })
+               setLoading(false)
          } catch(e) {
             console.log(e)
          }
@@ -103,22 +144,30 @@ const IncomeScreen = () => {
    const [graphData, setGraphData] = useState([]);
 
    const [picker, setPicker] = useState({
-      all: false,
-      day: true,
+      all: true,
+      day: false,
       week: false,
       month: false,
       year: false
    })
    
-   const handlePickerchange = val => {
+   const handlePickerchange = async(val) => {
 
       const newDate = new Date();
       let DateVal = 0;
+      let total = 0;
+      let cost = 0;
+      let discountVal = 0;
 
       if(val == "all"){
-          setIncomeData({
+         setOtherFlats(false)
+         setIncomeData({
             filteredIncomes: IncomeList
          }) 
+         setProductsData({
+            allProducts: ProductsList,
+            filteredProducts: ProductsList
+         })
          setPicker({ 
             all: true,
             day: false,
@@ -127,6 +176,7 @@ const IncomeScreen = () => {
             year: false
          })
       } else if(val == "day"){
+         setOtherFlats(true)
          setPicker({ 
             all: false,
             day: true,
@@ -134,20 +184,46 @@ const IncomeScreen = () => {
             month: false,
             year: false
          })
-         const date = newDate.getFullYear()+'-'+(newDate.getMonth()+1)+'-'+newDate.getDate();        
-         const todayValue = IncomeList.filter( item => {
-            return item.last_updated == String(date)
+         const date = new Date();        
+         const todayValue = SalesProductsList.filter( item => {
+            return item.last_updated.toDate().toDateString() == date.toDateString()
+         })
+         // todayValue.forEach( data => {
+         //    try{
+         //       firestore()
+         //          .collection('Products')
+         //          .doc(data.product_id)
+         //          .get()
+         //          .then( doc => {
+         //             console.log(doc)
+         //          })
+         //    } catch(e) {
+         //       console.log(e)
+         //    }
+         // })         
+         setProductsData({
+            ...productsData,
+            allProducts: todayValue,
+            filteredProducts: todayValue
          })
          setIncomeData({
             filteredIncomes: todayValue
-         })
+         })         
          const len = todayValue.length;
          for( let i=0; i<len; i++){
-            DateVal = (todayValue[i].sold_quantity * todayValue[i].price)+DateVal;
+            if(todayValue[i].discount == ""){
+               DateVal = (Number(todayValue[i].sold_quantity) * Number(todayValue[i].selling_price))+DateVal;
+            } else {
+               total = Number(todayValue[i].sold_quantity) * Number(todayValue[i].selling_price);
+               cost = Number(todayValue[i].cost_price) * Number(todayValue[i].sold_quantity);
+               discountVal = total - ((Number(todayValue[i].discount)/100) * total)
+               DateVal = DateVal + (discountVal - cost);
+            }                      
          }
          setValue(DateVal);      
       }  
       else if(val == "week"){
+         setOtherFlats(true)
          setPicker({ 
             all: false,
             day: false,
@@ -164,6 +240,7 @@ const IncomeScreen = () => {
          }     
       }  
       else if(val == "month"){
+         setOtherFlats(true)
          setPicker({ 
             all: false,
             day: false,
@@ -207,6 +284,7 @@ const IncomeScreen = () => {
          setGraphData(dataForGraph);
       }  
       else if(val == "year"){
+         setOtherFlats(true)
          setPicker({ 
             all: false,
             day: false,
@@ -238,6 +316,51 @@ const IncomeScreen = () => {
       } 
    }
 
+   const onRefresh = React.useCallback( async() => {
+      setRefreshing(true);
+      SalesProductsList = [];      
+      const today = new Date(); 
+      await firestore()
+         .collection('SalesProducts')
+         .orderBy('last_updated', 'desc')
+         .get()
+         .then( querySnapshot => {
+            querySnapshot.forEach( documentSnapshot => {                    
+               const data = documentSnapshot.data();
+               const dbDate = data.last_updated.toDate().toDateString();
+               if( dbDate == today.toDateString()){
+                  data.id = documentSnapshot.id;                                
+                  SalesProductsList.push(data); 
+               }                    
+            });       
+            setRefreshing(false) 
+            setProductsData({
+               allProducts: SalesProductsList,
+               filteredProducts: SalesProductsList
+            })          
+         });
+   }, [refreshing]);
+
+   const onRefresh1 = React.useCallback( async() => {
+      setRefreshing1(true);   
+      ProductsList = []   
+      await firestore()
+         .collection('Products')
+         .get()
+         .then( querySnapshot => {
+            querySnapshot.forEach( documentSnapshot => {                    
+               const data = documentSnapshot.data();
+               data.id = documentSnapshot.id;                                
+               ProductsList.push(data); 
+            });       
+         setRefreshing1(false) 
+         setProductsData({
+            allProducts: ProductsList,
+            filteredProducts: ProductsList
+         })          
+      });                            
+   }, [refreshing1]);      
+
    return(
       <View style={styles.container}>
          <View style={styles.mainActitivity}> 
@@ -246,7 +369,7 @@ const IncomeScreen = () => {
             null :
             <View style={styles.IncomeSection}>               
                <Text style={styles.IncomeDisplay}>                  
-                  Income: NRs. {value}                 
+                  Income: NRs. {numbering(value)}                 
                </Text>              
                {/* <View style={{display: graph ? 'flex' : 'none' }}>
                   <IncomeChart data={graphData} /> 
@@ -284,40 +407,85 @@ const IncomeScreen = () => {
                   <Text style={[styles.DateTexts, {color: picker.year ? '#fff' : '#078bab'}]}>1Y</Text>
                </TouchableOpacity>
             </View>                
-            <View style={styles.cardContent}>  
-               <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'center', fontWeight: '700'}]}> ID</Text> 
-               <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left', fontWeight: '700'}]}>Product</Text>             
-               <Text style={[styles.cardTitle, {flex: 2, textAlign: 'center', fontWeight: '700'}]}>Income (In Rs.)</Text>
-            </View>             
-            { 
-               IncomeData.filteredIncomes == null ?
-               <View opacity={0.5} style={styles.errorDisplay}>
-                  <Icon name="clipboard-alert-outline" size={30} color='#078bab'/>
-                  <Text style={styles.errorMsg}>No Match Found</Text>  
-                                 
+           { 
+               otherFlats ?
+               <View style={[styles.cardContent]}>  
+
+                  <Text style={[styles.cardTitle, {flex: 1, fontWeight: '700'}]}>Product</Text>             
+                  <Text style={[styles.cardTitle, {flex: 1,textAlign: 'center', fontWeight: '700'}]}>Income (In Rs.)</Text>
                </View> :
+               <View style={styles.cardContent}>  
+                  <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'center', fontWeight: '700'}]}> ID</Text> 
+                  <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left', fontWeight: '700'}]}>Product</Text>             
+                  <Text style={[styles.cardTitle, {flex: 2, textAlign: 'center', fontWeight: '700'}]}>Income (In Rs.)</Text>
+               </View>  
+            }  
+            {
+               loading ?
+               <ActivityIndicator size="large" color="#078bab" /> :
+               null
+            }
+            { 
+               otherFlats ?
+               <FlatList 
+                  data = {salesProductsData.filteredSalesProducts}
+                  keyExtractor = {item => item.id}
+                  renderItem = { ({item}) => {
+                        let costData = 0;
+                        let sellData = 0;
+                        let discountSellData = 0;
+                           costData = costData + (item.cost_price * item.sold_quantity);
+                           if( item.discount == "") {                              
+                              sellData = sellData + (item.selling_price * item.sold_quantity);
+                           } else {
+                              let total = (item.selling_price * item.sold_quantity)
+                              discountSellData =  total - ((Number(item.discount)/100) * total) 
+                              sellData = sellData + discountSellData;
+                           }                      
+                        // console.log(item.product_name, costData,  sellData)
+                        return(
+                           <View>                                                               
+                              <IncomeCard2 items={item} costData={costData} sellData={sellData} />
+                           </View>
+                        )                        
+                     }                       
+                  }
+                  refreshControl={
+                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                  }
+               /> :
                <FlatList 
                   data = {productsData.filteredProducts}
                   keyExtractor = {item => item.id}
                   renderItem = { ({item}) => {
                         let costData = 0;
                         let sellData = 0;
+                        let discountSellData = 0;
                         const foundSoldProduct = SalesProductsList.filter( product => {
                            return item.id == product.product_id
                         }) 
-                        // console.log(foundSoldProduct.length)
-                        foundSoldProduct.forEach( element => {
-                           console.log(element.selling_price, element.sold_quantity)
-                           // costData = costData + (element.cost_price * element.sold_quantity);
-                           // selldata = sellData + (element.selling_price * element.sold_quantity);
+                        // console.log(foundSoldProduct)
+                        foundSoldProduct.forEach( element => {                           
+                           // console.log(element.selling_price, Number(element.sold_quantity) 
+                           costData = costData + (element.cost_price * element.sold_quantity);
+                           if( element.discount == "") {                              
+                              sellData = sellData + (element.selling_price * element.sold_quantity);
+                           } else {
+                              let total = (element.selling_price * element.sold_quantity)
+                              discountSellData =  total - ((Number(element.discount)/100) * total) 
+                              sellData = sellData + discountSellData;
+                           }
                         })
-                        // console.log( sellData)
-                        // return(
-                        //    <View>                                                               
-                        //       <IncomeCard items={item} soldProduct={foundSoldProduct} costData={costData} sellData={sellData} />
-                        //    </View>
-                        // )                        
+                        // console.log(item.product_name, costData,  sellData)
+                        return(
+                           <View>                                                               
+                              <IncomeCard items={item} soldProduct={foundSoldProduct} costData={costData} sellData={sellData} />
+                           </View>
+                        )                        
                      }                       
+                  }
+                  refreshControl={
+                     <RefreshControl refreshing={refreshing1} onRefresh={onRefresh1} />
                   }
                />
             }            
@@ -376,9 +544,10 @@ const styles = StyleSheet.create({
    },   
    cardContent: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'space-around',
       padding: 5,
-      marginTop: 10
+      marginTop: 10,
+      marginHorizontal: 10
    },
    cardTitle:{
       marginHorizontal: 5,

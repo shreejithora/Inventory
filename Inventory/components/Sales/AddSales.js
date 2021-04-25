@@ -94,7 +94,7 @@ const AddSales = (props) => {
                .then( querySnapshot => {
                   querySnapshot.forEach( documentSnapshot => {
                      const data = documentSnapshot.data();
-                     data.customer_id = documentSnapshot.id;
+                     data.id = documentSnapshot.id;
                      CustomersList.push(data)
                   })
                })              
@@ -285,7 +285,7 @@ const AddSales = (props) => {
                         customer: customer.customerName,
                         customer_id: customerID,
                         product_id: item.product_id,
-                        product: item.product_name,
+                        product_name: item.product_name,
                         cost_price: item.cost_price,
                         selling_price: item.price,
                         sold_quantity: item.sold_qty,
