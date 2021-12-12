@@ -1,0 +1,107 @@
+[
+   {
+      "staff_id": "101",
+      "name": "Sabina khadka",
+      "number": "9841987547",
+      "department": "account",
+      "address": "Bhaktapur"
+   },
+   {
+      "staff_id": "102",
+      "name": "Rakesh Thapa",
+      "number": "9841987547",
+      "department": "sales",
+      "address": "Bhaktapur"
+   },
+   {
+      "staff_id": "103",
+      "name": "Rachana Basnet",
+      "number": "9841987547",
+      "department": "it",
+      "address": "Bhaktapur"
+   },
+   {
+      "staff_id": "104",
+      "name": "Sagun Shrestha",
+      "number": "9841987547",
+      "department": "marketting",
+      "address": "Bhaktapur"
+   },
+   {
+      "staff_id": "105",
+      "name": "Amisha Chaudhary",
+      "number": "9841987547",
+      "department": "account",
+      "address": "Bhaktapur"
+   },
+   {
+      "staff_id": "106",
+      "name": "Bijita Kc",
+      "number": "9841987547",
+      "department": "sales",
+      "address": "Bhaktapur"
+   },
+   {
+      "staff_id": "107",
+      "name": "Yaman Manandhar",
+      "number": "9841987547",
+      "department": "marketting",
+      "address": "Bhaktapur"
+   },
+   {
+      "staff_id": "108",
+      "name": "Sujab Shrestha",
+      "number": "9841987547",
+      "department": "reception",
+      "address": "Bhaktapur"
+   },
+   {
+      "staff_id": "109",
+      "name": "Anup Rijal",
+      "number": "9841987547",
+      "department": "reception",
+      "address": "Bhaktapur"
+   },
+   {
+      "staff_id": "110",
+      "name": "Anusha RIjal",
+      "number": "9841987547",
+      "department": "sales",
+      "address": "Bhaktapur"
+   },
+   {
+      "staff_id": "111",
+      "name": "herman Kayastha",
+      "number": "9841987547",
+      "department": "sales",
+      "address": "Bhaktapur"
+   },
+   {
+      "staff_id": "112",
+      "name": "Leena Shrestha",
+      "number": "9841987547",
+      "department": "account",
+      "address": "Bhaktapur"
+   },
+   {
+      "staff_id": "113",
+      "name": "Ritika Maharjan",
+      "number": "9841987547",
+      "department": "it",
+      "address": "Bhaktapur"
+   },
+   {
+      "staff_id": "114",
+      "name": "Nabin saru",
+      "number": "9841987547",
+      "department": "it",
+      "address": "Bhaktapur"
+   }
+   ,{
+      "staff_id": "115",
+      "name": "Sulav Panthi",
+      "number": "9841987547",
+      "department": "sales",
+      "address": "Bhaktapur"
+   }
+]

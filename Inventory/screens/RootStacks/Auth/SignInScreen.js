@@ -1,37 +1,39 @@
-import React from 'react';
+
+import React, {useState, useContext} from 'react';
+
 import { 
    View,
    Text, 
-   TextInput,
-   Button,
+   TextInput,   
    TouchableOpacity,
-   Platform,
    StyleSheet,
-   Image,
-   BackHandler,
    Alert
 } from 'react-native';
+
+import firestore from '@react-native-firebase/firestore';
 
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 
-// import { UserContext } from '../../components/UserContext';
-// import Users from '../../models/users';
+import { UserContext } from '../../../context/UserContext';
 
 const SignInScreen = ({ navigation }) => {
-   const [data, setData] = React.useState({
-      username: '',      
+
+   const { login } = useContext(UserContext);
+
+   const [isValidUser, setIsValidUser] = useState(true)
+
+   const [isValidAll, setIsValidAll] = useState(true)
+
+   const [email, setData] = React.useState({
+      email: '',      
       checkInputChange: false,
-      isValidUser: true,
    })
 
    const [password, setPassword] = React.useState({
       password: '',
-      isValidPass: true,
       secureTextEntry: true,
    })
-
-//    const { signIn } = React.useContext(UserContext);   
 
    const updateSecureTextEntry = () => {
       setPassword({
@@ -40,88 +42,88 @@ const SignInScreen = ({ navigation }) => {
       })
    }
 
-//    const loginHandle = (phone, pass) => {
-//       const foundUser = Users.filter( item => {
-//          return phone == item.phone && pass == item.password; 
-//       });
+   const [token, setToken] = useState('');   
+   const atoken = "12345"   
 
-//       if (data.phone.length == 0 || password.password.length == 0) {
-//          Alert.alert('Invalid Input !', 'Phone or Password fields cannot be empty.', [{text: 'Ok'}]);
-//          return;
-//       }
+   const loginHandle = async(mail, pass) => {   
 
-//       if (foundUser.length == 0) {
-//          Alert.alert('Invalid User!', 'Phone or Password is Incorrect.', [{text: 'Ok'}]);
-//          return;
-//       }
-//       signIn(foundUser);
-//    }
-
-   const handleValidUser = (val) => {
-     //  const userPhone = Users.filter( item => {
-     //     return number == item.phone
-     //  })
-      if ( val.length>=4){
-         setData({
-            ...data,
-            username: val,
-            isValidUser: true
-         })
+      setToken(atoken);   
+      if (email.email.length == 0 || password.password.length == 0) {
+         setIsValidAll(false)
+         setIsValidUser(true)
+         return;
       } else {
-         setData({
-            ...data,
-            username: val,
-            isValidUser:false
-         })
-      }
+         setIsValidAll(true)      
+         try{
+            const users = await firestore()
+            .collection('users')
+            .get()
+            .then( querySnapshot => {                       
+               querySnapshot.forEach( documentSnapshot => {
+                  let email = documentSnapshot.data().email               
+                  let password = documentSnapshot.data().password              
+                  if( email == mail && password == pass){
+                     login(email,password, token)
+                  } else {
+                     setIsValidUser(false)
+                     return;
+                  }
+               })            
+            }); 
+         } catch (e) {
+            console.log(e);
+         }
+      }                    
    }
-   
-   
-   const handleValidPass = (pass) => {
-      if (pass.length < 8 && pass.length > 0){
-         setPassword({
-            ...password,
-            password: pass,
-            isValidPass: false
-         })
-      } else {
-         setPassword({
-            ...password,
-            password: pass,
-            isValidPass: true
-         })
-      }
-   };
 
+   const handleValidEmail = (val) => {      
+         setData({
+            ...email,
+            email: val.toLowerCase(),            
+         })   
+   }
+   const handleValidPass = (pass) => {
+         setPassword({
+            ...password,
+            password: pass,
+            // isValidPass: true
+         })
+   }
 
  return (
       <View style={styles.container}>
       <View style={styles.header}>
-         {/* <Animatable.Image 
+         <Animatable.Image 
             animation="fadeInDown"
-            source = {require('./../../assets/userImage/nagarik.png')}
+            source = {require('../../../assets/logo.png')}
             style={styles.logo}
             resizeMode="stretch"
-         /> */}
+         />
       </View>
       <Animatable.View 
          animation="fadeInUpBig"
-         style={styles.footer}>
+         style={styles.footer}>      
+
          <View style={styles.fields}>
+            {  
+               isValidUser ?
+               null :
+               <Animatable.Text animation="fadeIn" style={styles.errMsg}>Email and Password doesnot match</Animatable.Text>
+            } 
+            {  
+               isValidAll ?
+               null :
+               <Animatable.Text animation="fadeIn" style={styles.errMsg}>Email and Password Fields cannot be Empty</Animatable.Text>
+            } 
             <View style={styles.inputs}>
-               <Text style={styles.texts}>Username</Text>
+               <Text style={styles.texts}>Email</Text>
                <TextInput
                   style={styles.textInputs}
-                  placeholder="Username" 
-                  onChangeText = { (val) => {handleValidUser(val)}}
-                  onEndEditing = { (e) => handleValidUser(e.nativeEvent.text)}
+                  placeholder="Email" 
+                  onChangeText = { (val) => {handleValidEmail(val)}}
+                  onEndEditing = { (e) => handleValidEmail(e.nativeEvent.text)}
                />
-            </View>
-            {  
-               data.isValidUser ?
-               null :
-               <Animatable.Text animation="fadeIn" style={styles.errMsg}>Username must be 4 chars long.</Animatable.Text>
-            } 
+            </View>            
 
             <View style={styles.inputs}>
                <Text style={styles.texts}>Password</Text>
@@ -151,15 +153,15 @@ const SignInScreen = ({ navigation }) => {
                   </TouchableOpacity>
                </View>
             </View>
-            {  
+            {/* {  
                password.isValidPass ?
                null :
-               <Animatable.Text animation="fadeIn" style={styles.errMsg}>The Password must be 8 chars long.</Animatable.Text>
-            } 
+               <Animatable.Text animation="fadeIn" style={styles.errMsg}>Password doesn't match.</Animatable.Text>
+            }  */}
 
             <TouchableOpacity 
                style={styles.button}
-               onPress={ () => {navigation.navigate('Home')}}
+               onPress={() => loginHandle(email.email, password.password)}
                >
                <Text style={[styles.texts,{color: '#fff', fontWeight: 'bold'}]}>Login</Text>
             </TouchableOpacity>
@@ -200,7 +202,7 @@ const styles =  StyleSheet.create({
    errMsg: {
       marginLeft: 20,
       color: 'red',
-      fontSize: 12
+      fontSize: 14
    },
    fields: {
       margin: 20
