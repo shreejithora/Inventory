@@ -15,8 +15,7 @@ import IncomeInfo from "./IncomeInfo";
 
 // const IncomeList = require('../../../models/Sales.json');
 
-const IncomeCard2 = ({items, costData, sellData}) => { 
-   console.log(items)
+const IncomeCard2 = ({items, costData, sellData}) => {   
    const numbering = num => {
       let x = num;
       x=x.toString();
@@ -50,7 +49,12 @@ const IncomeCard2 = ({items, costData, sellData}) => {
       hrin12 = 12
    }
    const min = new Date(date1).toString().substr(18, 3)
-   const date = hrin12+min
+   let date = null;
+   if(hour>=0 && hour<12){
+      date = hrin12+min+'AM';
+   } else {
+      date = hrin12+min+'PM';
+   }
 
    return(
       <View>
@@ -58,10 +62,12 @@ const IncomeCard2 = ({items, costData, sellData}) => {
             <TouchableOpacity onPress={() => setIncomeDetailModal(!incomeDetailModal)}>
                <View style={[styles.cardContent, {flexDirection: 'row'}]}> 
                   <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left'}]}>
-                     {items.product_name.length > 20 ? items.product_name.slice(0,20)+'...' : items.product_name}
+                     {items.product_name.length > 10 ? items.product_name.slice(0,10)+'...' : items.product_name}
                   </Text>  
-                  {/* <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left'}]}>{numbering(Number(sellData) - Number(costData))}</Text>  */}
-                  <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'center', fontWeight: '700'}]}>{numbering(Number(sellData) - Number(costData))}</Text> 
+                  <Text style={[styles.cardTitle, {flex: 1,fontSize: 15, textAlign: 'center'}]}>{items.sold_quantity}</Text> 
+                  <Text style={[styles.cardTitle, {flex: 1,fontSize: 15, textAlign: 'center'}]}>{items.selling_price}</Text> 
+                  <Text style={[styles.cardTitle, {flex: 1,fontSize: 15, textAlign: 'center'}]}>{items.cost_price}</Text> 
+                  <Text style={[styles.cardTitle, {flex: 1.5,fontSize: 15, textAlign: 'center', fontWeight: '700'}]}>{numbering(Number(sellData) - Number(costData))}</Text> 
                </View>   
                <Text style={[styles.cardTitle, {flex: 1.5, textAlign: 'left', fontSize: 13}]}>{date}</Text>      
             </TouchableOpacity>
@@ -79,7 +85,7 @@ const IncomeCard2 = ({items, costData, sellData}) => {
             animationInTiming={500}
             animationOutTiming={300}> 
             <View style={styles.modalView}>                         
-               {/* <IncomeInfo item={items}/>  */}
+               <IncomeInfo item={items} profit={sellData - costData} date={date}/> 
                <View style={{flexDirection: 'row',justifyContent: 'space-between', bottom: 0, right: 0}}>
                      <Animatable.View 
                         animation="fadeInLeft"

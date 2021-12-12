@@ -336,8 +336,7 @@ const AddProduct = (props) => {
                      len++;      
                   }                           
                })
-            })
-         console.log(len)            
+            })           
 
          let temp = 0;
          if( len == 0){
@@ -388,7 +387,6 @@ const AddProduct = (props) => {
          if( val == "stationery"){
             if( temp == null ){
                setProductCode({product_code: 400.001})
-               // console.log(codes.stationery)
             } else {
                temp = code[0] + 0.001
                setCodes({stationery: temp.toFixed(3)})
@@ -452,6 +450,14 @@ const AddProduct = (props) => {
                                     props.stateChange(productName.product_name, productCode.product_code)
                                     setAddingProducts(false)
                                     props.onAddProduct(false);
+                                 })
+                              firestore()
+                                 .collection('Expense')
+                                 .add({
+                                    product_name: productName.product_name,
+                                    bought_quantity: productQuantity.product_quantity,
+                                    cost_price: costPrice.cost_price,
+                                    updated: new Date()
                                  })
                            } catch(e) {
                               console.log(e)

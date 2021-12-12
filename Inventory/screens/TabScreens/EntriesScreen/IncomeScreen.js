@@ -71,6 +71,8 @@ const IncomeScreen = () => {
 
    const [loading, setLoading] = useState(false)
 
+   const [length, setLength] = useState(1);
+
    useEffect( () => {      
       setTimeout( async() => {
          ProductsList = [];
@@ -160,6 +162,7 @@ const IncomeScreen = () => {
       let discountVal = 0;
 
       if(val == "all"){
+         setLength(1)
          setOtherFlats(false)
          setIncomeData({
             filteredIncomes: IncomeList
@@ -201,26 +204,29 @@ const IncomeScreen = () => {
          //       console.log(e)
          //    }
          // })         
-         setProductsData({
-            ...productsData,
-            allProducts: todayValue,
-            filteredProducts: todayValue
+         setSalesProductsData({
+            ...salesProductsData,
+            allSalesProducts: todayValue,
+            filteredSalesProducts: todayValue
          })
-         setIncomeData({
-            filteredIncomes: todayValue
-         })         
+                
          const len = todayValue.length;
-         for( let i=0; i<len; i++){
-            if(todayValue[i].discount == ""){
-               DateVal = (Number(todayValue[i].sold_quantity) * Number(todayValue[i].selling_price))+DateVal;
-            } else {
-               total = Number(todayValue[i].sold_quantity) * Number(todayValue[i].selling_price);
-               cost = Number(todayValue[i].cost_price) * Number(todayValue[i].sold_quantity);
-               discountVal = total - ((Number(todayValue[i].discount)/100) * total)
-               DateVal = DateVal + (discountVal - cost);
-            }                      
-         }
-         setValue(DateVal);      
+         setLength(len)
+         if( len == 0 ) {
+            return;
+         } else {
+            for( let i=0; i<len; i++){
+               if(todayValue[i].discount == ""){
+                  DateVal = (Number(todayValue[i].sold_quantity) * Number(todayValue[i].selling_price))+DateVal;
+               } else {
+                  total = Number(todayValue[i].sold_quantity) * Number(todayValue[i].selling_price);
+                  cost = Number(todayValue[i].cost_price) * Number(todayValue[i].sold_quantity);
+                  discountVal = total - ((Number(todayValue[i].discount)/100) * total)
+                  DateVal = DateVal + (discountVal - cost);
+               }                      
+            }
+            setValue(DateVal); 
+         }              
       }  
       else if(val == "week"){
          setOtherFlats(true)
@@ -411,15 +417,25 @@ const IncomeScreen = () => {
                otherFlats ?
                <View style={[styles.cardContent]}>  
 
-                  <Text style={[styles.cardTitle, {flex: 1, fontWeight: '700'}]}>Product</Text>             
-                  <Text style={[styles.cardTitle, {flex: 1,textAlign: 'center', fontWeight: '700'}]}>Income (In Rs.)</Text>
+                  <Text style={[styles.cardTitle, {flex: 2, fontWeight: '700'}]}>Product</Text>             
+                  <Text style={[styles.cardTitle, {flex: 1,fontSize: 15, textAlign: 'center', fontWeight: '700'}]}>Qty</Text>
+                  <Text style={[styles.cardTitle, {flex: 1,fontSize: 15, textAlign: 'center', fontWeight: '700'}]}>Selling Price</Text>
+                  <Text style={[styles.cardTitle, {flex: 1,fontSize: 15, textAlign: 'center', fontWeight: '700'}]}>Cost Price</Text>
+                  <Text style={[styles.cardTitle, {flex: 1.5,fontSize: 15, textAlign: 'center', fontWeight: '700'}]}>Income (In Rs.)</Text>
                </View> :
                <View style={styles.cardContent}>  
                   <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'center', fontWeight: '700'}]}> ID</Text> 
                   <Text style={[styles.cardTitle, {flex: 2, textAlign: 'left', fontWeight: '700'}]}>Product</Text>             
                   <Text style={[styles.cardTitle, {flex: 2, textAlign: 'center', fontWeight: '700'}]}>Income (In Rs.)</Text>
                </View>  
-            }  
+            }       
+            {
+               length == 0 ?
+               <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+                  <Text style= {{opacity: 0.4, fontSize: 15, fontWeight: '700', color: '#078bab'}}>No Income Made</Text>
+               </View>:
+               null            
+            }       
             {
                loading ?
                <ActivityIndicator size="large" color="#078bab" /> :
@@ -442,7 +458,6 @@ const IncomeScreen = () => {
                               discountSellData =  total - ((Number(item.discount)/100) * total) 
                               sellData = sellData + discountSellData;
                            }                      
-                        // console.log(item.product_name, costData,  sellData)
                         return(
                            <View>                                                               
                               <IncomeCard2 items={item} costData={costData} sellData={sellData} />
@@ -464,9 +479,7 @@ const IncomeScreen = () => {
                         const foundSoldProduct = SalesProductsList.filter( product => {
                            return item.id == product.product_id
                         }) 
-                        // console.log(foundSoldProduct)
-                        foundSoldProduct.forEach( element => {                           
-                           // console.log(element.selling_price, Number(element.sold_quantity) 
+                        foundSoldProduct.forEach( element => {                            
                            costData = costData + (element.cost_price * element.sold_quantity);
                            if( element.discount == "") {                              
                               sellData = sellData + (element.selling_price * element.sold_quantity);
@@ -476,7 +489,6 @@ const IncomeScreen = () => {
                               sellData = sellData + discountSellData;
                            }
                         })
-                        // console.log(item.product_name, costData,  sellData)
                         return(
                            <View>                                                               
                               <IncomeCard items={item} soldProduct={foundSoldProduct} costData={costData} sellData={sellData} />

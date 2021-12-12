@@ -6,17 +6,53 @@ import {
    TouchableOpacity, 
    ScrollView, 
    StyleSheet,
-   FlatList
+   FlatList,
+   RefreshControl
 } from 'react-native';
 
 import DropDownPicker from 'react-native-dropdown-picker';
+import firestore from "@react-native-firebase/firestore";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useEffect } from 'react';
+import ExpenseCard from '../../../components/Entries/Expense/ExpenseCard';
+
+let ExpenseList = [];
 
 const ExpenseScreen = () => { 
 
    const [state, setState] = useState({
       status: 'today'
    })
+
+   const [expenseData, setExpenseData] = useState({
+      allExpenses: ExpenseList,
+      filteredExpenses: ExpenseList
+   })
+
+   useEffect( () => {
+      setTimeout( async() => {
+         ExpenseList = [];
+         try{
+            await firestore()
+               .collection('Expense')
+               .orderBy('updated', 'desc')
+               .get()
+               .then( querySnapshot => {
+                  querySnapshot.forEach( documentSnapshot => {
+                     const data = documentSnapshot.data()
+                     data.id = documentSnapshot.id
+                     ExpenseList.push(data);
+                  })
+                  setExpenseData({
+                     allExpenses: ExpenseList,
+                     filteredExpenses: ExpenseList
+                  })
+               })
+         } catch(e) {
+            console.log(e)
+         }
+      }, 1000)
+   }, []);
 
    const dateData = 
    [
@@ -49,12 +85,44 @@ const ExpenseScreen = () => {
       },
    ]
 
+   const [refreshing, setRefreshing] = useState(false)
+
    const handleStatusChange = (val) => {
 
       setState({
          status: val
       })
    }
+
+   const onRefresh = React.useCallback( async() => {
+      setRefreshing(true);           
+      const today = new Date(); 
+      try{
+         ExpenseList = []; 
+         await firestore()
+         .collection('Expense')
+         .orderBy('updated', 'desc')
+         .get()
+         .then( querySnapshot => {
+            querySnapshot.forEach( documentSnapshot => {                    
+               const data = documentSnapshot.data();
+               // const dbDate = data.last_updated.toDate().toDateString();
+               // if( dbDate == today.toDateString()){
+                  data.id = documentSnapshot.id;                                
+                  ExpenseList.push(data); 
+               // }                    
+            });       
+            setRefreshing(false) 
+            setExpenseData({
+               allExpenses: ExpenseList,
+               filteredExpenses: ExpenseList
+            })          
+         });
+      } catch(e){
+         console.log(e)
+      }
+      
+   }, [refreshing]);
 
    return(
       <View style={styles.container}>
@@ -72,26 +140,31 @@ const ExpenseScreen = () => {
                   onChangeItem={item => handleStatusChange(item.value)}
                />
             </View>             
-            <View style={styles.cardContent}>  
-               <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'center', fontWeight: '700'}]}> ID</Text> 
-               <Text style={[styles.cardTitle, {flex: 2, textAlign: 'center', fontWeight: '700'}]}>Product</Text>             
-               <Text style={[styles.cardTitle, {flex: 2, textAlign: 'center', fontWeight: '700'}]}>Expense (In Rs.)</Text>
+            <View style={styles.cardContent}>                 
+               <Text style={[styles.cardTitle, {flex: 3, textAlign: 'left', fontWeight: '700'}]}>Product</Text>   
+               <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'center', fontWeight: '700'}]}>Cost Price</Text> 
+               <Text style={[styles.cardTitle, {flex: 1, fontSize: 15, textAlign: 'center', fontWeight: '700'}]}> Qty </Text>           
+               <Text style={[styles.cardTitle, {flex: 2, fontSize: 15, textAlign: 'center', fontWeight: '700'}]}>Expense (In Rs.)</Text>
             </View> 
-            {/* { 
-               productData.filteredProducts == null ?
+            { 
+               expenseData.filteredExpenses == null ?
                <View opacity={0.5} style={styles.errorDisplay}>
                   <Icon name="clipboard-alert-outline" size={30} color='#078bab'/>
                   <Text style={styles.errorMsg}>No Match Found</Text>  
                                  
                </View> :
                <FlatList 
-                  data = {productData.filteredProducts}
-                  keyExtractor = {item => item.product_id}
+                  data = {expenseData.filteredExpenses}
+                  keyExtractor = {item => item.id}
                   renderItem = { ({item}) =>                  
-                     <ProductCard items={item}/>                                    
+                     <ExpenseCard items={item}/>  
+                     // <Text>{item.product_name}</Text>                                  
+                  }
+                  refreshControl={
+                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                   }
                />
-            }             */}
+            }            
          </View>                               
       </View>    
    )
@@ -131,7 +204,8 @@ const styles = StyleSheet.create({
    },
    cardContent: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      // justifyContent: 'space-around',
+      marginHorizontal: 10,
       padding: 5,
       marginTop: 10
    },

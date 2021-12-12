@@ -129,6 +129,17 @@ const ProductCard = ({items}) => {
                setProductDetailModal(false)
                Alert.alert('Product Updated', 'Product: '+state.product_name, [{text: 'Ok'}]);
             })
+         if(items.quantity != state.quantity && state.quantity > items.quantity){
+            await firestore()
+               .collection('Expense')
+               .add({
+                  supplier: state.supplier,
+                  bought_quantity: state.quantity - items.quantity,
+                  cost_price: state.cost_price,
+                  product_name: state.product_name,
+                  updated: new Date()
+               })
+         }
       } catch(e) {
          console.log(e)
       }
